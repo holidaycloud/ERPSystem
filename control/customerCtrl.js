@@ -36,11 +36,16 @@ CustomerCtrl.getCustomerByMobileOrRegister = function(ent,mobile,name,fn){
     });
 };
 
-CustomerCtrl.register=function(ent,mobile,passwd,fn){
-    var customer = new Customer({
+CustomerCtrl.register=function(ent,mobile,passwd,loginName,email,birthday,name,address,fn){
+    var customer = new Customer( {
         'ent':ent,
+        'loginName':loginName,
         'mobile':mobile,
-        'passwd':passwd
+        'email':email,
+        'passwd':passwd,
+        'birthday':birthday,
+        'name':name,
+        'address':address
     });
     customer.save(function(err,res){
         fn(err,res);

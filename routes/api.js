@@ -480,7 +480,12 @@ router.post('/customer/register', function(request, response) {
     var ent = request.body.ent;
     var mobile = request.body.mobile;
     var passwd = request.body.passwd;
-    CustomerCtrl.register(ent,mobile,passwd,function(err,res){
+    var loginName = request.body.loginName;
+    var email = request.body.email;
+    var birthday = request.body.birthday;
+    var name = request.body.name;
+    var address = request.body.address;
+    CustomerCtrl.register(ent,mobile,passwd,loginName,email,birthday,name,address,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -524,18 +529,23 @@ router.post('/customer/update', function(request, response) {
     });
 });
 
-router.post('/customer/registerAndBind', function(request, response) {
-    var ent = request.body.ent;
-    var mobile = request.body.mobile;
-    var passwd = request.body.passwd;
-    CustomerCtrl.register(ent,mobile,passwd,function(err,res){
-        if(err){
-            response.json({'error':1, 'errMsg':err.message});
-        } else {
-            response.json({'error':0, 'data':res});
-        }
-    });
-});
+//router.post('/customer/registerAndBind', function(request, response) {
+//    var ent = request.body.ent;
+//    var mobile = request.body.mobile;
+//    var passwd = request.body.passwd;
+//    var loginName = request.body.loginName;
+//    var email = request.body.email;
+//    var birthday = request.body.birthday;
+//    var name = request.body.name;
+//    var address = request.body.address;
+//    CustomerCtrl.registerAndBind(ent,mobile,passwd,loginName,email,birthday,name,address,function(err,res){
+//        if(err){
+//            response.json({'error':1, 'errMsg':err.message});
+//        } else {
+//            response.json({'error':0, 'data':res});
+//        }
+//    });
+//});
 
 router.post('/customer/weixinBind', function(request, response) {
     var ent = request.body.ent;
