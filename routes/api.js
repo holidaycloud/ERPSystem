@@ -216,7 +216,10 @@ router.post('/product/save', function(request, response) {
     var ent = request.body.ent;
     var weekend = request.body.weekend;
     var images = request.body.images;
-    ProductCtrl.save(name,introduction,gps,content,startDate,endDate,ent,weekend,images,function(err,res){
+    var type = request.body.type;
+    var subProduct = request.body.subProduct;
+
+    ProductCtrl.save(name,introduction,gps,content,startDate,endDate,ent,weekend,images,type,subProduct,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -233,7 +236,9 @@ router.post('/product/update', function(request, response) {
     }
     var obj = {
         'ent':request.body.ent,
-        'images':images
+        'images':images,
+        'productType':request.body.type,
+        'subProduct':request.body.subProduct
     };
     if(request.body.lat&&request.body.lon){
         obj.gps = {'lat':request.body.lat,'lon':request.body.lon};
@@ -270,9 +275,10 @@ router.post('/product/update', function(request, response) {
 
 router.get('/product/list', function(request, response) {
     var ent = request.query.ent;
+    var isRes = request.query.isRes;
     var page = request.query.page||0;
     var pageSize = request.query.pageSize||25;
-    ProductCtrl.list(ent,page,pageSize,function(err,res){
+    ProductCtrl.list(ent,isRes,page,pageSize,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -290,7 +296,8 @@ router.get('/product/detail', function(request, response) {
 
 router.get('/product/nameList', function(request, response) {
     var ent = request.query.ent;
-    ProductCtrl.nameList(ent,function(err,res){
+    var isRes = request.query.isRes;
+    ProductCtrl.nameList(ent,isRes,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {

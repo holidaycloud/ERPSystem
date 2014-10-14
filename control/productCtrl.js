@@ -3,7 +3,7 @@ var async = require('async');
 var EntCtrl = require('./../control/entCtrl');
 var ProductCtrl = function(){};
 
-ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,weekend,images,fn){
+ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,weekend,images,productType,subProduct,fn){
     if(!images){
         images=[];
     }
@@ -16,7 +16,9 @@ ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,
         'endDate':endDate,
         'ent':ent,
         'weekend':weekend,
-        'images':images
+        'images':images,
+        'productType':productType,
+        'subProduct':subProduct
     });
 
     product.save(function(err,res){
@@ -31,7 +33,7 @@ ProductCtrl.update = function(id,obj,fn){
   });
 };
 
-ProductCtrl.list = function(ent,page,pageSize,fn){
+ProductCtrl.list = function(ent,isRes,page,pageSize,fn){
     async.auto({
         'getEnt':function(cb){
             EntCtrl.detail(ent,function(err,res){
@@ -43,6 +45,11 @@ ProductCtrl.list = function(ent,page,pageSize,fn){
             if(!results.getEnt.isAdmin){
                 query.where({'ent':ent});
             }
+            if(isRes){
+                query.where({'productType':2});
+            } else {
+                query.where({'productType':{'$ne':2}});
+            }
             query.skip(page*pageSize).limit(pageSize).exec(function(err,products){
                 cb(err,products);
             });
@@ -51,6 +58,11 @@ ProductCtrl.list = function(ent,page,pageSize,fn){
             var query = Product.count();
             if(!results.getEnt.isAdmin){
                 query.where({'ent':ent});
+            }
+            if(isRes){
+                query.where({'productType':2});
+            } else {
+                query.where({'productType':{'$ne':2}});
             }
             query.exec(function(err,totalSize){
                 cb(err,totalSize);
@@ -75,10 +87,15 @@ ProductCtrl.detail = function(id,fn){
         });
 };
 
-ProductCtrl.nameList = function(ent,fn){
+ProductCtrl.nameList = function(ent,isRes,fn){
     var query = Product.find();
     if(ent){
         query.where({'ent':ent})
+    }
+    if(isRes){
+        query.where({'productType':2});
+    } else {
+        query.where({'productType':{'$ne':2}});
     }
     query.select('name startDate endDate ent');
     query.exec(function(err,res){
