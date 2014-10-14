@@ -568,7 +568,6 @@ router.get('/customer/list', function(request, response) {
     var pageSize = request.query.pageSize||25;
     var ent = request.query.ent;
     var mobile = request.query.mobile;
-
     CustomerCtrl.list(page,pageSize,ent,mobile,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
