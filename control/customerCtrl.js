@@ -137,7 +137,7 @@ CustomerCtrl.list = function(page,pageSize,ent,fn){
         } else {
             fn(null, {
                 'totalSize': res[1],
-                'orders': res[0]
+                'customers': res[0]
             });
         }
     });
