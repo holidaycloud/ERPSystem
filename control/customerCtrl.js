@@ -115,10 +115,13 @@ CustomerCtrl.update = function(id,obj,fn){
     });
 };
 
-CustomerCtrl.list = function(page,pageSize,ent,fn){
+CustomerCtrl.list = function(page,pageSize,ent,mobile,fn){
     async.parallel([
         function (cb) {
             var query = Customer.find({'ent': ent});
+            if(mobile){
+                query.where({'mobile':mobile});
+            }
             query.skip(page * pageSize);
             query.limit(pageSize);
             query.exec(function (err, customers) {
@@ -127,6 +130,9 @@ CustomerCtrl.list = function(page,pageSize,ent,fn){
         },
         function (cb) {
             var query = Customer.count({'ent': ent});
+            if(mobile){
+                query.where({'mobile':mobile});
+            }
             query.exec(function (err, totalsize) {
                 cb(err, totalsize);
             });
