@@ -275,7 +275,7 @@ router.post('/product/update', function(request, response) {
 
 router.get('/product/list', function(request, response) {
     var ent = request.query.ent;
-    var isRes = request.query.isRes;
+    var isRes = request.query.isRes=='true'?true:false;
     var page = request.query.page||0;
     var pageSize = request.query.pageSize||25;
     ProductCtrl.list(ent,isRes,page,pageSize,function(err,res){
