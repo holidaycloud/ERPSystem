@@ -29,6 +29,7 @@ ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,
 
 ProductCtrl.update = function(id,obj,fn){
   Product.findByIdAndUpdate(id,{'$set':obj},function(err,res){
+      console.log(err,res);
       fn(err,res);
   });
 };
