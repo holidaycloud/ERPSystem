@@ -238,7 +238,7 @@ router.post('/product/update', function(request, response) {
         'ent':request.body.ent,
         'images':images,
         'productType':request.body.type,
-        'subProduct':request.body.subProduct
+        'subProduct':request.body.subProduct?request.body.subProduct:[]
     };
     if(request.body.lat&&request.body.lon){
         obj.gps = {'lat':request.body.lat,'lon':request.body.lon};
