@@ -9,6 +9,7 @@ var ProductCtrl = require('./productCtrl');
 var CustomerCtrl = require('./customerCtrl');
 var ProductMatchCtrl = require('./productMatchCtrl');
 var async = require('async');
+var FMB = require('fumubang');
 var OrderCtrl = function () {
 };
 
@@ -259,5 +260,12 @@ OrderCtrl.detail = function (id, fn) {
         .exec(function (err, order) {
             fn(err, order);
         });
+};
+
+OrderCtrl.verifyCode = function(code,fn){
+    var fmb = new FMB('太仓盛兴','sty841');
+    fmb.verifyCode('123456',function(err,res){
+        fn(err,res);
+    });
 };
 module.exports = OrderCtrl;

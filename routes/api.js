@@ -482,6 +482,17 @@ router.get('/order/detail', function(request, response) {
     });
 });
 
+router.get('/order/verifyCode', function(request, response) {
+    var code = request.query.code;
+    OrderCtrl.verifyCode(code,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 //会员接口
 router.post('/customer/register', function(request, response) {
     var ent = request.body.ent;
