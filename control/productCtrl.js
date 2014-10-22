@@ -3,7 +3,7 @@ var async = require('async');
 var EntCtrl = require('./../control/entCtrl');
 var ProductCtrl = function(){};
 
-ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,weekend,images,productType,subProduct,fn){
+ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,weekend,images,productType,subProduct,isHot,fn){
     if(!images){
         images=[];
     }
@@ -18,7 +18,8 @@ ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,
         'weekend':weekend,
         'images':images,
         'productType':productType,
-        'subProduct':subProduct
+        'subProduct':subProduct,
+        'isHot':isHot
     });
 
     product.save(function(err,res){

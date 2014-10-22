@@ -17,7 +17,8 @@ var productSchema = new Schema({
     'images': [String],
     'productType':{type: Number, default: 0}, //产品类型 0:普通产品 1;时间段产品 2:资源 3:无时间产品
     'inventoryType':{type: Number, default: 1}, //0:无库存类型 1:普通库存查询inventory表 2:时间段库存查询库存消耗表 3:子产品单独库存查询子产品状态数量
-    'subProduct':[{type:Schema.Types.ObjectId,ref:'Product'}] //包含的子产品
+    'subProduct':[{type:Schema.Types.ObjectId,ref:'Product'}], //包含的子产品
+    'isHot':Boolean
 });
 
 var Product = db.model('Product', productSchema);
