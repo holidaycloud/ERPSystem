@@ -8,8 +8,8 @@ var _ = require('underscore')._;
 var PriceCtrl = function(){};
 
 PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,inventory,weekendinventory,fn){
-    async.waterfall([
-        function(cb){
+    async.auto({
+        'getProduct':function(cb){
             Product.findById(productId,function(err,res){
                if(err){
                    cb(err,null);
@@ -22,43 +22,62 @@ PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,invento
                }
             });
         },
-        function(product,cb){
-            Price.remove({'product':product,'date':{'$gte':startDate,'$lte':endDate}},function(err,res){
-                cb(err,product);
-            })
-        },
-        function(product,cb){
-            var priceArr = [];
-            var step = (endDate-startDate)/86400000+1;
-            for(var i=0;i<step;i++){
-                var isWeekend = false;
-                var date = new Date(startDate+i*86400000);
-                if(_.indexOf(product.weekend,date.getDay())>=0){
-                    isWeekend=true;
-                }
-                priceArr.push({
-                    'product':product,
-                    'date': startDate+i*86400000,
-                    'price':isWeekend?weekendPrice:price,
-                    'inventory':isWeekend?weekendinventory:inventory
+        'removePrice':['getProduct',function(cb,results){
+            if(results.getProduct.productType===3){
+                Price.remove({'product':results.getProduct._id},function(err,res){
+                    cb(err,res);
+                });
+            } else if(results.getProduct.productType===0){
+                Price.remove({'product':results.getProduct._id,'date':{'$gte':startDate,'$lte':endDate}},function(err,res){
+                    cb(err,res);
                 });
             }
-            Price.create(priceArr,function(err,res){
-                cb(err,res);
-            });
-        }
-    ],function(err,res){
-        fn(err,res);
+        }],
+        'saveProductPrice':['getProduct',function(cb,results){
+            if(results.getProduct.productType===3){
+                var price = new Price({
+                    'product':results.getProduct._id,
+                    'price':price,
+                    'inventory':inventory
+                });
+                price.save(function(err,res){
+                   cb(err,res);
+                });
+            } else if(results.getProduct.productType===0){
+                var priceArr = [];
+                var step = (endDate-startDate)/86400000+1;
+                for(var i=0;i<step;i++){
+                    var isWeekend = false;
+                    var date = new Date(startDate+i*86400000);
+                    if(_.indexOf(results.getProduct.weekend,date.getDay())>=0){
+                        isWeekend=true;
+                    }
+                    priceArr.push({
+                        'product':results.getProduct._id,
+                        'date': startDate+i*86400000,
+                        'price':isWeekend?weekendPrice:price,
+                        'inventory':isWeekend?weekendinventory:inventory
+                    });
+                }
+                Price.create(priceArr,function(err,res){
+                    cb(err,res);
+                });
+            }
+        }]
+    },function(err,results){
+        fn(err,results.saveProductPrice);
     });
 };
 
 PriceCtrl.list = function(product,startDate,endDate,fn){
-    Price.find()
-        .where({'product':product})
-        .where({'date':{'$gte':startDate,'$lte':endDate}})
-        .exec(function(err,res){
-            fn(err,res);
-        });
+    var query = Price.find();
+    query.where({'product':product});
+    if(startDate){
+        query .where({'date':{'$gte':startDate,'$lte':endDate}});
+    }
+    query.exec(function(err,res){
+        fn(err,res);
+    });
 };
 
 PriceCtrl.update = function(id,price,inventory,fn){
