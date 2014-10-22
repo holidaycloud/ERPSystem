@@ -8,6 +8,7 @@ var _ = require('underscore')._;
 var PriceCtrl = function(){};
 
 PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,inventory,weekendinventory,fn){
+    console.log(productId,startDate,endDate,price,weekendPrice,inventory,weekendinventory);
     async.auto({
         'getProduct':function(cb){
             Product.findById(productId,function(err,res){
@@ -40,6 +41,7 @@ PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,invento
                     'price':price,
                     'inventory':inventory
                 });
+
                 price.save(function(err,res){
                    cb(err,res);
                 });
