@@ -8,7 +8,6 @@ var _ = require('underscore')._;
 var PriceCtrl = function(){};
 
 PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,inventory,weekendinventory,fn){
-    console.log(productId,startDate,endDate,price,weekendPrice,inventory,weekendinventory);
     async.auto({
         'getProduct':function(cb){
             Product.findById(productId,function(err,res){
@@ -36,13 +35,12 @@ PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,invento
         }],
         'saveProductPrice':['getProduct',function(cb,results){
             if(results.getProduct.productType===3){
-                var price = new Price({
+                var priceObj = new Price({
                     'product':results.getProduct._id,
                     'price':price,
                     'inventory':inventory
                 });
-
-                price.save(function(err,res){
+                priceObj.save(function(err,res){
                    cb(err,res);
                 });
             } else if(results.getProduct.productType===0){
