@@ -97,7 +97,7 @@ ProductCtrl.nameList = function(ent,isRes,fn){
     } else {
         query.where({'productType':{'$ne':2}});
     }
-    query.select('name startDate endDate ent');
+    query.select('name startDate endDate ent productType');
     query.exec(function(err,res){
         fn(err,res);
     });
