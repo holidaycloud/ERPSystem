@@ -3,9 +3,19 @@ var async = require('async');
 var EntCtrl = require('./../control/entCtrl');
 var ProductCtrl = function(){};
 
-ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,weekend,images,productType,subProduct,isHot,fn){
-    if(!images){
-        images=[];
+ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,weekend,imageUrl,imagesMediaId,imagesTitle,productType,subProduct,isHot,fn){
+    var images = [];
+    for(var i in imageUrl){
+        var obj = {
+            'url':imageUrl[i]
+        };
+        if(imagesMediaId[i]){
+            obj.media_id = imagesMediaId[i];
+        }
+        if(imagesTitle[i]){
+            obj.title = imagesTitle[i];
+        }
+        images.push(obj);
     }
     var product = new Product({
         'name':name,

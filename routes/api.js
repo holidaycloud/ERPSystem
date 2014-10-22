@@ -215,12 +215,14 @@ router.post('/product/save', function(request, response) {
     var endDate = request.body.endDate;
     var ent = request.body.ent;
     var weekend = request.body.weekend;
-    var images = request.body.images;
+    var imageUrl = request.body.imageUrl;
+    var imagesMediaId = request.body.imagesMediaId;
+    var imagesTitle = request.body.imagesTitle;
     var type = request.body.type;
     var subProduct = request.body.subProduct;
     var isHot = request.body.isHot;
 
-    ProductCtrl.save(name,introduction,gps,content,startDate,endDate,ent,weekend,images,type,subProduct,isHot,function(err,res){
+    ProductCtrl.save(name,introduction,gps,content,startDate,endDate,ent,weekend,imageUrl,imagesMediaId,imagesTitle,type,subProduct,isHot,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -231,9 +233,21 @@ router.post('/product/save', function(request, response) {
 
 router.post('/product/update', function(request, response) {
     var id = request.body.id;
-    var images = request.body.images;
-    if(!images){
-        images=[];
+    var imageUrl = request.body.imageUrl;
+    var imagesMediaId = request.body.imagesMediaId;
+    var imagesTitle = request.body.imagesTitle;
+    var images = [];
+    for(var i in imageUrl){
+        var obj = {
+            'url':imageUrl[i]
+        };
+        if(imagesMediaId[i]){
+            obj.media_id = imagesMediaId[i];
+        }
+        if(imagesTitle[i]){
+            obj.title = imagesTitle[i];
+        }
+        images.push(obj);
     }
     var obj = {
         'ent':request.body.ent,
