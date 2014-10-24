@@ -10,6 +10,7 @@ var PriceCtrl = require('./../control/priceCtrl');
 var OrderCtrl = require('./../control/orderCtrl');
 var TokenCtrl = require('./../control/tokenCtrl');
 var CustomerCtrl = require('./../control/customerCtrl');
+var StaticProductCtrl = require('./../control/staticProductCtrl');
 /**
  Member接口
  */
@@ -314,6 +315,37 @@ router.get('/product/nameList', function(request, response) {
     var ent = request.query.ent;
     var isRes = request.query.isRes;
     ProductCtrl.nameList(ent,isRes,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get('/product/staitcList', function(request, response) {
+    var type = request.body.type;
+    StaticProductCtrl.list(type,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get('/product/hotList', function(request, response) {
+    StaticProductCtrl.hotList(function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get('/product/recommendList', function(request, response) {
+    StaticProductCtrl.recommendList(function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
