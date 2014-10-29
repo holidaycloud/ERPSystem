@@ -61,7 +61,7 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                     cb(err,res);
                 });
             } else {
-                CustomerCtrl.register(results.getMember.ent,contactPhone,'',null,null,null,liveName,address,function(err,res){
+                CustomerCtrl.register(results.getMember.ent,contactPhone,'',null,null,null,liveName,null,function(err,res){
                     cb(err,res);
                 })
             }
