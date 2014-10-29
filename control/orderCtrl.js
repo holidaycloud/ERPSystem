@@ -42,15 +42,6 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 cb(err, product);
             });
         }
-        ,getCustomer: function (cb, results) {
-            if(openId){
-                CustomerCtrl.detailByWeixin(openId,function(err,res){
-                    cb(err,res);
-                });
-            } else {
-                cb(null,null);
-            }
-        }
         ,getMember: function (cb) {
             TokenCtrl.findToken(token, function (err, token) {
                 if (err) {
@@ -64,6 +55,17 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 }
             });
         }
+        ,getCustomer: ['getMember',function (cb, results) {
+            if(openId){
+                CustomerCtrl.detailByWeixin(openId,function(err,res){
+                    cb(err,res);
+                });
+            } else {
+                CustomerCtrl.register(results.getMember.ent,contactPhone,'',null,null,null,liveName,address,function(err,res){
+                    cb(err,res);
+                })
+            }
+        }]
         ,getPrice: function (cb) {
             PriceCtrl.getPrice(priceId, function (err, price) {
                 if (err) {
