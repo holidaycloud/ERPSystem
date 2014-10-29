@@ -10,6 +10,8 @@ var priceSchema = new Schema({
     'createTime': { type: Number, default: Date.now },
     'inventory':Number
 });
-
+priceSchema.index({'product':1});
+priceSchema.index({'product':1,'date':1});
+priceSchema.index({'product':1,'date':1,'inventory':1});
 var Price = db.model('Price',priceSchema);
 module.exports = Price;

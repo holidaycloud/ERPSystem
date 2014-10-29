@@ -19,6 +19,5 @@ var entSchema = new Schema({
         'sell':[{'ent':{'type': Schema.Types.ObjectId, 'ref': 'Ent'},'settle':Number}]
     }
 });
-
 var Ent = db.model('Ent',entSchema);
 module.exports = Ent;

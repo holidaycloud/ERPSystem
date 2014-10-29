@@ -8,6 +8,7 @@ var tokenSchema = new Schema({
     'token': String,
     'expireDate': Number
 });
-
+tokenSchema.index({'member':1});
+tokenSchema.index({'token':1,'expireDate':1});
 var Token = db.model('Token',tokenSchema);
 module.exports = Token;

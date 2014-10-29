@@ -23,7 +23,12 @@ var orderSchema = new Schema({
     refOrderId:String                                            //渠道方orderId
 
 });
-
+orderSchema.index({'_id':1,'status':1});
+orderSchema.index({'customer':1});
+orderSchema.index({'ent':1});
+orderSchema.index({'ent':1,'product':1});
+orderSchema.index({'ent':1,'startDate':1});
+orderSchema.index({'ent':1,'product':1,'startDate':1});
 var Order = db.model('Order', orderSchema);
 
 module.exports = Order;

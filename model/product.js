@@ -21,7 +21,8 @@ var productSchema = new Schema({
     'isHot':Boolean,
     'isRecommend':Boolean
 });
-
+productSchema.index({'ent':1});
+productSchema.index({'ent':1,'productType':1});
 
 
 var Product = db.model('Product', productSchema);

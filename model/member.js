@@ -12,6 +12,9 @@ var memberSchema = new Schema({
     'createDate':{'type': 'Number', 'default': Date.now},
     'isEnable': Boolean
 });
-
+memberSchema.index({'loginName':1,'passwd':1,'isEnable':1});
+memberSchema.index({'mobile':1,'passwd':1,'isEnable':1});
+memberSchema.index({'email':1,'passwd':1,'isEnable':1});
+memberSchema.index({'mobile':1,'ent':1});
 var Member = db.model('Member',memberSchema);
 module.exports = Member;
