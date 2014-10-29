@@ -114,7 +114,7 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
             };
             if( customer){
                 obj.customer =customer;
-            } else if(openId){
+            } else{
                 if(results.getCustomer){
                     obj.customer =results.getCustomer._id;
                 }
