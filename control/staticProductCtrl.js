@@ -4,8 +4,8 @@
 var StaticProduct = require('./../model/staticProduct');
 var StaticProductCtrl = function(){};
 
-StaticProductCtrl.list = function(ent,type,fn){
-    StaticProduct.find({'ent':ent,'productType':type},function(err,res){
+StaticProductCtrl.list = function(ent,fn){
+    StaticProduct.find({'ent':ent},function(err,res){
         fn(err,res);
     });
 };

@@ -324,9 +324,8 @@ router.get('/product/nameList', function(request, response) {
 });
 
 router.get('/product/staitcList', function(request, response) {
-    var type = request.query.type;
     var ent = request.query.ent;
-    StaticProductCtrl.list(ent,type,function(err,res){
+    StaticProductCtrl.list(ent,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
