@@ -8,6 +8,7 @@ var productSchema = new Schema({
     'name':String,
     'introduction':String,
     'price':Number,
+    'ent': {type: Schema.Types.ObjectId, ref: 'Ent'},
     'images':[{'url':String,'media_id':String,'title':String}],
     'isHot':Boolean,
     'isRecommend':Boolean

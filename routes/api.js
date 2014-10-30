@@ -324,8 +324,9 @@ router.get('/product/nameList', function(request, response) {
 });
 
 router.get('/product/staitcList', function(request, response) {
-    var type = request.body.type;
-    StaticProductCtrl.list(type,function(err,res){
+    var type = request.query.type;
+    var ent = request.query.ent;
+    StaticProductCtrl.list(ent,type,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -335,7 +336,8 @@ router.get('/product/staitcList', function(request, response) {
 });
 
 router.get('/product/hotList', function(request, response) {
-    StaticProductCtrl.hotList(function(err,res){
+    var ent = request.query.ent;
+    StaticProductCtrl.hotList(ent,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -345,7 +347,8 @@ router.get('/product/hotList', function(request, response) {
 });
 
 router.get('/product/recommendList', function(request, response) {
-    StaticProductCtrl.recommendList(function(err,res){
+    var ent = request.query.ent;
+    StaticProductCtrl.recommendList(ent,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
