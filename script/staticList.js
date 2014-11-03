@@ -1,6 +1,8 @@
 /**
  * Created by zzy on 2014/10/24.
  */
+db.staticproducts.drop();
+
 db.products.find().forEach(function(product){
     if(product.productType==0){
         var price = db.prices.findOne({"product":product._id,"date":{"$gte":Date.now()}});
