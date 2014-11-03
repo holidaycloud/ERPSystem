@@ -11,6 +11,7 @@ var OrderCtrl = require('./../control/orderCtrl');
 var TokenCtrl = require('./../control/tokenCtrl');
 var CustomerCtrl = require('./../control/customerCtrl');
 var StaticProductCtrl = require('./../control/staticProductCtrl');
+var AreaCtrl = require('./../control/areaCtrl');
 /**
  Member接口
  */
@@ -680,4 +681,36 @@ router.get('/customer/login', function(request, response) {
     });
 });
 
+//省份城市地区
+router.get('/province/list', function(request, response) {
+    AreaCtrl.provinceList(function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get('/city/list', function(request, response) {
+    var pid = request.query.pid;
+    AreaCtrl.cityList(pid,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get('/district/list', function(request, response) {
+    var cid = request.query.cid;
+    AreaCtrl.districtList(cid,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
 module.exports = router;
