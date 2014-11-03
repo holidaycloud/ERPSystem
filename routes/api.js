@@ -11,6 +11,7 @@ var OrderCtrl = require('./../control/orderCtrl');
 var TokenCtrl = require('./../control/tokenCtrl');
 var CustomerCtrl = require('./../control/customerCtrl');
 var StaticProductCtrl = require('./../control/staticProductCtrl');
+var DomainCtrl = require('./../control/DomainCtrl');
 var AreaCtrl = require('./../control/areaCtrl');
 /**
  Member接口
@@ -718,6 +719,30 @@ router.get('/city/list', function(request, response) {
 router.get('/district/list', function(request, response) {
     var cid = request.query.cid;
     AreaCtrl.districtList(cid,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+//Domain接口
+router.post("/domain/save",function(request, response){
+    var ent = request.body.ent;
+    var domain = request.body.domain;
+    DomainCtrl.save(ent,domain,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get("/domain/get",function(request, response){
+    var domain = request.query.domain;
+    DomainCtrl.getEnt(domain,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
