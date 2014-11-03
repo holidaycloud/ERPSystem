@@ -106,7 +106,7 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 'remark': remark,
                 'product': product,
                 'totalPrice': results.getPrice.price * quantity,
-                'status': 1,
+                'status': 0,
                 'ent': results.getProduct.ent,
                 'liveName': liveName,
                 'contactPhone': contactPhone,
@@ -142,6 +142,22 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
 //        console.log(err,results);
         fn(err, results.saveOrder);
     });
+};
+
+OrderCtrl.changeStatus = function(id,status,fn){
+    if(status==1){
+        Order.findOneAndUpdate({'_id': id, 'status': 0}, {'$set': {'status': 1}}, function (err, res) {
+            fn(err, res);
+        });
+    } else if(status==2){
+        Order.findOneAndUpdate({'_id': id, 'status': 1}, {'$set': {'status': 2}}, function (err, res) {
+            fn(err, res);
+        });
+    } else if(status==3){
+        Order.findOneAndUpdate({'_id': id, 'status': 0}, {'$set': {'status': 3}}, function (err, res) {
+            fn(err, res);
+        });
+    }
 };
 
 OrderCtrl.confirm = function (id, fn) {

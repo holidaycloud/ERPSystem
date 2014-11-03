@@ -6,7 +6,7 @@ var City = require('./../model/city');
 var District = require('./../model/district');
 var AreaCtrl = function(){};
 AreaCtrl.provinceList = function(fn){
-    Province.find()
+    Province.find({'isEnable':true})
         .exec(function(err,res){
            fn(err,res);
         });
