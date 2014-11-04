@@ -641,6 +641,19 @@ router.post('/customer/update', function(request, response) {
 //    });
 //});
 
+router.post('/customer/changePasswd', function(request, response) {
+    var id = request.body.id;
+    var oldPasswd = request.body.oldPasswd;
+    var newPasswd = request.body.newPasswd;
+    CustomerCtrl.changePasswd(id,oldPasswd,newPasswd,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post('/customer/weixinBind', function(request, response) {
     var ent = request.body.ent;
     var mobile = request.body.mobile;
