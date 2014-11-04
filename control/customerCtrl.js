@@ -37,18 +37,33 @@ CustomerCtrl.getCustomerByMobileOrRegister = function(ent,mobile,name,fn){
 };
 
 CustomerCtrl.register=function(ent,mobile,passwd,loginName,email,birthday,name,address,fn){
-    var customer = new Customer( {
-        'ent':ent,
-        'loginName':loginName,
-        'mobile':mobile,
-        'email':email,
-        'passwd':passwd,
-        'birthday':birthday,
-        'name':name,
-        'address':address
-    });
-    customer.save(function(err,res){
-        fn(err,res);
+    async.auto({
+        'checkMobile':function(cb){
+            Customer.count({'ent':ent,'mobile':mobile},function(err,res){
+               cb(err,res);
+            });
+        }
+        ,'saveCustomer':['checkMobile',function(cb,results){
+            if(results.checkMobile>0){
+                cb(new Error('手机号码已存在！'),null);
+            } else {
+                var customer = new Customer( {
+                    'ent':ent,
+                    'loginName':loginName,
+                    'mobile':mobile,
+                    'email':email,
+                    'passwd':passwd,
+                    'birthday':birthday,
+                    'name':name,
+                    'address':address
+                });
+                customer.save(function(err,res){
+                    cb(err,res);
+                });
+            }
+        }]
+    },function(err,results){
+        fn(err,results.saveCustomer);
     });
 };
 
