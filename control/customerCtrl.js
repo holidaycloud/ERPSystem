@@ -81,7 +81,15 @@ CustomerCtrl.detail = function(id,fn){
 
 CustomerCtrl.login = function(ent,mobile,passwd,fn){
     Customer.findOne({'ent':ent,'mobile':mobile,'passwd':passwd},function(err,customer){
-        fn(err,customer);
+        if(err){
+            fn(err,null);
+        } else {
+            if(customer){
+                fn(null,customer);
+            } else {
+                fn(new Error('用户名或密码错误!'),null);
+            }
+        }
     });
 };
 
