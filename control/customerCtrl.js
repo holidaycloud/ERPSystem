@@ -140,12 +140,12 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,fn){
 CustomerCtrl.changePasswd = function(id,oldPasswd,newPasswd,fn){
     Customer.findOneAndUpdate({'_id':id,'passwd':oldPasswd},{'$set':{'passwd':newPasswd}},function(err,res){
        if(err){
-           cb(err,null);
+           fn(err,null);
        } else {
            if(res){
-               cb(null,res);
+               fn(null,res);
            } else {
-               cb(new Error('密码错误'),null);
+               fn(new Error('密码错误'),null);
            }
        }
     });
