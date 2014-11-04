@@ -13,6 +13,7 @@ var CustomerCtrl = require('./../control/customerCtrl');
 var StaticProductCtrl = require('./../control/staticProductCtrl');
 var DomainCtrl = require('./../control/DomainCtrl');
 var AreaCtrl = require('./../control/areaCtrl');
+var FeedbackCtrl = require('./../control/feedbackCtrl');
 /**
  Member接口
  */
@@ -776,6 +777,22 @@ router.post("/domain/save",function(request, response){
 router.get("/domain/get",function(request, response){
     var domain = request.query.domain;
     DomainCtrl.getEnt(domain,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+//用户反馈
+router.post("/feedback/save",function(request, response){
+    var name = request.body.name;
+    var email = request.body.email;
+    var title = request.body.title;
+    var msg = request.body.msg;
+
+    FeedbackCtrl.save(name,email,title,msg,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
