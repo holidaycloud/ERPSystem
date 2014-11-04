@@ -3,7 +3,7 @@ var async = require('async');
 var EntCtrl = require('./../control/entCtrl');
 var ProductCtrl = function(){};
 
-ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,weekend,imageUrl,imagesMediaId,imagesTitle,productType,subProduct,isHot,fn){
+ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,weekend,imageUrl,imagesMediaId,imagesTitle,productType,subProduct,isHot,isRecommend,lable,classify,fn){
     var images = [];
     for(var i in imageUrl){
         var obj = {
@@ -29,7 +29,10 @@ ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,
         'images':images,
         'productType':productType,
         'subProduct':subProduct,
-        'isHot':isHot
+        'isHot':isHot,
+        'isRecommend':isRecommend,
+        'lable':lable,
+        'classify':classify
     });
 
     product.save(function(err,res){

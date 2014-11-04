@@ -224,8 +224,11 @@ router.post('/product/save', function(request, response) {
     var type = request.body.type;
     var subProduct = request.body.subProduct;
     var isHot = request.body.isHot;
+    var isRecommend = request.body.isRecommend;
+    var lable = request.body.lable;
+    var classify = request.body.classify;
 
-    ProductCtrl.save(name,introduction,gps,content,startDate,endDate,ent,weekend,imageUrl,imagesMediaId,imagesTitle,type,subProduct,isHot,function(err,res){
+    ProductCtrl.save(name,introduction,gps,content,startDate,endDate,ent,weekend,imageUrl,imagesMediaId,imagesTitle,type,subProduct,isHot,isRecommend,lable,classify,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -257,7 +260,10 @@ router.post('/product/update', function(request, response) {
         'images':images,
         'productType':request.body.type,
         'subProduct':request.body.subProduct?request.body.subProduct:[],
-        'isHot':request.body.isHot
+        'isHot':request.body.isHot,
+        'isRecommend':request.body.isRecommend,
+        'lable':request.body.lable,
+        'classify':request.body.classify
     };
     if(request.body.lat&&request.body.lon){
         obj.gps = {'lat':request.body.lat,'lon':request.body.lon};
