@@ -7,7 +7,7 @@ var async = require('async');
 var _ = require('underscore')._;
 var PriceCtrl = function(){};
 
-PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,inventory,weekendinventory,fn){
+PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,basePrice,weekendBasePrice,tradePrice,weekendTradePrice,inventory,weekendinventory,fn){
     async.auto({
         'getProduct':function(cb){
             Product.findById(productId,function(err,res){
@@ -38,6 +38,8 @@ PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,invento
                 var priceObj = new Price({
                     'product':results.getProduct._id,
                     'price':price,
+                    'basePrice':basePrice,
+                    'tradePrice':tradePrice,
                     'inventory':inventory
                 });
                 priceObj.save(function(err,res){
@@ -56,6 +58,8 @@ PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,invento
                         'product':results.getProduct._id,
                         'date': startDate+i*86400000,
                         'price':isWeekend?weekendPrice:price,
+                        'basePrice':isWeekend?weekendBasePrice:basePrice,
+                        'tradePrice':isWeekend?weekendTradePrice:tradePrice,
                         'inventory':isWeekend?weekendinventory:inventory
                     });
                 }
@@ -80,8 +84,8 @@ PriceCtrl.list = function(product,startDate,endDate,fn){
     });
 };
 
-PriceCtrl.update = function(id,price,inventory,fn){
-    Price.findByIdAndUpdate(id,{'$set':{'price':price,'inventory':inventory}},function(err,res){
+PriceCtrl.update = function(id,price,basePrice,tradePrice,inventory,fn){
+    Price.findByIdAndUpdate(id,{'$set':{'price':price,'basePrice':basePrice,'tradePrice':tradePrice,'inventory':inventory}},function(err,res){
         fn(err,res);
     });
 };

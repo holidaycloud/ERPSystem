@@ -367,9 +367,13 @@ router.post('/price/save', function(request, response) {
     var endDate = parseInt(request.body.endDate);
     var price = request.body.price;
     var weekendPrice = request.body.weekendPrice;
+    var basePrice = request.body.basePrice;
+    var weekendBasePrice = request.body.weekendBasePrice;
+    var tradePrice = request.body.tradePrice;
+    var weekendTradePrice = request.body.weekendTradePrice;
     var inventory = request.body.inventory;
     var weekendinventory = request.body.weekendinventory;
-    PriceCtrl.save(product,startDate,endDate,price,weekendPrice,inventory,weekendinventory,function(err,res){
+    PriceCtrl.save(product,startDate,endDate,price,weekendPrice,basePrice,weekendBasePrice,tradePrice,weekendTradePrice,inventory,weekendinventory,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -394,8 +398,10 @@ router.get('/price/list', function(request, response) {
 router.post('/price/update', function(request, response) {
     var id = request.body.id;
     var price = request.body.price;
+    var basePrice = request.body.basePrice;
+    var tradePrice = request.body.tradePrice;
     var inventory = request.body.inventory;
-    PriceCtrl.update(id,price,inventory,function(err,res){
+    PriceCtrl.update(id,price,basePrice,tradePrice,inventory,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {

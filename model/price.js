@@ -7,6 +7,8 @@ var priceSchema = new Schema({
     'product':{type:Schema.Types.ObjectId,ref:'Product'},
     'date': Number,
     'price':Number,
+    'basePrice':Number,
+    'tradePrice':Number,
     'createTime': { type: Number, default: Date.now },
     'inventory':Number
 });
