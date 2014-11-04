@@ -756,7 +756,15 @@ router.get('/district/list', function(request, response) {
 router.post("/domain/save",function(request, response){
     var ent = request.body.ent;
     var domain = request.body.domain;
-    DomainCtrl.save(ent,domain,function(err,res){
+    var address = request.body.address;
+    var lat = request.body.lat;
+    var lon = request.body.lon;
+    var email = request.body.email;
+    var logo = request.body.logo;
+    var qrCode = request.body.qrCode;
+    var title = request.body.title;
+    var tel = request.body.tel;
+    DomainCtrl.save(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
