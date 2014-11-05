@@ -263,7 +263,7 @@ router.post('/product/update', function(request, response) {
         'subProduct':request.body.subProduct?request.body.subProduct:[],
         'isHot':request.body.isHot,
         'isRecommend':request.body.isRecommend,
-        'lable':request.body.lable,
+        'lable':request.body.lable?request.body.lable:[],
         'classify':request.body.classify
     };
     if(request.body.lat&&request.body.lon){
