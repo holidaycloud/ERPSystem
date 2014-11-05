@@ -264,7 +264,6 @@ router.post('/product/update', function(request, response) {
         'isHot':request.body.isHot,
         'isRecommend':request.body.isRecommend,
         'lable':request.body.lable?request.body.lable:[],
-        'classify':request.body.classify
     };
     if(request.body.lat&&request.body.lon){
         obj.gps = {'lat':request.body.lat,'lon':request.body.lon};
@@ -290,8 +289,9 @@ router.post('/product/update', function(request, response) {
     if(request.body.weekend){
         obj.weekend = request.body.weekend;
     }
-
-    console.log(obj);
+    if(request.body.classify){
+        obj.classify = request.body.classify;
+    }
     ProductCtrl.update(id,obj,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
