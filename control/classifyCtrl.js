@@ -28,7 +28,7 @@ ClassifyCtrl.update = function(id,name,isEnable,fn){
 
 ClassifyCtrl.detail = function(id,fn){
     Classify.findById(id,function(err,res){
-        cb(err,res);
+        fn(err,res);
     });
 };
 
