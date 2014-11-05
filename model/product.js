@@ -21,7 +21,7 @@ var productSchema = new Schema({
     'isHot':Boolean,
     'isRecommend':Boolean,
     'lable':[String],
-    'classify':Number
+    'classify':{type: Schema.Types.ObjectId, ref: 'Classify'}
 });
 productSchema.index({'ent':1});
 productSchema.index({'ent':1,'productType':1});

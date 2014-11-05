@@ -14,6 +14,7 @@ var StaticProductCtrl = require('./../control/staticProductCtrl');
 var DomainCtrl = require('./../control/DomainCtrl');
 var AreaCtrl = require('./../control/areaCtrl');
 var FeedbackCtrl = require('./../control/feedbackCtrl');
+var ClassifyCtrl = require('./../control/classifyCtrl');
 /**
  Member接口
  */
@@ -794,6 +795,54 @@ router.post("/feedback/save",function(request, response){
     var msg = request.body.msg;
 
     FeedbackCtrl.save(name,email,title,msg,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+//产品分类
+router.post("/classify/save",function(request, response){
+    var ent = request.body.ent;
+    var name = request.body.name;
+    ClassifyCtrl.save(ent,name,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.post("/classify/update",function(request, response){
+    var id = request.body.id;
+    var name = request.body.name;
+    var isEnable = request.body.isEnable;
+    ClassifyCtrl.update(id,name,isEnable,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get("/classify/list",function(request, response){
+    var ent = request.query.ent;
+    ClassifyCtrl.list(ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get("/classify/detail",function(request, response){
+    var id = request.query.id;
+    ClassifyCtrl.detail(id,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
