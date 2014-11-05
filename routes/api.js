@@ -263,7 +263,8 @@ router.post('/product/update', function(request, response) {
         'subProduct':request.body.subProduct?request.body.subProduct:[],
         'isHot':request.body.isHot,
         'isRecommend':request.body.isRecommend,
-        'lable':request.body.lable?request.body.lable:[]
+        'lable':request.body.lable?request.body.lable:[],
+        'classify':request.body.classify?request.body.classify:null
     };
     if(request.body.lat&&request.body.lon){
         obj.gps = {'lat':request.body.lat,'lon':request.body.lon};
@@ -288,9 +289,6 @@ router.post('/product/update', function(request, response) {
     }
     if(request.body.weekend){
         obj.weekend = request.body.weekend;
-    }
-    if(request.body.classify){
-        obj.classify = request.body.classify;
     }
     ProductCtrl.update(id,obj,function(err,res){
         if(err){
