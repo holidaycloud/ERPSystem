@@ -229,7 +229,7 @@ router.post('/product/save', function(request, response) {
     var isRecommend = request.body.isRecommend;
     var lable = request.body.lable;
     var classify = request.body.classify;
-
+    console.log(name,introduction,gps,content,startDate,endDate,ent,weekend,imageUrl,imagesMediaId,imagesTitle,type,subProduct,isHot,isRecommend,lable,classify);
     ProductCtrl.save(name,introduction,gps,content,startDate,endDate,ent,weekend,imageUrl,imagesMediaId,imagesTitle,type,subProduct,isHot,isRecommend,lable,classify,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
