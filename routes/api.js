@@ -787,6 +787,7 @@ router.get("/domain/get",function(request, response){
 
 //用户反馈
 router.post("/feedback/save",function(request, response){
+    var ent = request.body.ent;
     var name = request.body.name;
     var email = request.body.email;
     var title = request.body.title;

@@ -4,6 +4,7 @@
 var Schema = require('mongoose').Schema;
 
 var feedbackSchema = new Schema({
+    'ent':{type:Schema.Types.ObjectId,ref:'Ent'},
     'name':String,
     'email':String,
     'title':String,

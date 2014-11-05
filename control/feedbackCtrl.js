@@ -4,8 +4,9 @@
 var Feedback = require('./../model/feedback');
 var FeedbackCtrl = function(){};
 
-FeedbackCtrl.save = function(name,email,title,msg,fn){
+FeedbackCtrl.save = function(name,email,title,msg,ent,fn){
     var feedback = new Feedback({
+        'ent':ent,
         'name':name,
         'email':email,
         'title':title,
