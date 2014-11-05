@@ -263,7 +263,7 @@ router.post('/product/update', function(request, response) {
         'subProduct':request.body.subProduct?request.body.subProduct:[],
         'isHot':request.body.isHot,
         'isRecommend':request.body.isRecommend,
-        'lable':request.body.lable?request.body.lable:[],
+        'lable':request.body.lable?request.body.lable:[]
     };
     if(request.body.lat&&request.body.lon){
         obj.gps = {'lat':request.body.lat,'lon':request.body.lon};
