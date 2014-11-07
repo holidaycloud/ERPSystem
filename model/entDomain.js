@@ -12,8 +12,10 @@ var entDomainSchema = new Schema({
     'logo':String,
     'qrCode':String,
     'title':String,
-    'tel':String
+    'tel':String,
+    'isEnable':Boolean
 });
 entDomainSchema.index({'ent':1});
+entDomainSchema.index({'domain':1});
 var EntDomain = db.model('EntDomain',entDomainSchema);
 module.exports = EntDomain;

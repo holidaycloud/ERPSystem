@@ -3,7 +3,7 @@
  */
 var EntDomain = require('./../model/entDomain');
 var DomainCtrl = function(){};
-DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,fn){
+DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,isEnable,fn){
     var entDomain = new EntDomain({
         'ent':ent,
         'domain':domain,
@@ -13,16 +13,29 @@ DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,te
         'logo':logo,
         'qrCode':qrCode,
         'title':title,
-        'tel':tel
+        'tel':tel,
+        'isEnable':isEnable
     });
     entDomain.save(function(err,res){
         fn(err,res);
     });
 };
 
+DomainCtrl.update = function(id,obj,fn){
+    entDomain.findByIdAndUpdate(id,{'$set':obj},function(err,res){
+        fn(err,res);
+    });
+};
+
 DomainCtrl.getEnt = function(domain,fn){
     EntDomain.findOne({'domain':domain},function(err,res){
-       fn(err,res);
+        fn(err,res);
+    });
+};
+
+DomainCtrl.detail = function(ent,fn){
+    EntDomain.findOne({'ent':ent},function(err,res){
+        fn(err,res);
     });
 };
 
