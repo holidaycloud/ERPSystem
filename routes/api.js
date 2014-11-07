@@ -11,6 +11,10 @@ var OrderCtrl = require('./../control/orderCtrl');
 var TokenCtrl = require('./../control/tokenCtrl');
 var CustomerCtrl = require('./../control/customerCtrl');
 var StaticProductCtrl = require('./../control/staticProductCtrl');
+var DomainCtrl = require('./../control/DomainCtrl');
+var AreaCtrl = require('./../control/areaCtrl');
+var FeedbackCtrl = require('./../control/feedbackCtrl');
+var ClassifyCtrl = require('./../control/classifyCtrl');
 /**
  Member接口
  */
@@ -222,8 +226,10 @@ router.post('/product/save', function(request, response) {
     var type = request.body.type;
     var subProduct = request.body.subProduct;
     var isHot = request.body.isHot;
-
-    ProductCtrl.save(name,introduction,gps,content,startDate,endDate,ent,weekend,imageUrl,imagesMediaId,imagesTitle,type,subProduct,isHot,function(err,res){
+    var isRecommend = request.body.isRecommend;
+    var lable = request.body.lable;
+    var classify = request.body.classify;
+    ProductCtrl.save(name,introduction,gps,content,startDate,endDate,ent,weekend,imageUrl,imagesMediaId,imagesTitle,type,subProduct,isHot,isRecommend,lable,classify,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -255,7 +261,10 @@ router.post('/product/update', function(request, response) {
         'images':images,
         'productType':request.body.type,
         'subProduct':request.body.subProduct?request.body.subProduct:[],
-        'isHot':request.body.isHot
+        'isHot':request.body.isHot,
+        'isRecommend':request.body.isRecommend,
+        'lable':request.body.lable?request.body.lable:[],
+        'classify':request.body.classify?request.body.classify:null
     };
     if(request.body.lat&&request.body.lon){
         obj.gps = {'lat':request.body.lat,'lon':request.body.lon};
@@ -365,9 +374,13 @@ router.post('/price/save', function(request, response) {
     var endDate = parseInt(request.body.endDate);
     var price = request.body.price;
     var weekendPrice = request.body.weekendPrice;
+    var basePrice = request.body.basePrice;
+    var weekendBasePrice = request.body.weekendBasePrice;
+    var tradePrice = request.body.tradePrice;
+    var weekendTradePrice = request.body.weekendTradePrice;
     var inventory = request.body.inventory;
     var weekendinventory = request.body.weekendinventory;
-    PriceCtrl.save(product,startDate,endDate,price,weekendPrice,inventory,weekendinventory,function(err,res){
+    PriceCtrl.save(product,startDate,endDate,price,weekendPrice,basePrice,weekendBasePrice,tradePrice,weekendTradePrice,inventory,weekendinventory,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -392,8 +405,10 @@ router.get('/price/list', function(request, response) {
 router.post('/price/update', function(request, response) {
     var id = request.body.id;
     var price = request.body.price;
+    var basePrice = request.body.basePrice;
+    var tradePrice = request.body.tradePrice;
     var inventory = request.body.inventory;
-    PriceCtrl.update(id,price,inventory,function(err,res){
+    PriceCtrl.update(id,price,basePrice,tradePrice,inventory,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -470,6 +485,18 @@ router.post('/order/traderOrder', function(request, response) {
 router.post('/order/confirm', function(request, response) {
     var orderID = request.body.orderID;
     OrderCtrl.confirm(orderID,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.post('/order/changeStatus', function(request, response) {
+    var orderID = request.body.orderID;
+    var status = request.body.status;
+    OrderCtrl.changeStatus(orderID,status,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -615,6 +642,19 @@ router.post('/customer/update', function(request, response) {
 //    });
 //});
 
+router.post('/customer/changePasswd', function(request, response) {
+    var id = request.body.id;
+    var oldPasswd = request.body.oldPasswd;
+    var newPasswd = request.body.newPasswd;
+    CustomerCtrl.changePasswd(id,oldPasswd,newPasswd,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post('/customer/weixinBind', function(request, response) {
     var ent = request.body.ent;
     var mobile = request.body.mobile;
@@ -680,4 +720,186 @@ router.get('/customer/login', function(request, response) {
     });
 });
 
+//省份城市地区
+router.get('/province/list', function(request, response) {
+    AreaCtrl.provinceList(function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get('/city/list', function(request, response) {
+    var pid = request.query.pid;
+    AreaCtrl.cityList(pid,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get('/district/list', function(request, response) {
+    var cid = request.query.cid;
+    AreaCtrl.districtList(cid,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+//Domain接口
+router.post("/domain/save",function(request, response){
+    var ent = request.body.ent;
+    var domain = request.body.domain;
+    var address = request.body.address;
+    var lat = request.body.lat;
+    var lon = request.body.lon;
+    var email = request.body.email;
+    var logo = request.body.logo;
+    var qrCode = request.body.qrCode;
+    var title = request.body.title;
+    var tel = request.body.tel;
+    var isEnable = request.body.isEnable;
+    DomainCtrl.save(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,isEnable,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.post("/domain/update",function(request, response){
+    var id = request.body.id;
+    var obj ={
+        'isEnable':request.body.isEnable
+    };
+    if(request.body.domain){
+        obj.domain = request.body.domain;
+    }
+    if(request.body.address){
+        obj.address = request.body.address;
+    }
+    if(request.body.lat){
+        obj.gps = {
+            'lat':request.body.lat,
+            'lon':request.body.lon
+        };
+    }
+    if(request.body.email){
+        obj.email = request.body.email;
+    }
+    if(request.body.logo){
+        obj.logo = request.body.logo;
+    }
+    if(request.body.qrCode){
+        obj.qrCode = request.body.qrCode;
+    }
+    if(request.body.title){
+        obj.title = request.body.title;
+    }
+    if(request.body.tel){
+        obj.tel = request.body.tel;
+    }
+    DomainCtrl.update(id,obj,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get("/domain/detail",function(request, response){
+    var ent = request.query.ent;
+    DomainCtrl.detail(ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get("/domain/get",function(request, response){
+    var domain = request.query.domain;
+    DomainCtrl.getEnt(domain,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+//用户反馈
+router.post("/feedback/save",function(request, response){
+    var ent = request.body.ent;
+    var name = request.body.name;
+    var email = request.body.email;
+    var title = request.body.title;
+    var msg = request.body.msg;
+
+    FeedbackCtrl.save(name,email,title,msg,ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+//产品分类
+router.post("/classify/save",function(request, response){
+    var ent = request.body.ent;
+    var name = request.body.name;
+    ClassifyCtrl.save(ent,name,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.post("/classify/update",function(request, response){
+    var id = request.body.id;
+    var name = request.body.name;
+    var isEnable = request.body.isEnable;
+    ClassifyCtrl.update(id,name,isEnable,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get("/classify/list",function(request, response){
+    var ent = request.query.ent;
+    ClassifyCtrl.list(ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get("/classify/detail",function(request, response){
+    var id = request.query.id;
+    ClassifyCtrl.detail(id,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
 module.exports = router;

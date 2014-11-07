@@ -19,7 +19,9 @@ var productSchema = new Schema({
     'inventoryType':{type: Number, default: 1}, //0:无库存类型 1:普通库存查询inventory表 2:时间段库存查询库存消耗表 3:子产品单独库存查询子产品状态数量
     'subProduct':[{type:Schema.Types.ObjectId,ref:'Product'}], //包含的子产品
     'isHot':Boolean,
-    'isRecommend':Boolean
+    'isRecommend':Boolean,
+    'lable':[String],
+    'classify':{type: Schema.Types.ObjectId, ref: 'Classify'}
 });
 productSchema.index({'ent':1});
 productSchema.index({'ent':1,'productType':1});
