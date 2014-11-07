@@ -5,17 +5,36 @@ var EntDomain = require('./../model/entDomain');
 var DomainCtrl = function(){};
 DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,isEnable,fn){
     var obj = {
-        'ent': ent,
-        'domain': domain,
-        'address': address,
-        'gps': {'lat': lat, 'lon': lon},
-        'email': email,
-        'logo': logo,
-        'qrCode': qrCode,
-        'title': title,
-        'tel': tel,
+        'ent':ent,
         'isEnable': isEnable
     };
+    if(domain){
+        obj.domain=domain;
+    }
+    if(address){
+        obj.domain=address;
+    }
+    if(lat){
+        obj.gps={
+            'lat':lat,
+            'lon':lon
+        };
+    }
+    if(email){
+        obj.domain=email;
+    }
+    if(logo){
+        obj.domain=logo;
+    }
+    if(qrCode){
+        obj.domain=qrCode;
+    }
+    if(title){
+        obj.domain=title;
+    }
+    if(tel){
+        obj.domain=tel;
+    }
     EntDomain.update({'ent':ent},{'$set':obj},{'upsert':true},function(err,res){
         fn(err,res);
     })
