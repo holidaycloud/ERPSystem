@@ -16,7 +16,7 @@ DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,te
         'tel': tel,
         'isEnable': isEnable
     };
-    EntDomain.update({'ent':id},{'$set':obj},{'upsert':true},function(err,res){
+    EntDomain.update({'ent':ent},{'$set':obj},{'upsert':true},function(err,res){
         fn(err,res);
     })
 };
