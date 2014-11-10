@@ -21,7 +21,6 @@ var orderSchema = new Schema({
     ent:{'type': Schema.Types.ObjectId, 'ref': 'Ent'},       //供应商ent
     price:{},
     refOrderId:String                                            //渠道方orderId
-
 });
 orderSchema.index({'_id':1,'status':1});
 orderSchema.index({'customer':1});
