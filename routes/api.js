@@ -15,6 +15,7 @@ var DomainCtrl = require('./../control/DomainCtrl');
 var AreaCtrl = require('./../control/areaCtrl');
 var FeedbackCtrl = require('./../control/feedbackCtrl');
 var ClassifyCtrl = require('./../control/classifyCtrl');
+var ReportCtrl = require('./../control/reportCtrl');
 /**
  Member接口
  */
@@ -895,6 +896,19 @@ router.get("/classify/list",function(request, response){
 router.get("/classify/detail",function(request, response){
     var id = request.query.id;
     ClassifyCtrl.detail(id,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get('/report/sale',function(request,response){
+    var ent = request.query.ent;
+    var startDate = request.query.startDate;
+    var endDate = request.query.endDate;
+    ReportCtrl.saleReport(ent,startDate,endDate,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
