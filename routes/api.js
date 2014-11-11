@@ -956,4 +956,15 @@ router.get('/card/balance',function(request,response){
     });
 });
 
+router.get('/card/detail',function(request,response){
+    var cardNo = request.query.cardNo;
+    CardCtrl.detail(cardNo,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 module.exports = router;

@@ -45,6 +45,27 @@ CardCtrl.initCard = function(token,cardNum,fn){
     });
 };
 
+CardCtrl.detail = function(cardNum,fn){
+    async.auto({
+        'getBalance':function(cb){
+            CardCtrl.balance(cardNum,function(err,res){
+                cb(err,res);
+            });
+        },
+        'getConsumeList':['getBalance',function(cb,results){
+            CardLog.find({'card':results.getBalance._id},function(err,res){
+                cb(err,res);
+            });
+        }]
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            fn(null,{'balance':results.getBalance.balance,'list':results.getConsumeList})
+        }
+    });
+};
+
 CardCtrl.consume = function(token,cardNum,cardMoney,fn){
     async.auto({
         'getMember':function(cb){
