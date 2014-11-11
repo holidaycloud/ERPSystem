@@ -97,7 +97,7 @@ CardCtrl.consume = function(token,cardNum,cardMoney,fn){
             });
         },
         'consume':['getMember','getBalance',function(cb,results){
-            if(results.getBalance.balance+cardMoney>0){
+            if(results.getBalance.balance+cardMoney>=0){
                 var cardLog = new CardLog({
                     'card':results.getBalance._id,
                     'consume':cardMoney,
