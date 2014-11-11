@@ -54,7 +54,7 @@ CardCtrl.detail = function(cardNum,fn){
         },
         'getConsumeList':['getBalance',function(cb,results){
             CardLog.find({'card':results.getBalance._id})
-                .populate('member')
+                .populate({'path':'member','select':'loginName'})
                 .exec(function(err,res){
                     cb(err,res);
                 });
