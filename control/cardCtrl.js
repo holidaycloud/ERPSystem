@@ -53,9 +53,11 @@ CardCtrl.detail = function(cardNum,fn){
             });
         },
         'getConsumeList':['getBalance',function(cb,results){
-            CardLog.find({'card':results.getBalance._id},function(err,res){
-                cb(err,res);
-            });
+            CardLog.find({'card':results.getBalance._id})
+                .populate('member')
+                .exec(function(err,res){
+                    cb(err,res);
+                });
         }]
     },function(err,results){
         if(err){
