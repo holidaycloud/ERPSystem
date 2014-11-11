@@ -16,6 +16,7 @@ var AreaCtrl = require('./../control/areaCtrl');
 var FeedbackCtrl = require('./../control/feedbackCtrl');
 var ClassifyCtrl = require('./../control/classifyCtrl');
 var ReportCtrl = require('./../control/reportCtrl');
+var CardCtrl = require('./../control/cardCtrl');
 /**
  Member接口
  */
@@ -904,11 +905,38 @@ router.get("/classify/detail",function(request, response){
     });
 });
 
+//Report
 router.get('/report/sale',function(request,response){
     var ent = request.query.ent;
     var startDate = request.query.startDate;
     var endDate = request.query.endDate;
     ReportCtrl.saleReport(ent,startDate,endDate,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+//Card
+router.post('/card/init',function(request,response){
+    var cardNo = request.body.cardNo;
+    var token = request.body.token;
+    CardCtrl.initCard(token,cardNo,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.post('/card/consume',function(request,response){
+    var cardNo = request.body.cardNo;
+    var cardMoney = request.body.cardMoney;
+    var token = request.body.token;
+    CardCtrl.consume(token,cardNo,cardMoney,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
