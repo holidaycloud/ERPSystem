@@ -29,6 +29,16 @@ CardCtrl.initCard = function(token,cardNum,fn){
             card.save(function(err,res){
                 cb(err,res);
             });
+        }],
+        'initConsume':['getMember','initCard',function(cb,result){
+            var cardLog = new CardLog({
+                'card':results.initCard._id,
+                'consume':0,
+                'member':results.getMember._id
+            });
+            cardLog.save(function(err,res){
+                cb(err,res);
+            });
         }]
     },function(err,results){
         fn(err,results.initCard);
