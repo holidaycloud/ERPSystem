@@ -56,7 +56,7 @@ CardCtrl.consume = function(token,cardNum,cardMoney,fn){
             });
         },
         'consume':['getMember','getBalance',function(cb,results){
-            if(results.getBalance.balance-cardMoney>0){
+            if(results.getBalance.balance+cardMoney>0){
                 var cardLog = new CardLog({
                     'card':results.getBalance._id,
                     'consume':cardMoney,
@@ -94,7 +94,7 @@ CardCtrl.balance = function(cardNum,fn){
           aggregate.match({'card':results.getCard._id});
           aggregate.group({'_id':'$card','balance':{'$sum':'$consume'}});
           aggregate.exec(function(err,res){
-              cb(err,res);
+              cb(err,res[0]);
           });
       }]
   },function(err,results){

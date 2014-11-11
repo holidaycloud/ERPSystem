@@ -934,7 +934,7 @@ router.post('/card/init',function(request,response){
 
 router.post('/card/consume',function(request,response){
     var cardNo = request.body.cardNo;
-    var cardMoney = request.body.cardMoney;
+    var cardMoney = parseFloat(request.body.cardMoney);
     var token = request.body.token;
     CardCtrl.consume(token,cardNo,cardMoney,function(err,res){
         if(err){
