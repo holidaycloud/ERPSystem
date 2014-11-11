@@ -27,7 +27,15 @@ CardCtrl.initCard = function(token,cardNum,fn){
                 'member':results.getMember._id
             });
             card.save(function(err,res){
-                cb(err,res);
+                if(err){
+                    if(err.code==11000){
+                        cb(new Error('卡号已存在'),null);
+                    } else {
+                        cb(err,null);
+                    }
+                } else {
+                    cb(null,res);
+                }
             });
         }],
         'initConsume':['getMember','initCard',function(cb,results){
