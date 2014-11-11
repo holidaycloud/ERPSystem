@@ -932,6 +932,16 @@ router.post('/card/init',function(request,response){
     });
 });
 
+router.get('/card/list',function(request,response){
+    CardCtrl.list(function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post('/card/consume',function(request,response){
     var cardNo = request.body.cardNo;
     var cardMoney = parseFloat(request.body.cardMoney);

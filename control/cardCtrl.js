@@ -115,6 +115,14 @@ CardCtrl.consume = function(token,cardNum,cardMoney,fn){
     });
 };
 
+CardCtrl.list = function(fn){
+    var aggregate = CardLog.aggregate();
+    aggregate.group({'_id':'$card','balance':{'$sum':'$consume'}});
+    aggregate.exec(function(err,res){
+        fn(err,res);
+    });
+};
+
 CardCtrl.balance = function(cardNum,fn){
   async.auto({
       'getCard':function(cb){
