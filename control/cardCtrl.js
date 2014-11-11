@@ -30,7 +30,7 @@ CardCtrl.initCard = function(token,cardNum,fn){
                 cb(err,res);
             });
         }],
-        'initConsume':['getMember','initCard',function(cb,result){
+        'initConsume':['getMember','initCard',function(cb,results){
             var cardLog = new CardLog({
                 'card':results.initCard._id,
                 'consume':0,
