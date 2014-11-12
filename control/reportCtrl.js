@@ -4,6 +4,7 @@
 
 var Order = require('./../model/order');
 var ProductCtrl = require('./productCtrl');
+var OrderCtrl = require('./orderCtrl');
 var async = require('async');
 var ReportCtrl = function(){};
 ReportCtrl.saleReport = function(ent,startDate,endDate,fn){
@@ -75,6 +76,34 @@ ReportCtrl.saleReport = function(ent,startDate,endDate,fn){
 };
 
 ReportCtrl.saleDetail = function(page,pageSize,start,end,ent,fn){
-
+    async.auto({
+        'getOrder':function(cb){
+            OrderCtrl.list(page,pageSize,ent,null,start,end,function(err,res){
+                cb(err,res);
+            });
+        }
+        ,'createReport':['getOrder',function(cb,results){
+            var orders = results.getOrder.orders;
+            var res = {};
+            res.totalSize = results.getOrder.totalSize;
+            res.orders=[];
+            orders.forEach(function(order){
+                res.orders.push({
+                    'createTime':order.orderDate,
+                    'cusName':order.liveName,
+                    'cusType':'',
+                    'contact':order.contactPhone,
+                    'pdtName':order.product.name,
+                    'quantity':order.quantity,
+                    'total':order.totalPrice,
+                    'payWay':order.payWay,
+                    'remark':order.remark
+                });
+            });
+            cb(null,res);
+        }]
+    },function(err,results){
+        fn(err,results.createReport);
+    });
 };
 module.exports = ReportCtrl;

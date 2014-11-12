@@ -919,6 +919,22 @@ router.get('/report/revenue',function(request,response){
     });
 });
 
+router.get('/report/revenueDetail',function(request,response){
+    var page = request.query.page||0;
+    var pageSize = request.query.pageSize||25;
+    var ent = request.query.ent;
+    var start = request.query.start;
+    var end = request.query.end;
+
+    ReportCtrl.saleDetail(page,pageSize,start,end,ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 //Card
 router.post('/card/init',function(request,response){
     var cardNo = request.body.cardNo;
