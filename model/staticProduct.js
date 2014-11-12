@@ -11,7 +11,9 @@ var productSchema = new Schema({
     'ent': {type: Schema.Types.ObjectId, ref: 'Ent'},
     'images':[{'url':String,'media_id':String,'title':String}],
     'isHot':Boolean,
-    'isRecommend':Boolean
+    'isRecommend':Boolean,
+    'lable':[String],
+    'classify':{type: Schema.Types.ObjectId, ref: 'Classify'}
 });
 
 var StaticProduct = db.model('StaticProduct', productSchema);

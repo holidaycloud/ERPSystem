@@ -345,6 +345,18 @@ router.get('/product/staitcList', function(request, response) {
     });
 });
 
+router.get('/product/classifyList', function(request, response) {
+    var ent = request.query.ent;
+    var classify = request.query.classify;
+    StaticProductCtrl.classifyList(ent,classify,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/product/hotList', function(request, response) {
     var ent = request.query.ent;
     StaticProductCtrl.hotList(ent,function(err,res){

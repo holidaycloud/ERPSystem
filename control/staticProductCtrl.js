@@ -22,4 +22,14 @@ StaticProductCtrl.recommendList = function(ent,fn){
     });
 };
 
+StaticProductCtrl.classifyList = function(ent,classify,fn){
+    var query = StaticProduct.find({'ent':ent});
+    if(classify){
+        query.where({'classify':classify});
+    }
+   query.exec(function(err,res){
+        fn(err,res);
+    });
+};
+
 module.exports = StaticProductCtrl;

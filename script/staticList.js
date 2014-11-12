@@ -16,7 +16,9 @@ db.products.find().forEach(function(product){
                 'images':product.images,
                 'isHot':product.isHot,
                 'isRecommend':product.isRecommend,
-                'ent':product.ent
+                'ent':product.ent,
+                'lable':product.lable,
+                'classify':product.classify
             });
         }
     } else if(product.productType==3){
@@ -31,7 +33,9 @@ db.products.find().forEach(function(product){
                 'images':product.images,
                 'isHot':product.isHot,
                 'isRecommend':product.isRecommend,
-                'ent':product.ent
+                'ent':product.ent,
+                'lable':product.lable,
+                'classify':product.classify
             });
         }
     }
