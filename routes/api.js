@@ -908,9 +908,9 @@ router.get("/classify/detail",function(request, response){
 //Report
 router.get('/report/revenue',function(request,response){
     var ent = request.query.ent;
-    var startDate = request.query.startDate;
-    var endDate = request.query.endDate;
-    ReportCtrl.saleReport(ent,startDate,endDate,function(err,res){
+    var start = request.query.start;
+    var end = request.query.end;
+    ReportCtrl.saleReport(ent,start,end,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {

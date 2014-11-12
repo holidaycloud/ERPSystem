@@ -73,4 +73,8 @@ ReportCtrl.saleReport = function(ent,startDate,endDate,fn){
     });
 
 };
+
+ReportCtrl.saleDetail = function(page,pageSize,start,end,ent,fn){
+
+};
 module.exports = ReportCtrl;
