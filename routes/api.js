@@ -906,7 +906,7 @@ router.get("/classify/detail",function(request, response){
 });
 
 //Report
-router.get('/report/sale',function(request,response){
+router.get('/report/revenue',function(request,response){
     var ent = request.query.ent;
     var startDate = request.query.startDate;
     var endDate = request.query.endDate;
