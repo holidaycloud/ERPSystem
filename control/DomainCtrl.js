@@ -12,7 +12,7 @@ DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,te
         obj.domain=domain;
     }
     if(address){
-        obj.domain=address;
+        obj.address=address;
     }
     if(lat){
         obj.gps={
@@ -21,19 +21,19 @@ DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,te
         };
     }
     if(email){
-        obj.domain=email;
+        obj.email=email;
     }
     if(logo){
-        obj.domain=logo;
+        obj.logo=logo;
     }
     if(qrCode){
-        obj.domain=qrCode;
+        obj.qrCode=qrCode;
     }
     if(title){
-        obj.domain=title;
+        obj.title=title;
     }
     if(tel){
-        obj.domain=tel;
+        obj.tel=tel;
     }
     EntDomain.update({'ent':ent},{'$set':obj},{'upsert':true},function(err,res){
         fn(err,res);

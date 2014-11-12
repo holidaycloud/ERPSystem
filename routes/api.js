@@ -768,6 +768,7 @@ router.post("/domain/save",function(request, response){
     var title = request.body.title;
     var tel = request.body.tel;
     var isEnable = request.body.isEnable;
+    console.log(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,isEnable);
     DomainCtrl.save(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,isEnable,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
