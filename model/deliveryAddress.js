@@ -12,7 +12,7 @@ var deliveryAddressSchema = new Schema({
     'customer':{type:Schema.Types.ObjectId,ref:'Customer'},
     'isEnable':{type:Boolean,default:true}
 });
-customerSchema.index({'customer':1});
+deliveryAddressSchema.index({'customer':1});
 
 var DeliveryAddress = db.model('DeliveryAddress',deliveryAddressSchema);
 module.exports = DeliveryAddress;
