@@ -18,6 +18,7 @@ var ClassifyCtrl = require('./../control/classifyCtrl');
 var ReportCtrl = require('./../control/reportCtrl');
 var CardCtrl = require('./../control/cardCtrl');
 var AddressCtrl = require('./../control/addressCtrl');
+var InvoiceCtrl = require('./../control/invoiceCtrl');
 /**
  Member接口
  */
@@ -1029,6 +1030,20 @@ router.post('/address/save',function(request,response){
 router.get('/address/get',function(request,response){
     var customer = request.query.customer;
     AddressCtrl.getAddress(customer,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+//Invoice
+router.post('/invoice/save',function(request,response){
+    var order = request.body.order;
+    var type = request.body.type;
+    var title = request.body.title;
+    InvoiceCtrl.save(order,type,title,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
