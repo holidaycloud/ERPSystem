@@ -17,6 +17,7 @@ var FeedbackCtrl = require('./../control/feedbackCtrl');
 var ClassifyCtrl = require('./../control/classifyCtrl');
 var ReportCtrl = require('./../control/reportCtrl');
 var CardCtrl = require('./../control/cardCtrl');
+var AddressCtrl = require('./../control/addressCtrl');
 /**
  Member接口
  */
@@ -1001,6 +1002,33 @@ router.get('/card/balance',function(request,response){
 router.get('/card/detail',function(request,response){
     var cardNo = request.query.cardNo;
     CardCtrl.detail(cardNo,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+//DeliveryAddress
+router.post('/address/save',function(request,response){
+    var province = request.body.province;
+    var city = request.body.city;
+    var district = request.body.district;
+    var address = request.body.address;
+    var customer = request.body.customer;
+    AddressCtrl.save(province,city,district,address,customer,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get('/address/get',function(request,response){
+    var customer = request.query.customer;
+    AddressCtrl.getAddress(customer,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
