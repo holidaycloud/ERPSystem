@@ -348,7 +348,9 @@ router.get('/product/staitcList', function(request, response) {
 router.get('/product/classifyList', function(request, response) {
     var ent = request.query.ent;
     var classify = request.query.classify;
-    StaticProductCtrl.classifyList(ent,classify,function(err,res){
+    var page = request.query.page||0;
+    var pageSize = request.query.pageSize||25;
+    StaticProductCtrl.classifyList(page,pageSize,ent,classify,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
