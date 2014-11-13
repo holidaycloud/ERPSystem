@@ -30,7 +30,7 @@ StaticProductCtrl.classifyList = function(page,pageSize,ent,classify,fn){
                 query.where({'classify':classify});
             }
             query.exec(function(err,res){
-                fn(err,res);
+                cb(err,res);
             });
         },
         'getProduct':function(cb){
@@ -41,10 +41,11 @@ StaticProductCtrl.classifyList = function(page,pageSize,ent,classify,fn){
                 query.where({'classify':classify});
             }
             query.exec(function(err,res){
-                fn(err,res);
+                cb(err,res);
             });
         }
     },function(err,results){
+        console.log(err,results);
         if(err){
             fn(err,null);
         } else {
