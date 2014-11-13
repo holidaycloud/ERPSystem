@@ -2,6 +2,7 @@
  * Created by zzy on 2014/10/24.
  */
 var StaticProduct = require('./../model/staticProduct');
+var async = require('async');
 var StaticProductCtrl = function(){};
 
 StaticProductCtrl.list = function(ent,fn){
