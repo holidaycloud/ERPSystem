@@ -35,7 +35,7 @@ OrderCtrl.traderOrder = function(trader,token,startDate,quantity,remark,traderPr
     });
 };
 
-OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName, contactPhone, priceId, openId,customer,fn) {
+OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName, contactPhone, priceId, openId,customer,payway,fn) {
     async.auto({
         getProduct: function (cb) {
             ProductCtrl.detail(product, function (err, product) {
@@ -103,7 +103,7 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 'orderID': results.getOrderID,
                 'member': results.getMember,
                 'startDate': startDate,
-                'payWay': 1,
+                'payWay': payway,
                 'quantity': quantity,
                 'remark': remark,
                 'product': product,

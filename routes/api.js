@@ -469,7 +469,8 @@ router.post('/order/save', function(request, response) {
     var customer = request.body.customer;
     var openId = request.body.openId;
     var price = request.body.price;
-    OrderCtrl.save(token,startDate,quantity,remark,product,liveName,contactPhone,price,openId,customer,function(err,res){
+    var payway = request.body.payway||1;
+    OrderCtrl.save(token,startDate,quantity,remark,product,liveName,contactPhone,price,openId,customer,payway,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
