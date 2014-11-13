@@ -60,7 +60,9 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 CustomerCtrl.detailByWeixin(openId,function(err,res){
                     cb(err,res);
                 });
-            } else {
+            } else if(customer){
+                cb(null,null);
+            }else {
                 CustomerCtrl.register(results.getMember.ent,contactPhone,'',null,null,null,liveName,null,function(err,res){
                     cb(err,res);
                 })
