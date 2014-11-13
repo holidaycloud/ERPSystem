@@ -22,13 +22,37 @@ StaticProductCtrl.recommendList = function(ent,fn){
     });
 };
 
-StaticProductCtrl.classifyList = function(ent,classify,fn){
-    var query = StaticProduct.find({'ent':ent});
-    if(classify){
-        query.where({'classify':classify});
-    }
-   query.exec(function(err,res){
-        fn(err,res);
+StaticProductCtrl.classifyList = function(page,pageSize,ent,classify,fn){
+    async.auto({
+        'getTotal':function(cb){
+            var query = StaticProduct.count({'ent':ent});
+            if(classify){
+                query.where({'classify':classify});
+            }
+            query.exec(function(err,res){
+                fn(err,res);
+            });
+        },
+        'getProduct':function(cb){
+            var query = StaticProduct.find({'ent':ent});
+            query.skip(page*pageSize);
+            query.limit(pageSize);
+            if(classify){
+                query.where({'classify':classify});
+            }
+            query.exec(function(err,res){
+                fn(err,res);
+            });
+        }
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            fn(null,{
+                'totalSize':results.getTotal,
+                'products':results.getProduct
+            });
+        }
     });
 };
 
