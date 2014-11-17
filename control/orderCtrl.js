@@ -162,6 +162,12 @@ OrderCtrl.changeStatus = function(id,status,fn){
     }
 };
 
+OrderCtrl.cusCancel = function(id,customer,fn){
+    Order.findOneAndUpdate({'_id': id,'customer':customer, 'status': 0}, {'$set': {'status': 3}}, function (err, res) {
+        fn(err, res);
+    });
+};
+
 OrderCtrl.confirm = function (id, fn) {
     Order.findOneAndUpdate({'_id': id, 'status': 1}, {'$set': {'status': 2}}, function (err, res) {
         fn(err, res);

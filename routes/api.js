@@ -577,6 +577,19 @@ router.get('/order/detail', function(request, response) {
         }
     });
 });
+
+router.post('/order/cusCancel', function(request, response) {
+    var id = request.body.id;
+    var customer = request.body.customer;
+    OrderCtrl.cusCancel(id,customer,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/order/cusDetail', function(request, response) {
     var id = request.query.id;
     var customer = request.query.customer;
