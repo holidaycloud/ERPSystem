@@ -36,6 +36,7 @@ OrderCtrl.traderOrder = function(trader,token,startDate,quantity,remark,traderPr
 };
 
 OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName, contactPhone, priceId, openId,customer,payway,fn) {
+    console.log(token, startDate, quantity, remark, product, liveName, contactPhone, priceId, openId,customer,payway);
     async.auto({
         getProduct: function (cb) {
             ProductCtrl.detail(product, function (err, product) {
