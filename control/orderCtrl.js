@@ -36,7 +36,6 @@ OrderCtrl.traderOrder = function(trader,token,startDate,quantity,remark,traderPr
 };
 
 OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName, contactPhone, priceId, openId,customer,payway,fn) {
-    console.log(token, startDate, quantity, remark, product, liveName, contactPhone, priceId, openId,customer,payway);
     async.auto({
         getProduct: function (cb) {
             ProductCtrl.detail(product, function (err, product) {
@@ -275,6 +274,16 @@ OrderCtrl.list = function (page, pageSize, ent, product, startDate, endDate, fn)
 
 OrderCtrl.detail = function (id, fn) {
     Order.findById(id)
+        .populate({'path': 'product', 'select': 'name'})
+        .populate({'path': 'member', 'select': 'loginName'})
+        .populate({'path': 'customer','select':'name mobile'})
+        .exec(function (err, order) {
+            fn(err, order);
+        });
+};
+
+OrderCtrl.cusDetail = function (id,customer,fn) {
+    Order.findOne({'_id':id,'customer':customer})
         .populate({'path': 'product', 'select': 'name'})
         .populate({'path': 'member', 'select': 'loginName'})
         .populate({'path': 'customer','select':'name mobile'})

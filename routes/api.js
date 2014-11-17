@@ -577,6 +577,17 @@ router.get('/order/detail', function(request, response) {
         }
     });
 });
+router.get('/order/cusDetail', function(request, response) {
+    var id = request.query.id;
+    var customer = request.query.customer;
+    OrderCtrl.cusDetail(id,customer,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
 
 router.get('/order/verifyCode', function(request, response) {
     var code = request.query.code;
