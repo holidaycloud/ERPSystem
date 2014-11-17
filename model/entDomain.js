@@ -13,7 +13,8 @@ var entDomainSchema = new Schema({
     'qrCode':String,
     'title':String,
     'tel':String,
-    'isEnable':Boolean
+    'isEnable':Boolean,
+    'longToken':String
 });
 entDomainSchema.index({'ent':1});
 entDomainSchema.index({'domain':1});
