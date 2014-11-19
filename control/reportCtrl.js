@@ -34,8 +34,8 @@ ReportCtrl.saleReport = function(ent,startDate,endDate,fn){
                 for(var i in values){
                     totalPrice+=values[i].totalPrice;
                     quantity+=values[i].quantity;
-                    cost+=(values[i].price.basePrice*values[i].quantity);
-                    price += values[i].price.price*values[i].quantity;
+                    cost+=values[i].cost;
+                    price += values[i].price*values[i].quantity;
                 }
                 var profit=totalPrice-cost;
                 var profitRate = profit/totalPrice;
