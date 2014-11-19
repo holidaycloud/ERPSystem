@@ -6,7 +6,7 @@ var TokenCtrl = require('./tokenCtrl');
 var Card = require('./../model/card');
 var CardLog = require('./../model/cardLog');
 var CardCtrl = function(){};
-CardCtrl.initCard = function(token,cardNum,fn){
+CardCtrl.initCard = function(token,cardNum,ent,fn){
     async.auto({
         'getMember':function(cb){
             TokenCtrl.findToken(token, function (err, token) {
@@ -24,7 +24,8 @@ CardCtrl.initCard = function(token,cardNum,fn){
         'initCard':['getMember',function(cb,results){
             var card = new Card({
                 'cardNum':cardNum,
-                'member':results.getMember._id
+                'member':results.getMember._id,
+                'ent':ent
             });
             card.save(function(err,res){
                 if(err){
@@ -53,10 +54,10 @@ CardCtrl.initCard = function(token,cardNum,fn){
     });
 };
 
-CardCtrl.detail = function(cardNum,fn){
+CardCtrl.detail = function(cardNum,ent,fn){
     async.auto({
         'getBalance':function(cb){
-            CardCtrl.balance(cardNum,function(err,res){
+            CardCtrl.balance(cardNum,ent,function(err,res){
                 cb(err,res);
             });
         },
@@ -76,7 +77,7 @@ CardCtrl.detail = function(cardNum,fn){
     });
 };
 
-CardCtrl.consume = function(token,cardNum,cardMoney,fn){
+CardCtrl.consume = function(token,cardNum,cardMoney,ent,fn){
     async.auto({
         'getMember':function(cb){
             TokenCtrl.findToken(token, function (err, token) {
@@ -92,7 +93,7 @@ CardCtrl.consume = function(token,cardNum,cardMoney,fn){
             });
         },
         'getBalance':function(cb){
-            CardCtrl.balance(cardNum,function(err,res){
+            CardCtrl.balance(cardNum,ent,function(err,res){
               cb(err,res);
             });
         },
@@ -115,18 +116,19 @@ CardCtrl.consume = function(token,cardNum,cardMoney,fn){
     });
 };
 
-CardCtrl.list = function(fn){
+CardCtrl.list = function(ent,fn){
     var aggregate = CardLog.aggregate();
+    aggregate.match({'ent':ent});
     aggregate.group({'_id':'$card','balance':{'$sum':'$consume'}});
     aggregate.exec(function(err,res){
         fn(err,res);
     });
 };
 
-CardCtrl.balance = function(cardNum,fn){
+CardCtrl.balance = function(cardNum,ent,fn){
   async.auto({
       'getCard':function(cb){
-          Card.findOne({'cardNum':cardNum},function(err,res){
+          Card.findOne({'cardNum':cardNum,'ent':ent},function(err,res){
               if(err){
                   cb(err,null);
               } else {

@@ -981,7 +981,8 @@ router.get('/report/revenueDetail',function(request,response){
 router.post('/card/init',function(request,response){
     var cardNo = request.body.cardNo;
     var token = request.body.token;
-    CardCtrl.initCard(token,cardNo,function(err,res){
+    var ent = request.body.ent;
+    CardCtrl.initCard(token,cardNo,ent,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -991,7 +992,8 @@ router.post('/card/init',function(request,response){
 });
 
 router.get('/card/list',function(request,response){
-    CardCtrl.list(function(err,res){
+    var ent = request.query.ent;
+    CardCtrl.list(ent,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -1004,7 +1006,8 @@ router.post('/card/consume',function(request,response){
     var cardNo = request.body.cardNo;
     var cardMoney = parseFloat(request.body.cardMoney);
     var token = request.body.token;
-    CardCtrl.consume(token,cardNo,cardMoney,function(err,res){
+    var ent = request.body.ent;
+    CardCtrl.consume(token,cardNo,cardMoney,ent,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -1015,7 +1018,8 @@ router.post('/card/consume',function(request,response){
 
 router.get('/card/balance',function(request,response){
     var cardNo = request.query.cardNo;
-    CardCtrl.balance(cardNo,function(err,res){
+    var ent = request.query.ent;
+    CardCtrl.balance(cardNo,ent,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
@@ -1026,7 +1030,8 @@ router.get('/card/balance',function(request,response){
 
 router.get('/card/detail',function(request,response){
     var cardNo = request.query.cardNo;
-    CardCtrl.detail(cardNo,function(err,res){
+    var ent = request.query.ent;
+    CardCtrl.detail(cardNo,ent,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
