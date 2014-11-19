@@ -10,6 +10,6 @@ var cardSchema = new Schema({
     'member':{type:Schema.Types.ObjectId,ref:'Member'}
 });
 
-cardSchema.index({'cardNum':1});
+cardSchema.index({'ent':1});
 var Card = db.model('Card',cardSchema);
 module.exports = Card;

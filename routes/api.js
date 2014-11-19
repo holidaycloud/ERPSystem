@@ -992,8 +992,10 @@ router.post('/card/init',function(request,response){
 });
 
 router.get('/card/list',function(request,response){
+    var page = request.query.page||0;
+    var pageSize = request.query.pageSize||25;
     var ent = request.query.ent;
-    CardCtrl.list(ent,function(err,res){
+    CardCtrl.list(page,pageSize,ent,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {

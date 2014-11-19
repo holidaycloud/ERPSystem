@@ -117,10 +117,17 @@ CardCtrl.consume = function(token,cardNum,cardMoney,ent,fn){
     });
 };
 
-CardCtrl.list = function(ent,fn){
+CardCtrl.list = function(page,pageSize,ent,fn){
     async.auto({
+        'totalSize':function(cb){
+            Card.count({'ent':ent},function(err,res){
+               cb(err,res);
+            });
+        },
         'getCards':function(cb){
             Card.find({'ent':ent})
+                .skip(pageSize*page)
+                .limit(pageSize)
                 .populate({'path':'member','select':'loginName'})
                 .lean()
                 .exec(function(err,res){
@@ -154,7 +161,7 @@ CardCtrl.list = function(ent,fn){
             cb(null,result);
         }]
     },function(err,results){
-        fn(err,results.createResult);
+        fn(err,{'totalSize':results.totalSize,'cards':results.createResult});
     });
 
     var getCard = function(cards,id){
