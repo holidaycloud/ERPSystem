@@ -2,7 +2,9 @@
  * Created by zzy on 2014/9/28.
  */
 var Customer = require('./../model/customer');
+var CustomerCard = require('./../model/customerCard');
 var async = require('async');
+var CardCtrl = require('./cardCtrl');
 var CustomerCtrl = function(){};
 
 CustomerCtrl.getCustomerByMobileOrRegister = function(ent,mobile,name,fn){
@@ -79,16 +81,85 @@ CustomerCtrl.detail = function(id,fn){
     });
 };
 
+CustomerCtrl.initCard = function(token,customer,ent,fn){
+    async.auto({
+        'createCard':function(cb){
+            var crypto = require('crypto');
+            var shasum = crypto.createHash('sha256');
+            shasum.update(customer+Date.now());
+            var cardNum = shasum.digest('hex');
+            CardCtrl.initCard(token,cardNum,ent,function(err,res){
+                cb(err,res);
+            });
+        },
+        'saveCustomerCard':['createCard',function(cb,results){
+            var customerCard = new CustomerCard({
+                'card':results.createCard._id,
+                'customer':customer
+            });
+            customerCard.save(function(err,res){
+               cb(err,res);
+            });
+        }]
+    },function(err,results){
+        fn(err,results.saveCustomerCard);
+    });
+};
+
 CustomerCtrl.login = function(ent,mobile,passwd,fn){
-    Customer.findOne({'ent':ent,'mobile':mobile,'passwd':passwd},function(err,customer){
+    async.auto({
+        'getCustomer':function(cb){
+            Customer.findOne({'ent':ent,'mobile':mobile,'passwd':passwd})
+                .lean()
+                .exec(function(err,customer){
+                if(err){
+                    cb(err,null);
+                } else {
+                    if(customer){
+                        cb(null,customer);
+                    } else {
+                        cb(new Error('用户名或密码错误!'),null);
+                    }
+                }
+            });
+        }
+        ,'getCustomerCard':['getCustomer',function(cb,results){
+            CustomerCtrl.getCustomerCard(results.getCustomer._id,function(err,res){
+               if(err){
+                   cb(err,null);
+               } else {
+                   cb(null,null);
+               }
+            });
+        }]
+        ,'getCard':['getCustomerCard',function(cb,results){
+            if(results.getCustomerCard){
+                CardCtrl.getCard(results.getCustomerCard.card,function(err,res){
+                    cb(err,res);
+                });
+            } else {
+                cb(null,null);
+            }
+
+        }]
+        ,'getCardBalance':['getCard',function(cb,results){
+            if(results.getCard){
+                CardCtrl.balance(results.getCard.cardNum,ent,function(err,res){
+                    cb(err,res);
+                })
+            } else {
+                cb(null,null);
+            }
+        }]
+    },function(err,results){
         if(err){
             fn(err,null);
         } else {
-            if(customer){
-                fn(null,customer);
-            } else {
-                fn(new Error('用户名或密码错误!'),null);
+            var customer = results.getCustomer;
+            if(results.getCardBalance){
+                customer.cardBalance = results.getCardBalance.balance;
             }
+            fn(null,customer);
         }
     });
 };
@@ -150,6 +221,12 @@ CustomerCtrl.changePasswd = function(id,oldPasswd,newPasswd,fn){
        }
     });
 };
+
+CustomerCtrl.getCustomerCard = function(customer,fn){
+    CustomerCard.findOne({'customer':customer},function(err,res){
+       fn(err,res);
+    });
+}
 
 CustomerCtrl.update = function(id,obj,fn){
     Customer.findByIdAndUpdate(id,{'$set':obj},function(err,res){

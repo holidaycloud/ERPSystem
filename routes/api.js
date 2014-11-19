@@ -632,6 +632,19 @@ router.post('/customer/register', function(request, response) {
     });
 });
 
+router.post('/customer/initCard', function(request, response) {
+    var ent = request.body.ent;
+    var token = request.body.token;
+    var customer = request.body.customer;
+    CustomerCtrl.initCard(token,customer,ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post('/customer/update', function(request, response) {
     var id = request.body.id;
     var loginName = request.body.loginName;

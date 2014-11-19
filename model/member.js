@@ -10,8 +10,7 @@ var memberSchema = new Schema({
     'email':{'type':'String','unique': true},
     'passwd':String,
     'createDate':{'type': 'Number', 'default': Date.now},
-    'isEnable': Boolean,
-    'card':{type:Schema.Types.ObjectId,ref:'Card'}
+    'isEnable': Boolean
 });
 memberSchema.index({'loginName':1,'passwd':1,'isEnable':1});
 memberSchema.index({'mobile':1,'passwd':1,'isEnable':1});

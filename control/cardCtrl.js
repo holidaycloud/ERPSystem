@@ -175,6 +175,12 @@ CardCtrl.list = function(page,pageSize,ent,fn){
     }
 };
 
+CardCtrl.getCard = function(id,fn){
+    Card.findById(id,function(err,res){
+        fn(err,res);
+    });
+};
+
 CardCtrl.balance = function(cardNum,ent,fn){
   async.auto({
       'getCard':function(cb){
