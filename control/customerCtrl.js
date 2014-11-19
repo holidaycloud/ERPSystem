@@ -128,7 +128,7 @@ CustomerCtrl.login = function(ent,mobile,passwd,fn){
                if(err){
                    cb(err,null);
                } else {
-                   cb(null,null);
+                   cb(null,res);
                }
             });
         }]
