@@ -2,6 +2,7 @@
  * Created by zzy on 2014/11/11.
  */
 var async = require('async');
+var _ = require('underscore');
 var TokenCtrl = require('./tokenCtrl');
 var Card = require('./../model/card');
 var CardLog = require('./../model/cardLog');
@@ -117,12 +118,54 @@ CardCtrl.consume = function(token,cardNum,cardMoney,ent,fn){
 };
 
 CardCtrl.list = function(ent,fn){
-    var aggregate = CardLog.aggregate();
-    aggregate.match({'ent':ent});
-    aggregate.group({'_id':'$card','balance':{'$sum':'$consume'}});
-    aggregate.exec(function(err,res){
-        fn(err,res);
+    async.auto({
+        'getCards':function(cb){
+            Card.find({'ent':ent})
+                .populate({'path':'member','select':'loginName'})
+                .lean()
+                .exec(function(err,res){
+                    cb(err,res);
+                });
+        },
+        'getBalance':['getCards',function(cb,results){
+            var cards = results.getCards;
+            var ids =_.pluck(cards,"_id");
+            var aggregate = CardLog.aggregate();
+            aggregate.match({'card':{'$in':ids}});
+            aggregate.group({'_id':'$card','balance':{'$sum':'$consume'}});
+            aggregate.exec(function(err,res){
+                cb(err,res);
+            });
+        }],
+        'createResult':['getCards','getBalance',function(cb,results){
+            var cards = results.getCards;
+            var cardBlance = results.getBalance;
+            var result = [];
+            cardBlance.forEach(function(b){
+                var card = getCard(cards,b._id);
+                var obj = {
+                    'createDate':card.createDate,
+                    'cardNo':card.cardNum,
+                    'member':card.member.loginName,
+                    'balance': b.balance
+                }
+                result.push(obj);
+            });
+            cb(null,result);
+        }]
+    },function(err,results){
+        fn(err,results.createResult);
     });
+
+    var getCard = function(cards,id){
+        var result;
+        cards.forEach(function(c){
+            if(c._id.toString()==id.toString()){
+                result = c;
+            }
+        });
+        return result;
+    }
 };
 
 CardCtrl.balance = function(cardNum,ent,fn){
