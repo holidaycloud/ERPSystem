@@ -17,7 +17,14 @@ ReportCtrl.saleReport = function(ent,startDate,endDate,fn){
         ,'getData':function(cb){
             var o = {};
             o.map = function(){
-                emit(this.product,{totalPrice:this.totalPrice,qty:this.quantity,price:this.price});
+                emit(this.product,{
+                    totalPrice:this.totalPrice,
+                    quantity:this.quantity,
+                    price:this.price.price,
+                    cost:this.price.basePrice*this.quantity,
+                    profit:this.totalPrice-this.price.basePrice*this.quantity,
+                    profitRate:(this.totalPrice-this.price.basePrice*this.quantity)/this.totalPrice
+                });
             };
             o.reduce = function(product,values){
                 var totalPrice = 0;
@@ -26,9 +33,9 @@ ReportCtrl.saleReport = function(ent,startDate,endDate,fn){
                 var price = 0;
                 for(var i in values){
                     totalPrice+=values[i].totalPrice;
-                    quantity+=values[i].qty;
-                    cost+=(values[i].price.basePrice*values[i].qty);
-                    price += values[i].price.price*values[i].qty;
+                    quantity+=values[i].quantity;
+                    cost+=(values[i].price.basePrice*values[i].quantity);
+                    price += values[i].price.price*values[i].quantity;
                 }
                 var profit=totalPrice-cost;
                 var profitRate = profit/totalPrice;
@@ -50,6 +57,7 @@ ReportCtrl.saleReport = function(ent,startDate,endDate,fn){
         ,'createReport':['getProducts','getData',function(cb,results){
             var products = results.getProducts;
             var data = results.getData;
+            console.log(data);
             var res = [];
             data.forEach(function(d){
                 var obj = {};
