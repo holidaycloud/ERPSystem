@@ -80,6 +80,16 @@ router.get("/detail",function(request, response){
     });
 });
 
+router.get("/list",function(request, response){
+    DomainCtrl.list(function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get("/get",function(request, response){
     var domain = request.query.domain;
     DomainCtrl.getEnt(domain,function(err,res){

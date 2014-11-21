@@ -36,7 +36,6 @@ ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,
     });
 
     product.save(function(err,res){
-        console.log(err,res);
         fn(err,res);
     });
 };

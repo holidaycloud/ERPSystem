@@ -109,7 +109,7 @@ CardCtrl.consume = function(token,cardNum,cardMoney,ent,fn){
                     cb(err,res);
                 });
             } else {
-                cb(new Error('卡内余额不足,剩余'+results.getBalance.balance),null);
+                cb(new Error('余额不足,剩余'+results.getBalance.balance),null);
             }
         }]
     },function(err,results){

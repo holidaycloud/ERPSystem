@@ -52,6 +52,22 @@ DomainCtrl.getEnt = function(domain,fn){
     });
 };
 
+DomainCtrl.list = function(fn){
+    EntDomain.find()
+        .lean()
+        .exec(function(err,res){
+            if(err){
+                fn(err,null);
+            } else {
+                var result={};
+                res.forEach(function(domain){
+                    result[domain.domain] = domain;
+                });
+                fn(null,result);
+            }
+        });
+};
+
 DomainCtrl.detail = function(ent,fn){
     EntDomain.findOne({'ent':ent},function(err,res){
         fn(err,res);

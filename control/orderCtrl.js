@@ -176,26 +176,31 @@ OrderCtrl.cusCardPay = function(id,customer,token,ent,fn){
             });
         },
         'getCardInfo':['getCustomerCard',function(cb,results){
-            CardCtrl.getCard(results.getCustomerCard._id,function(err,res){
+            CardCtrl.getCard(results.getCustomerCard.card,function(err,res){
                 cb(err,res);
             });
         }]
         ,'cardConsume':['getCardInfo','getOrder',function(cb,results){
-            CardCtrl.consume(token,results.getCardInfo.cardNum,results.getOrder.totalPrice,ent,function(err,res){
+            CardCtrl.consume(token,results.getCardInfo.cardNum,-results.getOrder.totalPrice,ent,function(err,res){
                 cb(err,res);
             });
         }]
         ,'changeOrderStatus':['getOrder','cardConsume',function(cb,results){
-            if(results,cardConsume){
-                Order.findByOneAndUpdate({'_id':id,'status':0},{'$set':{'status':1,'payWay':2}},function(err,res){
+            if(results.cardConsume){
+                Order.findOneAndUpdate({'_id':id,'status':0},{'$set':{'status':1,'payWay':2}},function(err,res){
                     cb(err,res);
                 })
             } else {
                 cb(new Error('支付失败'),null)
             }
         }]
+        ,'getCardBalance':['getCardInfo','changeOrderStatus',function(cb,results){
+            CardCtrl.balance(results.getCardInfo.cardNum,ent,function(err,res){
+                cb(err,res);
+            })
+        }]
     },function(err,results){
-        fn(err,results.changeOrderStatus);
+        fn(err,results.getCardBalance);
     });
 };
 
