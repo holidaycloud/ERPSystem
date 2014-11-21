@@ -187,9 +187,9 @@ OrderCtrl.cusCardPay = function(id,customer,token,ent,fn){
         }]
         ,'changeOrderStatus':['getOrder','cardConsume',function(cb,results){
             if(results,cardConsume){
-                OrderCtrl.changeStatus(results.getOrder._id,1,function(err,res){
-                   cb(err,res);
-                });
+                Order.findByOneAndUpdate({'_id':id,'status':0},{'$set':{'status':1,'payWay':2}},function(err,res){
+                    cb(err,res);
+                })
             } else {
                 cb(new Error('支付失败'),null)
             }
