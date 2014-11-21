@@ -7,6 +7,7 @@ var PriceCtrl = require('./priceCtrl');
 var TokenCtrl = require('./tokenCtrl');
 var ProductCtrl = require('./productCtrl');
 var CustomerCtrl = require('./customerCtrl');
+var CardCtrl = require('./cardCtrl');
 var ProductMatchCtrl = require('./productMatchCtrl');
 var async = require('async');
 var FMB = require('fumubang');
@@ -160,6 +161,42 @@ OrderCtrl.changeStatus = function(id,status,fn){
             fn(err, res);
         });
     }
+};
+
+OrderCtrl.cusCardPay = function(id,customer,token,ent,fn){
+    async.auto({
+        'getOrder':function(cb){
+            OrderCtrl.cusDetail(id,customer,function(err,res){
+                cb(err,res);
+            });
+        },
+        'getCustomerCard':function(cb){
+            CustomerCtrl.getCustomerCard(customer,function(err,res){
+               cb(err,res);
+            });
+        },
+        'getCardInfo':['getCustomerCard',function(cb,results){
+            CardCtrl.getCard(results.getCustomerCard._id,function(err,res){
+                cb(err,res);
+            });
+        }]
+        ,'cardConsume':['getCardInfo','getOrder',function(cb,results){
+            CardCtrl.consume(token,results.getCardInfo.cardNum,results.getOrder.totalPrice,ent,function(err,res){
+                cb(err,res);
+            });
+        }]
+        ,'changeOrderStatus':['getOrder','cardConsume',function(cb,results){
+            if(results,cardConsume){
+                OrderCtrl.changeStatus(results.getOrder._id,1,function(err,res){
+                   cb(err,res);
+                });
+            } else {
+                cb(new Error('支付失败'),null)
+            }
+        }]
+    },function(err,results){
+        fn(err,results.changeOrderStatus);
+    });
 };
 
 OrderCtrl.cusCancel = function(id,customer,fn){

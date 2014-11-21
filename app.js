@@ -21,7 +21,22 @@ log4js.configure({
 });
 var logger = log4js.getLogger('normal');
 
-var api = require('./routes/api');
+var member = require('./routes/member');
+var ent = require('./routes/ent');
+var product = require('./routes/product');
+var price = require('./routes/price');
+var order = require('./routes/order');
+var customer = require('./routes/customer');
+var province = require('./routes/province');
+var city = require('./routes/city');
+var district = require('./routes/district');
+var domain = require('./routes/domain');
+var feedback = require('./routes/feedback');
+var classify = require('./routes/classify');
+var report = require('./routes/report');
+var card = require('./routes/card');
+var address = require('./routes/deliveryAddress');
+var invoice = require('./routes/invoice');
 var index = require('./routes/index');
 var app = express();
 
@@ -43,8 +58,22 @@ app.use(function(req,res,next){
     next();
 });
 app.use('/', index);
-app.use('/api', api);
-
+app.use('/api/member', member);
+app.use('/api/ent', ent);
+app.use('/api/product', product);
+app.use('/api/price', price);
+app.use('/api/order', order);
+app.use('/api/customer', customer);
+app.use('/api/province', province);
+app.use('/api/city', city);
+app.use('/api/district', district);
+app.use('/api/domain', domain);
+app.use('/api/feedback', feedback);
+app.use('/api/classify', classify);
+app.use('/api/report', report);
+app.use('/api/card', card);
+app.use('/api/address', address);
+app.use('/api/invoice', invoice);
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
