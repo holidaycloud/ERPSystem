@@ -260,9 +260,9 @@ CustomerCtrl.update = function(id,obj,fn){
             }
 
         }]
-        ,'getCardBalance':['getCard',function(cb,results){
+        ,'getCardBalance':['getCustomer','getCard',function(cb,results){
             if(results.getCard){
-                CardCtrl.balance(results.getCard.cardNum,ent,function(err,res){
+                CardCtrl.balance(results.getCard.cardNum,results.getCustomer.ent,function(err,res){
                     cb(err,res);
                 })
             } else {
