@@ -229,10 +229,6 @@ CustomerCtrl.getCustomerCard = function(customer,fn){
 }
 
 CustomerCtrl.update = function(id,obj,fn){
-    Customer.findByIdAndUpdate(id,{'$set':obj},function(err,res){
-        fn(err,res);
-    });
-
     async.auto({
         'getCustomer':function(cb){
             Customer.findByIdAndUpdate(id,{'$set':obj})
