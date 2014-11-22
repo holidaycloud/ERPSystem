@@ -232,6 +232,58 @@ CustomerCtrl.update = function(id,obj,fn){
     Customer.findByIdAndUpdate(id,{'$set':obj},function(err,res){
         fn(err,res);
     });
+
+    async.auto({
+        'getCustomer':function(cb){
+            Customer.findByIdAndUpdate(id,{'$set':obj})
+                .lean()
+                .exec(function(err,customer){
+                    if(err){
+                        cb(err,null);
+                    } else {
+                        cb(null,customer);
+                    }
+                });
+        }
+        ,'getCustomerCard':['getCustomer',function(cb,results){
+            CustomerCtrl.getCustomerCard(results.getCustomer._id,function(err,res){
+                if(err){
+                    cb(err,null);
+                } else {
+                    cb(null,res);
+                }
+            });
+        }]
+        ,'getCard':['getCustomerCard',function(cb,results){
+            if(results.getCustomerCard){
+                CardCtrl.getCard(results.getCustomerCard.card,function(err,res){
+                    cb(err,res);
+                });
+            } else {
+                cb(null,null);
+            }
+
+        }]
+        ,'getCardBalance':['getCard',function(cb,results){
+            if(results.getCard){
+                CardCtrl.balance(results.getCard.cardNum,ent,function(err,res){
+                    cb(err,res);
+                })
+            } else {
+                cb(null,null);
+            }
+        }]
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            var customer = results.getCustomer;
+            if(results.getCardBalance){
+                customer.cardBalance = results.getCardBalance.balance;
+            }
+            fn(null,customer);
+        }
+    });
 };
 
 CustomerCtrl.list = function(page,pageSize,ent,mobile,fn){
