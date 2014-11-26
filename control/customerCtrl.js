@@ -173,23 +173,27 @@ CustomerCtrl.weixinLogin = function(ent,openId,fn){
 CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName,sex,fn){
     async.auto({
         'getCustomer':function(cb){
-            Customer.findOne({'ent':ent,'mobile':mobile},function(err,customer){
-                if(customer){
-                    if(customer.passwd==passwd){
-                        cb(null,customer);
+            Customer.findOne({'ent':ent,'mobile':mobile})
+                .lean()
+                .exec(function(err,customer){
+                    if(customer){
+                        if(customer.passwd==passwd){
+                            cb(null,customer);
+                        } else {
+                            cb(new Error('用户名或密码错误！'),null);
+                        }
                     } else {
-                        cb(new Error('用户名或密码错误！'),null);
+                        cb(null,null);
                     }
-                } else {
-                    cb(null,null);
-                }
-            });
+                });
         }
         ,'registerCustomer':['getCustomer',function(cb,results){
             if(results.getCustomer){
-                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId,'headimgurl':headimgurl,'loginName':loginName,'sex':parseInt(sex)}},function(err,customer){
-                    cb(err,customer);
-                });
+                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId,'headimgurl':headimgurl,'loginName':loginName,'sex':parseInt(sex)}})
+                    .lean()
+                    .exec(function(err,customer){
+                        cb(err,customer);
+                    });
             } else {
                 var customer = new Customer({
                     'ent':ent,
@@ -201,7 +205,7 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName
                     'sex':parseInt(sex)
                 });
                 customer.save(function(err,res){
-                    fn(err,res);
+                    cb(err,res);
                 });
             }
         }]
@@ -233,18 +237,17 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName
             cb(null,null);
         }
     }]
-    },function(err,results){});
-    async.waterfall([
-        function(cb){
-
-        },
-        function(customer,cb){
-
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            var customer = results.registerCustomer;
+            if(results.getCardBalance){
+                customer.cardBalance = results.getCardBalance.balance;
+            }
+            fn(null,customer);
         }
-    ],function(err,res){
-        fn(err,res);
     });
-
 };
 
 CustomerCtrl.changePasswd = function(id,oldPasswd,newPasswd,fn){
