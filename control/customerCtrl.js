@@ -170,7 +170,7 @@ CustomerCtrl.weixinLogin = function(ent,openId,fn){
     });
 };
 
-CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,fn){
+CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName,sex,fn){
     async.waterfall([
         function(cb){
             Customer.findOne({'ent':ent,'mobile':mobile},function(err,customer){
@@ -187,7 +187,7 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,fn){
         },
         function(customer,cb){
             if(customer){
-                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId}},function(err,customer){
+                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId,'headimgurl':headimgurl,'loginName':loginName,'sex':sex}},function(err,customer){
                     cb(err,customer);
                 });
             } else {
@@ -195,7 +195,10 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,fn){
                     'ent':ent,
                     'mobile':mobile,
                     'passwd':passwd,
-                    'weixinOpenId':openId
+                    'weixinOpenId':openId,
+                    'headimgurl':headimgurl,
+                    'loginName':loginName,
+                    'sex':sex
                 });
                 customer.save(function(err,res){
                     fn(err,res);

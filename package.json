@@ -18,6 +18,7 @@
         "async":"*",
         "underscore":"*",
         "request":"*",
-        "log4js":"*"
+        "log4js":"*",
+        "nodemailer":"*"
     }
 }

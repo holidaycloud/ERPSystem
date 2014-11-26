@@ -6,6 +6,7 @@ var _ = require('underscore');
 var TokenCtrl = require('./tokenCtrl');
 var Card = require('./../model/card');
 var CardLog = require('./../model/cardLog');
+var QRcodeCtrl = require('./qrcodeCtrl');
 var CardCtrl = function(){};
 CardCtrl.initCard = function(token,cardNum,ent,fn){
     async.auto({
@@ -22,11 +23,17 @@ CardCtrl.initCard = function(token,cardNum,ent,fn){
                 }
             });
         },
-        'initCard':['getMember',function(cb,results){
+        'getQrCode':function(cb){
+          CardCtrl.getQRCode(cardNum,null,null,function(err,res){
+              cb(err,res);
+          });
+        },
+        'initCard':['getMember','getQrCode',function(cb,results){
             var card = new Card({
                 'cardNum':cardNum,
                 'member':results.getMember._id,
-                'ent':ent
+                'ent':ent,
+                'qrCode':results.getQrCode
             });
             card.save(function(err,res){
                 if(err){
@@ -52,6 +59,12 @@ CardCtrl.initCard = function(token,cardNum,ent,fn){
         }]
     },function(err,results){
         fn(err,results.initCard);
+    });
+};
+
+CardCtrl.getQRCode = function(cardNum,logo,width,fn){
+    QRcodeCtrl.generateCode(cardNum,width,logo,function(err,res){
+       fn(err,res);
     });
 };
 

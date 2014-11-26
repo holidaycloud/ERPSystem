@@ -7,7 +7,8 @@ var cardSchema = new Schema({
     'ent':{type:Schema.Types.ObjectId,ref:'Ent'},
     'cardNum':{'type':'String','unique': true},
     'createDate':{'type': 'Number', 'default': Date.now},
-    'member':{type:Schema.Types.ObjectId,ref:'Member'}
+    'member':{type:Schema.Types.ObjectId,ref:'Member'},
+    'qrCode':String
 });
 
 cardSchema.index({'ent':1});
