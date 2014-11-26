@@ -187,7 +187,7 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName
         },
         function(customer,cb){
             if(customer){
-                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId,'headimgurl':headimgurl,'loginName':loginName,'sex':sex}},function(err,customer){
+                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId,'headimgurl':headimgurl,'loginName':loginName,'sex':parseInt(sex)}},function(err,customer){
                     cb(err,customer);
                 });
             } else {
@@ -198,7 +198,7 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName
                     'weixinOpenId':openId,
                     'headimgurl':headimgurl,
                     'loginName':loginName,
-                    'sex':sex
+                    'sex':parseInt(sex)
                 });
                 customer.save(function(err,res){
                     fn(err,res);
