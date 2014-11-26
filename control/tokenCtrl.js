@@ -30,6 +30,7 @@ TokenCtrl.generate = function(member,fn){
 };
 
 TokenCtrl.generateNoExpire = function(member,fn){
+    console.log('member:',member);
     var shasum = ctypto.createHash('sha1');
     shasum.update(member+Date.now());
     var token = shasum.digest('hex');
@@ -37,7 +38,7 @@ TokenCtrl.generateNoExpire = function(member,fn){
         {'member':member},
         {'member':member,'expireDate':new Date('2099-12-31').getTime(),'token':token},
         {'upsert':true},function(err,res){
-            console.log(err,res);
+            console.log(member);
             fn(err,res.token);
         }
     )
