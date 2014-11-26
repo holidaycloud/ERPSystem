@@ -171,8 +171,8 @@ CustomerCtrl.weixinLogin = function(ent,openId,fn){
 };
 
 CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName,sex,fn){
-    async.waterfall([
-        function(cb){
+    async.auto({
+        'getCustomer':function(cb){
             Customer.findOne({'ent':ent,'mobile':mobile},function(err,customer){
                 if(customer){
                     if(customer.passwd==passwd){
@@ -184,9 +184,9 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName
                     cb(null,null);
                 }
             });
-        },
-        function(customer,cb){
-            if(customer){
+        }
+        ,'registerCustomer':['getCustomer',function(cb,results){
+            if(results.getCustomer){
                 Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId,'headimgurl':headimgurl,'loginName':loginName,'sex':parseInt(sex)}},function(err,customer){
                     cb(err,customer);
                 });
@@ -204,6 +204,42 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName
                     fn(err,res);
                 });
             }
+        }]
+        ,'getCustomerCard':['registerCustomer',function(cb,results){
+        CustomerCtrl.getCustomerCard(results.registerCustomer._id,function(err,res){
+            if(err){
+                cb(err,null);
+            } else {
+                cb(null,res);
+            }
+        });
+    }]
+        ,'getCard':['getCustomerCard',function(cb,results){
+        if(results.getCustomerCard){
+            CardCtrl.getCard(results.getCustomerCard.card,function(err,res){
+                cb(err,res);
+            });
+        } else {
+            cb(null,null);
+        }
+
+    }]
+        ,'getCardBalance':['getCard',function(cb,results){
+        if(results.getCard){
+            CardCtrl.balance(results.getCard.cardNum,ent,function(err,res){
+                cb(err,res);
+            })
+        } else {
+            cb(null,null);
+        }
+    }]
+    },function(err,results){});
+    async.waterfall([
+        function(cb){
+
+        },
+        function(customer,cb){
+
         }
     ],function(err,res){
         fn(err,res);
