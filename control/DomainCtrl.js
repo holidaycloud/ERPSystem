@@ -2,6 +2,8 @@
  * Created by zzy on 2014/11/3.
  */
 var EntDomain = require('./../model/entDomain');
+var EntAlipay = require('./../model/entAlipay');
+var async = require('async');
 var DomainCtrl = function(){};
 DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,isEnable,fn){
     var obj = {
@@ -40,6 +42,25 @@ DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,te
     })
 };
 
+DomainCtrl.saveAlipay = function(ent,pid,key,fn){
+    var entAlipay = new EntAlipay({
+        'ent':ent,
+        'pid':pid,
+        'key':key
+    });
+    entAlipay.save(function(err,res){
+        fn(err,res);
+    });
+};
+
+DomainCtrl.alipayDetail = function(ent,fn){
+    EntAlipay.findOne({'ent':ent})
+        .lean()
+        .exec(function(err,res){
+            fn(err,res);
+        });
+};
+
 DomainCtrl.update = function(id,obj,fn){
     entDomain.findByIdAndUpdate(id,{'$set':obj},function(err,res){
         fn(err,res);
@@ -47,8 +68,35 @@ DomainCtrl.update = function(id,obj,fn){
 };
 
 DomainCtrl.getEnt = function(domain,fn){
-    EntDomain.findOne({'domain':domain},function(err,res){
-        fn(err,res);
+    async.auto({
+        'getDomain':function(cb){
+            EntDomain.findOne({'domain':domain})
+                .lean()
+                .exec(function(err,res){
+                    cb(err,res);
+                });
+        }
+        ,'getAlipay':['getDomain',function(cb,results){
+            var ent = results.getDomain?results.getDomain.ent:null;
+            if(ent){
+                DomainCtrl.alipayDetail(ent,function(err,res){
+                   cb(err,res);
+                });
+            }
+        }]
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            var domain = results.getDomain;
+            if(domain){
+                domain.alipay = results.getAlipay;
+                fn(null,domain);
+            } else {
+                fn(null,null);
+            }
+
+        }
     });
 };
 
