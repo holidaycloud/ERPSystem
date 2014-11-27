@@ -28,6 +28,20 @@ router.post("/save",function(request, response){
     });
 });
 
+router.post("/saveAlipay",function(request, response){
+    var ent = request.body.ent;
+    var pid = request.body.pid;
+    var key = request.body.key;
+
+    DomainCtrl.saveAlipay(ent,pid,key,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post("/update",function(request, response){
     var id = request.body.id;
     var obj ={

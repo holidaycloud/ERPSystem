@@ -43,12 +43,16 @@ DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,te
 };
 
 DomainCtrl.saveAlipay = function(ent,pid,key,fn){
-    var entAlipay = new EntAlipay({
-        'ent':ent,
-        'pid':pid,
-        'key':key
-    });
-    entAlipay.save(function(err,res){
+    var obj = {
+        'ent':ent
+    };
+    if(pid){
+        obj.pid = pid;
+    }
+    if(key){
+        obj.key = key;
+    }
+    EntAlipay.update({'ent':ent},{'$set':obj},{'upsert':true},function(err,res){
         fn(err,res);
     });
 };
