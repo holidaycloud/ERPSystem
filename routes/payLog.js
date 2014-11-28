@@ -7,13 +7,11 @@ var PayLogCtrl = require('./../control/payLogCtrl');
 
 router.post('/save',function(request,response){
     PayLogCtrl.save(request.body.type,request.body,function(err,res){
-        CardCtrl.consume(token,cardNo,cardMoney,ent,function(err,res){
-            if(err){
-                response.json({'error':1, 'errMsg':err.message});
-            } else {
-                response.json({'error':0, 'data':res});
-            }
-        });
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
     });
 });
 
