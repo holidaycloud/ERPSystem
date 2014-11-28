@@ -8,5 +8,8 @@ PayLogCtrl.save = function(type,data,fn){
         'type': type,
         'data':data
     });
+    payLog.save(function(err,res){
+        fn(err,res);
+    })
 };
 module.exports = PayLogCtrl;
