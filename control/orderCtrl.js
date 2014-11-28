@@ -205,8 +205,13 @@ OrderCtrl.cusCardPay = function(id,customer,token,ent,fn){
 };
 
 OrderCtrl.cusCancel = function(id,customer,fn){
-    console.log(id,customer);
     Order.findOneAndUpdate({'_id': id,'customer':customer, 'status': 0}, {'$set': {'status': 3}}, function (err, res) {
+        fn(err, res);
+    });
+};
+
+OrderCtrl.pay = function(id,customer,fn){
+    Order.findOneAndUpdate({'_id': id, 'status': 0}, {'$set': {'status': 1}}, function (err, res) {
         fn(err, res);
     });
 };

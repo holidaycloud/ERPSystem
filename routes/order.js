@@ -63,6 +63,17 @@ router.post('/traderOrder', function(request, response) {
     });
 });
 
+router.post('/pay', function(request, response) {
+    var orderID = request.body.orderID;
+    OrderCtrl.pay(orderID,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post('/confirm', function(request, response) {
     var orderID = request.body.orderID;
     OrderCtrl.confirm(orderID,function(err,res){
