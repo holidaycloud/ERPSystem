@@ -210,7 +210,7 @@ OrderCtrl.cusCancel = function(id,customer,fn){
     });
 };
 
-OrderCtrl.pay = function(id,customer,fn){
+OrderCtrl.pay = function(id,fn){
     Order.findOneAndUpdate({'_id': id, 'status': 0}, {'$set': {'status': 1}}, function (err, res) {
         fn(err, res);
     });
