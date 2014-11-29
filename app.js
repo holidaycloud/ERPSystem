@@ -38,6 +38,8 @@ var card = require('./routes/card');
 var address = require('./routes/deliveryAddress');
 var invoice = require('./routes/invoice');
 var payLog = require('./routes/payLog');
+var coupon = require('./routes/coupon');
+var marketing = require('./routes/marketing');
 var index = require('./routes/index');
 var app = express();
 
@@ -76,6 +78,8 @@ app.use('/api/card', card);
 app.use('/api/address', address);
 app.use('/api/invoice', invoice);
 app.use('/api/payLog', payLog);
+app.use('/api/coupon', coupon);
+app.use('/api/marketing', marketing);
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
