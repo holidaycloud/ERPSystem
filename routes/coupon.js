@@ -49,4 +49,31 @@ router.post('/use',function(request,response){
         }
     });
 });
+
+router.get('/customerCoupons',function(request,response){
+    var customer = request.query.customer;
+    var ent = request.query.ent;
+    var status = request.query.status;
+    CouponCtrl.customerCoupons(ent,customer,status,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get('/canUseList',function(request,response){
+    var customer = request.query.customer;
+    var ent = request.query.ent;
+    var product = request.query.product;
+    CouponCtrl.canUseList(ent,customer,product,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 module.exports = router;

@@ -21,6 +21,6 @@ var couponSchema = new Schema({
     'useTime':Number                                                   //优惠券使用时间
 });
 couponSchema.index({'ent':1});
-couponSchema.index({'ent':1,'customer':1});
+couponSchema.index({'ent':1,'customer':1,'marketing':1});
 var Coupon = db.model('Coupon',couponSchema);
 module.exports = Coupon;

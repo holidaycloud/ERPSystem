@@ -75,4 +75,22 @@ CouponCtrl.useCoupon = function(code,customer,order,fn){
        }
     });
 };
+
+CouponCtrl.customerCoupons = function(ent,customer,status,fn){
+    var query = Coupon.find({'ent':ent,'customer':customer});
+    if(status){
+        query.where({'status':status});
+    }
+    query.exec(function(err,res){
+        fn(err,res);
+    });
+};
+
+CouponCtrl.canUseList = function(ent,customer,product,fn){
+    var query = Coupon.find({'ent':ent,'customer':customer,'status':0});
+    query.where({'$or':[{'product':product},{'product':{'$exists':false}}]})
+    query.exec(function(err,res){
+        fn(err,res);
+    });
+};
 module.exports = CouponCtrl;
