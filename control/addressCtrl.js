@@ -22,7 +22,16 @@ AddressCtrl.save = function(province,city,district,address,name,customer,isDefau
                 cb(err,res);
             });
         },
-        'saveAddress':['getProvince','getCity','getDistrict',function(cb,results){
+        'setDefault':function(cb){
+            if(isDefault){
+                DeliveryAddress.update({'customer':customer},{'$set':{'isDefault':false}},{ multi: true },function(err,res){
+                    cb(err,res);
+                });
+            } else {
+                cb(null,null);
+            }
+        },
+        'saveAddress':['getProvince','getCity','getDistrict','setDefault',function(cb,results){
             var showtext = results.getProvince.provinceName+" "+results.getCity.cityName+" "+results.getDistrict.districtName+" "+address;
             var deliveryAddress = new DeliveryAddress({
                 'province':province,
