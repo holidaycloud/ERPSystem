@@ -16,7 +16,7 @@ var couponSchema = new Schema({
     'endDate':Number,                                                  //有效期
     'status':{'type':Number,'default':0},                            //状态 1：已使用 0：未使用
     'customer':{'type':Schema.Types.ObjectId,'ref':'Customer'},   //分配到的用户
-    'order':{'type':Schema.Types.ObjectId,'ref':'Order'},          //订单号
+    'order':String,                                                     //订单号
     'createTime':{'type':Number,'default':Date.now},                //优惠券创建时间
     'useTime':Number                                                   //优惠券使用时间
 });
