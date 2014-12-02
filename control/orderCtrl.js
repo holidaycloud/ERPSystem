@@ -37,7 +37,7 @@ OrderCtrl.traderOrder = function(trader,token,startDate,quantity,remark,traderPr
     });
 };
 
-OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName, contactPhone, priceId, openId,customer,payway,fn,invoiceTitle,coupon) {
+OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName, contactPhone, priceId, openId,customer,payway,fn,invoiceTitle,coupon,deliveryAddress) {
     async.auto({
         getProduct: function (cb) {
             ProductCtrl.detail(product, function (err, product) {
@@ -149,6 +149,9 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 obj.useCoupon = true;
             } else {
                 obj.totalPrice = results.getPrice.price * quantity;
+            }
+            if(deliveryAddress){
+                obj.address = deliveryAddress;
             }
             if( customer){
                 obj.customer =customer;
