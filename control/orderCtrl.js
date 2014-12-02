@@ -134,16 +134,15 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 'price': results.getPrice
             };
             if(coupon){
-                //TODO 总价扣除优惠券金额
                 var couponObject = results.useCoupon;
                 if(couponObject.type==0){
                     obj.totalPrice = results.getPrice.price * quantity - couponObject.value;
                 } else if(couponObject.type==1){
                     obj.totalPrice = results.getPrice.price * quantity * couponObject.value;
                 } else if(couponObject.type==3) {
-                    obj.totalPrice = (results.getPrice.price * quantity-1) + couponObject.value;
+                    obj.totalPrice = (results.getPrice.price * (quantity-1)) + couponObject.value;
                 } else if(couponObject.type == 4){
-                    obj.totalPrice = results.getPrice.price * quantity-1;
+                    obj.totalPrice = results.getPrice.price * (quantity-1);
                 } else {
                     obj.totalPrice = results.getPrice.price * quantity;
                 }
