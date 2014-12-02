@@ -25,6 +25,7 @@ AddressCtrl.save = function(province,city,district,address,name,customer,isDefau
         },
         'setDefault':function(cb){
             if(isDefault){
+                console.log('set all default false');
                 DeliveryAddress.update({'customer':customer},{'$set':{'isDefault':false}},{ multi: true },function(err,res){
                     cb(err,res);
                 });
