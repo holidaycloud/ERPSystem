@@ -186,7 +186,6 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
             });
         }]
     }, function (err, results) {
-        console.log(err,results);
         fn(err, results.saveOrder);
     });
 };
