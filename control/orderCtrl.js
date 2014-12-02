@@ -100,7 +100,7 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 }
             });
         }
-        ,'useCoupon':['getOrderID','getCustomer',function(cb,result){
+        ,'useCoupon':['getOrderID','getCustomer',function(cb,results){
             var c;
             if( customer){
                 c =customer;
