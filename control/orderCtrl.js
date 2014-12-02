@@ -8,6 +8,7 @@ var TokenCtrl = require('./tokenCtrl');
 var ProductCtrl = require('./productCtrl');
 var CustomerCtrl = require('./customerCtrl');
 var CardCtrl = require('./cardCtrl');
+var CouponCtrl = require('./couponCtrl');
 var ProductMatchCtrl = require('./productMatchCtrl');
 var async = require('async');
 var FMB = require('fumubang');
@@ -36,7 +37,7 @@ OrderCtrl.traderOrder = function(trader,token,startDate,quantity,remark,traderPr
     });
 };
 
-OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName, contactPhone, priceId, openId,customer,payway,fn) {
+OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName, contactPhone, priceId, openId,customer,payway,fn,invoiceTitle,coupon) {
     async.auto({
         getProduct: function (cb) {
             ProductCtrl.detail(product, function (err, product) {
@@ -99,7 +100,21 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 }
             });
         }
-        ,saveOrder: ['getMember', 'getPrice', 'getOrderID', 'getProduct','getCustomer', function (cb, results) {
+        ,'useCoupon':['getOrderID','getCustomer',function(cb,result){
+            var c;
+            if( customer){
+                c =customer;
+            } else{
+                if(results.getCustomer){
+                    c = results.getCustomer._id;
+                }
+            }
+            var orderID = results.getOrderID;
+            CouponCtrl.useCoupon(coupon,c,orderID,function(err,res){
+               cb(err,res);
+            });
+        }]
+        ,saveOrder: ['getMember', 'getPrice', 'getOrderID', 'getProduct','getCustomer','useCoupon', function (cb, results) {
             var obj = {
                 'orderID': results.getOrderID,
                 'member': results.getMember,
@@ -115,6 +130,9 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 'contactPhone': contactPhone,
                 'price': results.getPrice
             };
+            if(coupon){
+                obj.useCoupon = true;
+            }
             if( customer){
                 obj.customer =customer;
             } else{

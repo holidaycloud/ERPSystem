@@ -20,7 +20,13 @@ var orderSchema = new Schema({
     status: {'type': Number, 'default': 0},                   //状态 0 未支付 1 已支付 2 已确认 3 已取消 （只能在未支付状态下跳转到已取消) 4 退款中 5 已退款
     ent:{'type': Schema.Types.ObjectId, 'ref': 'Ent'},       //供应商ent
     price:{},
-    refOrderId:String                                            //渠道方orderId
+    refOrderId:String,                                            //渠道方orderId
+    invoice:{
+        'title':String,
+        'number':String,
+        'status':Number
+    },
+    'useCoupon':{'type':Boolean,'default':false}
 });
 orderSchema.index({'_id':1,'status':1});
 orderSchema.index({'customer':1});
