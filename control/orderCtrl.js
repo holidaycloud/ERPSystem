@@ -138,7 +138,7 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 if(couponObject.type==0){
                     obj.totalPrice = results.getPrice.price * quantity - couponObject.value;
                 } else if(couponObject.type==1){
-                    obj.totalPrice = results.getPrice.price * quantity * couponObject.value;
+                    obj.totalPrice = results.getPrice.price * quantity - results.getPrice.price * quantity * couponObject.value;
                 } else if(couponObject.type==3) {
                     obj.totalPrice = (results.getPrice.price * (quantity-1)) + couponObject.value;
                 } else if(couponObject.type == 4){
