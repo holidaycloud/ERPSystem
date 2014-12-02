@@ -67,7 +67,8 @@ router.get('/canUseList',function(request,response){
     var customer = request.query.customer;
     var ent = request.query.ent;
     var product = request.query.product;
-    CouponCtrl.canUseList(ent,customer,product,function(err,res){
+    var totalPrice = request.query.totalPrice;
+    CouponCtrl.canUseList(ent,customer,product,totalPrice,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {

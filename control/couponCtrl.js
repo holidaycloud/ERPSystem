@@ -86,8 +86,8 @@ CouponCtrl.customerCoupons = function(ent,customer,status,fn){
     });
 };
 
-CouponCtrl.canUseList = function(ent,customer,product,fn){
-    var query = Coupon.find({'ent':ent,'customer':customer,'status':0});
+CouponCtrl.canUseList = function(ent,customer,product,totalPrice,fn){
+    var query = Coupon.find({'ent':ent,'customer':customer,'status':0,'minValue':{'$lte':totalPrice}});
     query.where({'$or':[{'product':product},{'product':{'$exists':false}}]})
     query.exec(function(err,res){
         fn(err,res);
