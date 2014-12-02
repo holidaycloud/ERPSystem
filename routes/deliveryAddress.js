@@ -12,7 +12,9 @@ router.post('/save',function(request,response){
     var district = request.body.district;
     var address = request.body.address;
     var customer = request.body.customer;
-    AddressCtrl.save(province,city,district,address,customer,function(err,res){
+    var name = request.body.name;
+    var isDefault = request.body.isDefault;
+    AddressCtrl.save(province,city,district,address,name,customer,isDefault,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {

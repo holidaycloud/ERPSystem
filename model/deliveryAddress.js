@@ -8,9 +8,11 @@ var deliveryAddressSchema = new Schema({
     'city':String,
     'district':String,
     'address':String,
+    'name':String,
     'showtext':String,
     'customer':{type:Schema.Types.ObjectId,ref:'Customer'},
-    'isEnable':{type:Boolean,default:true}
+    'isEnable':{type:Boolean,default:true},
+    'isDefault':{type:Boolean,default:false}
 });
 deliveryAddressSchema.index({'customer':1});
 
