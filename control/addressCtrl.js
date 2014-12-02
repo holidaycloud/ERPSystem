@@ -6,7 +6,6 @@ var DeliveryAddress = require('./../model/deliveryAddress');
 var AreaCtrl = require('./areaCtrl');
 var AddressCtrl = function(){};
 AddressCtrl.save = function(province,city,district,address,name,customer,isDefault,fn){
-    console.log('address is Default?',isDefault);
     async.auto({
         'getProvince':function(cb){
             AreaCtrl.getProvince(province,function(err,res){
@@ -24,8 +23,7 @@ AddressCtrl.save = function(province,city,district,address,name,customer,isDefau
             });
         },
         'setDefault':function(cb){
-            if(isDefault){
-                console.log('set all default false');
+            if(isDefault=='true'){
                 DeliveryAddress.update({'customer':customer},{'$set':{'isDefault':false}},{ multi: true },function(err,res){
                     cb(err,res);
                 });
