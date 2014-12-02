@@ -68,9 +68,9 @@ CouponCtrl.useCoupon = function(code,customer,order,fn){
            fn(err,null);
        } else {
            if(res){
-               cb(null,res);
+               fn(null,res);
            } else {
-               cb(new Error('优惠券已使用过'),null);
+               fn(new Error('优惠券已使用过'),null);
            }
        }
     });
