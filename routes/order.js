@@ -19,13 +19,15 @@ router.post('/save', function(request, response) {
     var openId = request.body.openId;
     var price = request.body.price;
     var payway = request.body.payway||1;
+    var invoiceTitle = request.body.invoiceTitle;
+    var coupon = request.body.coupon;
     OrderCtrl.save(token,startDate,quantity,remark,product,liveName,contactPhone,price,openId,customer,payway,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
             response.json({'error':0, 'data':res});
         }
-    });
+    },invoiceTitle,coupon);
 });
 
 router.post('/cardPay', function(request, response) {

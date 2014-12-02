@@ -140,6 +140,12 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                     obj.customer =results.getCustomer._id;
                 }
             }
+            if(invoiceTitle){
+                obj.invoice = {
+                    'title':invoiceTitle,
+                    'status':0
+                };
+            }
             var order = new Order(obj);
             order.save(function (err, res) {
                 cb(err, res);
