@@ -101,18 +101,22 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
             });
         }
         ,'useCoupon':['getOrderID','getCustomer',function(cb,results){
-            var c;
-            if( customer){
-                c =customer;
-            } else{
-                if(results.getCustomer){
-                    c = results.getCustomer._id;
+            if(coupon){
+                var c;
+                if( customer){
+                    c =customer;
+                } else{
+                    if(results.getCustomer){
+                        c = results.getCustomer._id;
+                    }
                 }
+                var orderID = results.getOrderID;
+                CouponCtrl.useCoupon(coupon,c,orderID,function(err,res){
+                    cb(err,res);
+                });
+            } else {
+                cb(null,null);
             }
-            var orderID = results.getOrderID;
-            CouponCtrl.useCoupon(coupon,c,orderID,function(err,res){
-               cb(err,res);
-            });
         }]
         ,saveOrder: ['getMember', 'getPrice', 'getOrderID', 'getProduct','getCustomer','useCoupon', function (cb, results) {
             var obj = {
@@ -123,7 +127,6 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 'quantity': quantity,
                 'remark': remark,
                 'product': product,
-                'totalPrice': results.getPrice.price * quantity,
                 'status': 0,
                 'ent': results.getProduct.ent,
                 'liveName': liveName,
@@ -131,7 +134,22 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 'price': results.getPrice
             };
             if(coupon){
+                //TODO 总价扣除优惠券金额
+                var couponObject = results.useCoupon;
+                if(couponObject.type==0){
+                    obj.totalPrice = results.getPrice.price * quantity - couponObject.value;
+                } else if(couponObject.type==1){
+                    obj.totalPrice = results.getPrice.price * quantity * couponObject.value;
+                } else if(couponObject.type==3) {
+                    obj.totalPrice = (results.getPrice.price * quantity-1) + couponObject.value;
+                } else if(couponObject.type == 4){
+                    obj.totalPrice = results.getPrice.price * quantity-1;
+                } else {
+                    obj.totalPrice = results.getPrice.price * quantity;
+                }
                 obj.useCoupon = true;
+            } else {
+                obj.totalPrice = results.getPrice.price * quantity;
             }
             if( customer){
                 obj.customer =customer;
