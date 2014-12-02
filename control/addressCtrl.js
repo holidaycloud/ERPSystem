@@ -6,6 +6,7 @@ var DeliveryAddress = require('./../model/deliveryAddress');
 var AreaCtrl = require('./areaCtrl');
 var AddressCtrl = function(){};
 AddressCtrl.save = function(province,city,district,address,name,customer,isDefault,fn){
+    console.log('address is Default?',isDefault);
     async.auto({
         'getProvince':function(cb){
             AreaCtrl.getProvince(province,function(err,res){
