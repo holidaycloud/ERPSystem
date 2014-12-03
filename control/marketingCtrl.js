@@ -2,7 +2,7 @@
  * Created by zzy on 2014/11/29.
  */
 var Marketing = require('./../model/marketing');
-var async = require();
+var async = require('async');
 var MarketingCtrl = function(){};
 MarketingCtrl.save = function(ent,name,content,startDate,endDate,channel,fn){
     var marketing = new Marketing({
