@@ -63,6 +63,17 @@ router.get('/customerCoupons',function(request,response){
     });
 });
 
+router.get('/detail',function(request,response){
+    var id = request.query.id;
+    CouponCtrl.detail(id,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/canUseList',function(request,response){
     var customer = request.query.customer;
     var ent = request.query.ent;
