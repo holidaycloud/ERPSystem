@@ -92,6 +92,33 @@ CouponCtrl.detail = function(id,fn){
     });
 };
 
+CouponCtrl.list = function(page,pageSize,ent,fn){
+    async.auto({
+        'getList':function(cb){
+            Coupon.find({'ent':ent})
+                .skip(page*pageSize)
+                .limit(pageSize)
+                .exec(function(err,marketings){
+                    cb(err,marketings);
+                });
+        },
+        'getTotalSize':function(cb,results){
+            Coupon.count({'ent':ent},function(err,size){
+                cb(err,size);
+            });
+        }
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            fn(null,{
+                'totalSize':results.getTotalSize,
+                'coupons':results.getList
+            });
+        }
+    });
+};
+
 CouponCtrl.canUseList = function(ent,customer,product,totalPrice,fn){
     var query = Coupon.find({'ent':ent,'customer':customer,'status':0,'minValue':{'$lte':totalPrice}});
     query.where({'$or':[{'product':product},{'product':{'$exists':false}}]})

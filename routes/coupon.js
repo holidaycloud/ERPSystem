@@ -63,6 +63,19 @@ router.get('/customerCoupons',function(request,response){
     });
 });
 
+router.get('/list',function(request,response){
+    var ent = request.query.ent;
+    var page = request.query.page||0;
+    var pageSize = request.query.pageSize||25;
+    CouponCtrl.list(page,pageSize,ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/detail',function(request,response){
     var id = request.query.id;
     CouponCtrl.detail(id,function(err,res){
