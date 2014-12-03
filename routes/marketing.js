@@ -20,7 +20,7 @@ router.post('/save',function(request,response){
     });
 });
 
-router.get('/nameList',function(request,response){
+router.get('/namelist',function(request,response){
     var ent = request.query.ent;
     MarketingCtrl.nameList(ent,function(err,res){
         if(err){
