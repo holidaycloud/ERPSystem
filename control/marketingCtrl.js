@@ -18,6 +18,14 @@ MarketingCtrl.save = function(ent,name,content,startDate,endDate,channel,fn){
     });
 };
 
+MarketingCtrl.nameList = function(ent,fn){
+    Marketing.find({'ent':ent})
+        .select('name')
+        .exec(function(err,res){
+            fn(err,res);
+        });
+};
+
 MarketingCtrl.list = function(page,pageSize,ent,fn){
     async.auto({
         'getList':function(cb){

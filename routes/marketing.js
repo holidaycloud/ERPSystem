@@ -20,6 +20,17 @@ router.post('/save',function(request,response){
     });
 });
 
+router.get('/nameList',function(request,response){
+    var ent = request.query.ent;
+    MarketingCtrl.nameList(ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/list',function(request,response){
     var ent = request.query.ent;
     var page = request.query.page||0;
