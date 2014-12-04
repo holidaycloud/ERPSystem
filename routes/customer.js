@@ -143,6 +143,7 @@ router.get('/weixinLogin', function(request, response) {
 router.get('/getOrRegister', function(request, response) {
     var ent = request.query.ent;
     var mobile = request.query.mobile;
+    var name = request.query.name;
     CustomerCtrl.getCustomerByMobileOrRegister(ent,mobile,name,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
