@@ -77,4 +77,16 @@ router.get('/get', function(request, response) {
         }
     });
 });
+
+router.get('/getDatePrice', function(request, response) {
+    var product = request.query.product;
+    var startDate = request.query.startDate;
+    PriceCtrl.getDatePrice(product,startDate,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
 module.exports = router;
