@@ -140,6 +140,18 @@ router.get('/weixinLogin', function(request, response) {
     });
 });
 
+router.get('/getOrRegister', function(request, response) {
+    var ent = request.query.ent;
+    var mobile = request.query.mobile;
+    CustomerCtrl.getCustomerByMobileOrRegister(ent,mobile,name,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/login', function(request, response) {
     var ent = request.query.ent;
     var mobile = request.query.mobile;
