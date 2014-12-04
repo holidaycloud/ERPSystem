@@ -33,4 +33,21 @@ router.get('/get',function(request,response){
         }
     });
 });
+
+router.post('/getOrSaveAddress',function(request,response){
+    var customer = request.body.customer;
+    var prov = request.body.prov;
+    var city = request.body.city;
+    var area = request.body.area;
+    var address = request.body.address;
+    var name = request.body.name;
+    var phone = request.body.phone;
+    AddressCtrl.getOrSaveAddress(customer,prov,city,area,address,name,phone,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
 module.exports = router;

@@ -18,6 +18,14 @@ AreaCtrl.getProvince = function(pid,fn){
             fn(err,res);
         });
 };
+
+AreaCtrl.getProvinceByName = function(name,fn){
+    Province.findOne({'provinceName':new RegExp(name)})
+        .exec(function(err,res){
+            fn(err,res);
+        });
+};
+
 AreaCtrl.cityList = function(pid,fn){
     City.find({'pid':pid})
         .exec(function(err,res){
@@ -30,6 +38,13 @@ AreaCtrl.getCity = function(cid,fn){
             fn(err,res);
         });
 };
+
+AreaCtrl.getCityByName = function(name,pid,fn){
+    City.findOne({'cityName':new RegExp(name),'pid':pid})
+        .exec(function(err,res){
+            fn(err,res);
+        });
+};
 AreaCtrl.districtList = function(cid,fn){
     District.find({'cid':cid})
         .exec(function(err,res){
@@ -38,6 +53,12 @@ AreaCtrl.districtList = function(cid,fn){
 };
 AreaCtrl.getDistrict = function(did,fn){
     District.findOne({'did':did})
+        .exec(function(err,res){
+            fn(err,res);
+        });
+};
+AreaCtrl.getDistrictByName = function(name,cid,fn){
+    District.findOne({'districtName':new RegExp(name),'cid':cid})
         .exec(function(err,res){
             fn(err,res);
         });

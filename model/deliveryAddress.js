@@ -9,6 +9,7 @@ var deliveryAddressSchema = new Schema({
     'district':String,
     'address':String,
     'name':String,
+    'phone':String,
     'showtext':String,
     'customer':{type:Schema.Types.ObjectId,ref:'Customer'},
     'isEnable':{type:Boolean,default:true},
