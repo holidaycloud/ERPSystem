@@ -47,7 +47,8 @@ CustomerCtrl.register=function(ent,mobile,passwd,loginName,email,birthday,name,a
         }
         ,'saveCustomer':['checkMobile',function(cb,results){
             if(results.checkMobile){
-                cb(null,results.checkMobile);
+                //cb(null,results.checkMobile);
+                cb(new Error('用户已存在'),null);
             } else {
                 var customer = new Customer( {
                     'ent':ent,

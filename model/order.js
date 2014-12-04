@@ -27,7 +27,8 @@ var orderSchema = new Schema({
         'status':Number
     },
     'useCoupon':{'type':Boolean,'default':false},
-    'address':{'type': Schema.Types.ObjectId, 'ref': 'DeliveryAddress'}
+    'address':{'type': Schema.Types.ObjectId, 'ref': 'DeliveryAddress'},
+    'addressText':String
 });
 orderSchema.index({'_id':1,'status':1});
 orderSchema.index({'customer':1});
