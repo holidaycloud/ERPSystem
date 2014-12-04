@@ -54,9 +54,9 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
             fn(err,null);
         } else {
             if(res){
-                cb(null,res);
+                fn(null,res);
             } else {
-                cb(new Error('优惠券已发完'),null);
+                fn(new Error('优惠券已发完'),null);
             }
         }
     });
