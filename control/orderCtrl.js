@@ -275,6 +275,7 @@ OrderCtrl.cusCancel = function(id,customer,fn){
 OrderCtrl.pay = function(id,fn){
     async.auto({
         'updateOrder':function(cb){
+            console.log('-----change pay status-----');
             if(id.length!=24){
                 Order.findOneAndUpdate({'orderID': id, 'status': 0}, {'$set': {'status': 1}}, function (err, res) {
                     fn(err, res);
@@ -286,11 +287,14 @@ OrderCtrl.pay = function(id,fn){
             }
         },
         'weixinNotify':['updateOrder',function(cb,results){
+            console.log('-----send pay weixin notify-----');
             OrderCtrl.sendWeixinNotify(results.updateOrder._id,function(err,res){
+                console.log('-----pay notify result-----',err,res);
                cb(null,null);
             });
         }]
     },function(err,results){
+        console.log(err,results);
         fn(err,results.updateOrder);
     });
 };
