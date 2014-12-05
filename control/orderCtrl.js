@@ -65,7 +65,7 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
             } else if(customer){
                 cb(null,null);
             }else {
-                CustomerCtrl.register(results.getMember.ent,contactPhone,'',null,null,null,liveName,null,function(err,res){
+                CustomerCtrl.getCustomerByMobileOrRegister(results.getMember.ent,contactPhone,'',null,null,null,liveName,null,function(err,res){
                     cb(err,res);
                 })
             }
@@ -254,9 +254,15 @@ OrderCtrl.cusCancel = function(id,customer,fn){
 };
 
 OrderCtrl.pay = function(id,fn){
-    Order.findOneAndUpdate({'_id': id, 'status': 0}, {'$set': {'status': 1}}, function (err, res) {
-        fn(err, res);
-    });
+    if(id.length!=24){
+        Order.findOneAndUpdate({'orderID': id, 'status': 0}, {'$set': {'status': 1}}, function (err, res) {
+            fn(err, res);
+        });
+    } else {
+        Order.findOneAndUpdate({'_id': id, 'status': 0}, {'$set': {'status': 1}}, function (err, res) {
+            fn(err, res);
+        });
+    }
 };
 
 OrderCtrl.confirm = function (id, fn) {
