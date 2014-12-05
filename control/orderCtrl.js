@@ -414,7 +414,7 @@ OrderCtrl.verifyCode = function(code,fn){
 OrderCtrl.sendWeixinNotify = function(oid,fn){
     var createFunc = function(member,order){
         return function(cb){
-            var url = config.weixin.host+":"+config.weixin.port+"/weixin/sendOrderTemplate/"+ent;
+            var url = config.weixin.host+":"+config.weixin.port+"/weixin/sendOrderTemplate/"+order.ent;
             request({
                 url:url,
                 timeout:3000,
