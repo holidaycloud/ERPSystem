@@ -10,8 +10,11 @@ var CustomerCtrl = require('./customerCtrl');
 var CardCtrl = require('./cardCtrl');
 var CouponCtrl = require('./couponCtrl');
 var ProductMatchCtrl = require('./productMatchCtrl');
+var MemberCtrl = require('./memberCtrl');
 var async = require('async');
-var FMB = require('fumubang');
+//var FMB = require('fumubang');
+var request = require('request');
+var config = require('./../config/config.json');
 var OrderCtrl = function () {
 };
 
@@ -180,6 +183,11 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
 //                cb(err, res);
 //            });
 //        }]
+        ,'weixinNotify':['saveOrder',function(cb,results){
+            OrderCtrl.sendWeixinNotify(results.saveOrder._id,function(err,res){
+               cb(null,null);
+            });
+        }]
         ,deductInventory: ['saveOrder', function (cb) {
             PriceCtrl.deductInventory(priceId, quantity, function (err, price) {
                 cb(err, price);
@@ -380,6 +388,7 @@ OrderCtrl.detail = function (id, fn) {
         .populate({'path': 'product', 'select': 'name'})
         .populate({'path': 'member', 'select': 'loginName'})
         .populate({'path': 'customer','select':'name mobile'})
+        .populate({'path': 'address','select':'name phone showtext'})
         .exec(function (err, order) {
             fn(err, order);
         });
@@ -400,5 +409,54 @@ OrderCtrl.verifyCode = function(code,fn){
     fmb.verifyCode('123456',function(err,res){
         fn(err,res);
     });
+};
+
+OrderCtrl.sendWeixinNotify = function(oid,fn){
+    var createFunc = function(member,order){
+        return function(cb){
+            var url = config.weixin.host+":"+config.weixin.port+"/weixin/sendOrderTemplate/"+ent;
+            request({
+                url:url,
+                timeout:3000,
+                method:'POST',
+                form: {
+                    'tempId':'OTQM8Ud7KVbhSrZtSSf3aTotnw5lGzgErTbFSMv0XqY',
+                    'toUser':member,
+                    'customerInfo':order.liveName+" "+order.contactPhone,
+                    'orderID':order.orderID,
+                    'remark':'',
+                    'orderDate':new Date(order.orderDate).Format('yyyy-MM-dd hh:mm:ss')
+                }
+            },function(err,response,body){
+                fn(err,body?JSON.parse(body):{});
+            });
+        };
+    };
+    async.auto({
+        'getOrderDetail':function(cb){
+            OrderCtrl.detail(oid,function(err,res){
+               cb(err,res);
+            });
+        },
+        'getMembers':['getOrderDetail',function(cb,results){
+            MemberCtrl.weixinMemberList(results.getOrderDetail.ent,function(err,res){
+               cb(err,res);
+            });
+        }],
+        'sendNotify':['getOrderDetail','getMembers',function(cb,results){
+            var members = results.getMembers;
+            var order = results.getOrderDetail;
+            var funcArr = [];
+            members.forEach(function(m){
+                funcArr.push(createFunc(m.weixinOpenId,order));
+            });
+            async.parallel(funcArr,function(err,res){
+                cb(err,res);
+            });
+        }]
+    },function(err,res){
+        fn(err,res);
+    });
+
 };
 module.exports = OrderCtrl;

@@ -135,6 +135,12 @@ MemberCtrl.register = function(ent,loginName,mobile,email,passwd,fn){
 
 };
 
+MemberCtrl.weixinMemberList = function(ent,fn){
+    Member.find({'ent':ent,'weixinOpenId':{'$exists':true}},function(err,res){
+       fn(err,res);
+    });
+};
+
 MemberCtrl.changePasswd = function(token,oldPasswd,newPasswd,fn){
     async.waterfall([
         function(cb){

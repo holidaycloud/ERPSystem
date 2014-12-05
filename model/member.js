@@ -10,7 +10,8 @@ var memberSchema = new Schema({
     'email':{'type':'String'},
     'passwd':String,
     'createDate':{'type': 'Number', 'default': Date.now},
-    'isEnable': Boolean
+    'isEnable': Boolean,
+    'weixinOpenId':String
 });
 memberSchema.index({'loginName':1,'ent':1},{'unique': true});
 memberSchema.index({'mobile':1,'ent':1},{'unique': true});
