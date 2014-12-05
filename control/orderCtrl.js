@@ -428,7 +428,8 @@ OrderCtrl.sendWeixinNotify = function(oid,fn){
                     'orderDate':new Date(order.orderDate).Format('yyyy-MM-dd hh:mm:ss')
                 }
             },function(err,response,body){
-                fn(err,body?JSON.parse(body):{});
+                console.log(err,body);
+                cb(err,body?JSON.parse(body):{});
             });
         };
     };
