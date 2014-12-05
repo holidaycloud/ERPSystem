@@ -256,21 +256,43 @@ OrderCtrl.cusCardPay = function(id,customer,token,ent,fn){
 };
 
 OrderCtrl.cusCancel = function(id,customer,fn){
-    Order.findOneAndUpdate({'_id': id,'customer':customer, 'status': 0}, {'$set': {'status': 3}}, function (err, res) {
-        fn(err, res);
+    async.auto({
+        'updateOrder':function(cb){
+            Order.findOneAndUpdate({'_id': id,'customer':customer, 'status': 0}, {'$set': {'status': 3}}, function (err, res) {
+                fn(err, res);
+            });
+        },
+        'weixinNotify':['updateOrder',function(cb,results){
+            OrderCtrl.sendWeixinNotify(results.updateOrder._id,function(err,res){
+                cb(null,null);
+            });
+        }]
+    },function(err,results){
+        fn(err,results.updateOrder);
     });
 };
 
 OrderCtrl.pay = function(id,fn){
-    if(id.length!=24){
-        Order.findOneAndUpdate({'orderID': id, 'status': 0}, {'$set': {'status': 1}}, function (err, res) {
-            fn(err, res);
-        });
-    } else {
-        Order.findOneAndUpdate({'_id': id, 'status': 0}, {'$set': {'status': 1}}, function (err, res) {
-            fn(err, res);
-        });
-    }
+    async.auto({
+        'updateOrder':function(cb){
+            if(id.length!=24){
+                Order.findOneAndUpdate({'orderID': id, 'status': 0}, {'$set': {'status': 1}}, function (err, res) {
+                    fn(err, res);
+                });
+            } else {
+                Order.findOneAndUpdate({'_id': id, 'status': 0}, {'$set': {'status': 1}}, function (err, res) {
+                    fn(err, res);
+                });
+            }
+        },
+        'weixinNotify':['updateOrder',function(cb,results){
+            OrderCtrl.sendWeixinNotify(results.updateOrder._id,function(err,res){
+               cb(null,null);
+            });
+        }]
+    },function(err,results){
+        fn(err,results.updateOrder);
+    });
 };
 
 OrderCtrl.confirm = function (id, fn) {
