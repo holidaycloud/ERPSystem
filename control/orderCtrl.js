@@ -414,6 +414,9 @@ OrderCtrl.verifyCode = function(code,fn){
 OrderCtrl.sendWeixinNotify = function(oid,fn){
     var createFunc = function(member,order){
         return function(cb){
+            var orderStatus =['未支付','已支付','已确认','已取消','退款中','已退款'];
+            var status =orderStatus[order.status];
+            var remark = order.address?'配送地址:'+order.address.showtext:'';
             var url = config.weixin.host+":"+config.weixin.port+"/weixin/sendOrderTemplate/548123e82321630e394590e5";
             request({
                 url:url,
@@ -424,7 +427,8 @@ OrderCtrl.sendWeixinNotify = function(oid,fn){
                     'toUser':member,
                     'customerInfo':order.liveName+" "+order.contactPhone,
                     'orderID':order.orderID,
-                    'remark':'',
+                    'status':status,
+                    'remark':remark,
                     'orderDate':new Date(order.orderDate).Format('yyyy-MM-dd hh:mm:ss')
                 }
             },function(err,response,body){
