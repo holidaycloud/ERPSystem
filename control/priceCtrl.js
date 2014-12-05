@@ -97,9 +97,15 @@ PriceCtrl.getPrice = function(id,fn){
 };
 
 PriceCtrl.getDatePrice = function(product,startDate,fn){
-    Price.findOne({'product':product,'date':startDate},function(err,res){
-        fn(err,res);
-    });
+    if(startDate){
+        Price.findOne({'product':product,'date':startDate},function(err,res){
+            fn(err,res);
+        });
+    } else {
+        Price.findOne({'product':product},function(err,res){
+            fn(err,res);
+        });
+    }
 };
 
 PriceCtrl.getFirstPrice = function(product,fn){

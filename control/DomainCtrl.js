@@ -2,23 +2,67 @@
  * Created by zzy on 2014/11/3.
  */
 var EntDomain = require('./../model/entDomain');
+var EntAlipay = require('./../model/entAlipay');
+var async = require('async');
 var DomainCtrl = function(){};
 DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,isEnable,fn){
     var obj = {
-        'ent': ent,
-        'domain': domain,
-        'address': address,
-        'gps': {'lat': lat, 'lon': lon},
-        'email': email,
-        'logo': logo,
-        'qrCode': qrCode,
-        'title': title,
-        'tel': tel,
+        'ent':ent,
         'isEnable': isEnable
     };
-    EntDomain.update({'ent':id},{'$set':obj},{'upsert':true},function(err,res){
+    if(domain){
+        obj.domain=domain;
+    }
+    if(address){
+        obj.address=address;
+    }
+    if(lat){
+        obj.gps={
+            'lat':lat,
+            'lon':lon
+        };
+    }
+    if(email){
+        obj.email=email;
+    }
+    if(logo){
+        obj.logo=logo;
+    }
+    if(qrCode){
+        obj.qrCode=qrCode;
+    }
+    if(title){
+        obj.title=title;
+    }
+    if(tel){
+        obj.tel=tel;
+    }
+    EntDomain.update({'ent':ent},{'$set':obj},{'upsert':true},function(err,res){
         fn(err,res);
     })
+};
+
+DomainCtrl.saveAlipay = function(ent,pid,key,fn){
+    var obj = {
+        'ent':ent
+    };
+    if(pid){
+        obj.pid = pid;
+    }
+    if(key){
+        obj.key = key;
+    }
+    EntAlipay.update({'ent':ent},{'$set':obj},{'upsert':true},function(err,res){
+        fn(err,res);
+    });
+};
+
+DomainCtrl.alipayDetail = function(ent,fn){
+    EntAlipay.findOne({'ent':ent})
+        .lean()
+        .exec(function(err,res){
+            fn(err,res);
+        });
 };
 
 DomainCtrl.update = function(id,obj,fn){
@@ -28,9 +72,52 @@ DomainCtrl.update = function(id,obj,fn){
 };
 
 DomainCtrl.getEnt = function(domain,fn){
-    EntDomain.findOne({'domain':domain},function(err,res){
-        fn(err,res);
+    async.auto({
+        'getDomain':function(cb){
+            EntDomain.findOne({'domain':domain})
+                .lean()
+                .exec(function(err,res){
+                    cb(err,res);
+                });
+        }
+        ,'getAlipay':['getDomain',function(cb,results){
+            var ent = results.getDomain?results.getDomain.ent:null;
+            if(ent){
+                DomainCtrl.alipayDetail(ent,function(err,res){
+                   cb(err,res);
+                });
+            }
+        }]
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            var domain = results.getDomain;
+            if(domain){
+                domain.alipay = results.getAlipay;
+                fn(null,domain);
+            } else {
+                fn(null,null);
+            }
+
+        }
     });
+};
+
+DomainCtrl.list = function(fn){
+    EntDomain.find()
+        .lean()
+        .exec(function(err,res){
+            if(err){
+                fn(err,null);
+            } else {
+                var result={};
+                res.forEach(function(domain){
+                    result[domain.domain] = domain;
+                });
+                fn(null,result);
+            }
+        });
 };
 
 DomainCtrl.detail = function(ent,fn){

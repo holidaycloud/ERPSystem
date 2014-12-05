@@ -37,6 +37,7 @@ TokenCtrl.generateNoExpire = function(member,fn){
         {'member':member},
         {'member':member,'expireDate':new Date('2099-12-31').getTime(),'token':token},
         {'upsert':true},function(err,res){
+            console.log(err,res);
             fn(err,res.token);
         }
     )

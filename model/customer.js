@@ -5,6 +5,7 @@ var Schema = require('mongoose').Schema;
 
 var customerSchema = new Schema({
     'ent':{type:Schema.Types.ObjectId,ref:'Ent'},
+    'sex':Number,
     'loginName':String,
     'mobile':String,
     'email':String,
@@ -14,7 +15,9 @@ var customerSchema = new Schema({
     'name':String,
     'address':String,
     'isEnable': {'type': 'Boolean', 'default': true},
-    'weixinOpenId':String
+    'headimgurl':String,
+    'weixinOpenId':String,
+    'origin':{type:Schema.Types.ObjectId}
 });
 customerSchema.index({'ent':1});
 customerSchema.index({'ent':1,'mobile':1});

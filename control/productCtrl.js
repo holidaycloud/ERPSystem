@@ -36,7 +36,6 @@ ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,
     });
 
     product.save(function(err,res){
-        console.log(err,res);
         fn(err,res);
     });
 };
@@ -56,9 +55,9 @@ ProductCtrl.list = function(ent,isRes,page,pageSize,fn){
         },
         'getList':['getEnt',function(cb,results){
             var query = Product.find();
-            if(!results.getEnt.isAdmin){
+            //if(!results.getEnt.isAdmin){
                 query.where({'ent':ent});
-            }
+            //}
             if(isRes){
                 query.where({'productType':2});
             } else {

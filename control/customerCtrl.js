@@ -2,7 +2,9 @@
  * Created by zzy on 2014/9/28.
  */
 var Customer = require('./../model/customer');
+var CustomerCard = require('./../model/customerCard');
 var async = require('async');
+var CardCtrl = require('./cardCtrl');
 var CustomerCtrl = function(){};
 
 CustomerCtrl.getCustomerByMobileOrRegister = function(ent,mobile,name,fn){
@@ -39,13 +41,14 @@ CustomerCtrl.getCustomerByMobileOrRegister = function(ent,mobile,name,fn){
 CustomerCtrl.register=function(ent,mobile,passwd,loginName,email,birthday,name,address,fn){
     async.auto({
         'checkMobile':function(cb){
-            Customer.count({'ent':ent,'mobile':mobile},function(err,res){
+            Customer.findOne({'ent':ent,'mobile':mobile},function(err,res){
                cb(err,res);
             });
         }
         ,'saveCustomer':['checkMobile',function(cb,results){
-            if(results.checkMobile>0){
-                cb(new Error('手机号码已存在！'),null);
+            if(results.checkMobile){
+                //cb(null,results.checkMobile);
+                cb(new Error('用户已存在'),null);
             } else {
                 var customer = new Customer( {
                     'ent':ent,
@@ -79,16 +82,85 @@ CustomerCtrl.detail = function(id,fn){
     });
 };
 
+CustomerCtrl.initCard = function(token,customer,ent,fn){
+    async.auto({
+        'createCard':function(cb){
+            var crypto = require('crypto');
+            var shasum = crypto.createHash('sha256');
+            shasum.update(customer+Date.now());
+            var cardNum = shasum.digest('hex');
+            CardCtrl.initCard(token,cardNum,ent,function(err,res){
+                cb(err,res);
+            });
+        },
+        'saveCustomerCard':['createCard',function(cb,results){
+            var customerCard = new CustomerCard({
+                'card':results.createCard._id,
+                'customer':customer
+            });
+            customerCard.save(function(err,res){
+               cb(err,res);
+            });
+        }]
+    },function(err,results){
+        fn(err,results.saveCustomerCard);
+    });
+};
+
 CustomerCtrl.login = function(ent,mobile,passwd,fn){
-    Customer.findOne({'ent':ent,'mobile':mobile,'passwd':passwd},function(err,customer){
+    async.auto({
+        'getCustomer':function(cb){
+            Customer.findOne({'ent':ent,'mobile':mobile,'passwd':passwd})
+                .lean()
+                .exec(function(err,customer){
+                if(err){
+                    cb(err,null);
+                } else {
+                    if(customer){
+                        cb(null,customer);
+                    } else {
+                        cb(new Error('用户名或密码错误!'),null);
+                    }
+                }
+            });
+        }
+        ,'getCustomerCard':['getCustomer',function(cb,results){
+            CustomerCtrl.getCustomerCard(results.getCustomer._id,function(err,res){
+               if(err){
+                   cb(err,null);
+               } else {
+                   cb(null,res);
+               }
+            });
+        }]
+        ,'getCard':['getCustomerCard',function(cb,results){
+            if(results.getCustomerCard){
+                CardCtrl.getCard(results.getCustomerCard.card,function(err,res){
+                    cb(err,res);
+                });
+            } else {
+                cb(null,null);
+            }
+
+        }]
+        ,'getCardBalance':['getCard',function(cb,results){
+            if(results.getCard){
+                CardCtrl.balance(results.getCard.cardNum,ent,function(err,res){
+                    cb(err,res);
+                })
+            } else {
+                cb(null,null);
+            }
+        }]
+    },function(err,results){
         if(err){
             fn(err,null);
         } else {
-            if(customer){
-                fn(null,customer);
-            } else {
-                fn(new Error('用户名或密码错误!'),null);
+            var customer = results.getCustomer;
+            if(results.getCardBalance){
+                customer.cardBalance = results.getCardBalance.balance;
             }
+            fn(null,customer);
         }
     });
 };
@@ -99,42 +171,84 @@ CustomerCtrl.weixinLogin = function(ent,openId,fn){
     });
 };
 
-CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,fn){
-    async.waterfall([
-        function(cb){
-            Customer.findOne({'ent':ent,'mobile':mobile},function(err,customer){
-                if(customer){
-                    if(customer.passwd==passwd){
-                        cb(null,customer);
+CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName,sex,fn){
+    async.auto({
+        'getCustomer':function(cb){
+            Customer.findOne({'ent':ent,'mobile':mobile})
+                .lean()
+                .exec(function(err,customer){
+                    if(customer){
+                        if(customer.passwd==passwd){
+                            cb(null,customer);
+                        } else {
+                            cb(new Error('用户名或密码错误！'),null);
+                        }
                     } else {
-                        cb(new Error('用户名或密码错误！'),null);
+                        cb(null,null);
                     }
-                } else {
-                    cb(null,null);
-                }
-            });
-        },
-        function(customer,cb){
-            if(customer){
-                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId}},function(err,customer){
-                    cb(err,customer);
                 });
+        }
+        ,'registerCustomer':['getCustomer',function(cb,results){
+            if(results.getCustomer){
+                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId,'headimgurl':headimgurl,'loginName':loginName,'sex':parseInt(sex)}})
+                    .lean()
+                    .exec(function(err,customer){
+                        cb(err,customer);
+                    });
             } else {
                 var customer = new Customer({
                     'ent':ent,
                     'mobile':mobile,
                     'passwd':passwd,
-                    'weixinOpenId':openId
+                    'weixinOpenId':openId,
+                    'headimgurl':headimgurl,
+                    'loginName':loginName,
+                    'sex':parseInt(sex)
                 });
                 customer.save(function(err,res){
-                    fn(err,res);
+                    cb(err,res);
                 });
             }
+        }]
+        ,'getCustomerCard':['registerCustomer',function(cb,results){
+        CustomerCtrl.getCustomerCard(results.registerCustomer._id,function(err,res){
+            if(err){
+                cb(err,null);
+            } else {
+                cb(null,res);
+            }
+        });
+    }]
+        ,'getCard':['getCustomerCard',function(cb,results){
+        if(results.getCustomerCard){
+            CardCtrl.getCard(results.getCustomerCard.card,function(err,res){
+                cb(err,res);
+            });
+        } else {
+            cb(null,null);
         }
-    ],function(err,res){
-        fn(err,res);
-    });
 
+    }]
+        ,'getCardBalance':['getCard',function(cb,results){
+        if(results.getCard){
+            CardCtrl.balance(results.getCard.cardNum,ent,function(err,res){
+                cb(err,res);
+            })
+        } else {
+            cb(null,null);
+        }
+    }]
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            var customer = results.registerCustomer;
+            if(results.getCardBalance){
+                customer.cardBalance = results.getCardBalance.balance;
+            }
+            fn(null,customer);
+        }
+    });
 };
 
 CustomerCtrl.changePasswd = function(id,oldPasswd,newPasswd,fn){
@@ -151,9 +265,63 @@ CustomerCtrl.changePasswd = function(id,oldPasswd,newPasswd,fn){
     });
 };
 
+CustomerCtrl.getCustomerCard = function(customer,fn){
+    CustomerCard.findOne({'customer':customer},function(err,res){
+       fn(err,res);
+    });
+}
+
 CustomerCtrl.update = function(id,obj,fn){
-    Customer.findByIdAndUpdate(id,{'$set':obj},function(err,res){
-        fn(err,res);
+    async.auto({
+        'getCustomer':function(cb){
+            Customer.findByIdAndUpdate(id,{'$set':obj})
+                .lean()
+                .exec(function(err,customer){
+                    if(err){
+                        cb(err,null);
+                    } else {
+                        cb(null,customer);
+                    }
+                });
+        }
+        ,'getCustomerCard':['getCustomer',function(cb,results){
+            CustomerCtrl.getCustomerCard(results.getCustomer._id,function(err,res){
+                if(err){
+                    cb(err,null);
+                } else {
+                    cb(null,res);
+                }
+            });
+        }]
+        ,'getCard':['getCustomerCard',function(cb,results){
+            if(results.getCustomerCard){
+                CardCtrl.getCard(results.getCustomerCard.card,function(err,res){
+                    cb(err,res);
+                });
+            } else {
+                cb(null,null);
+            }
+
+        }]
+        ,'getCardBalance':['getCustomer','getCard',function(cb,results){
+            if(results.getCard){
+                CardCtrl.balance(results.getCard.cardNum,results.getCustomer.ent,function(err,res){
+                    cb(err,res);
+                })
+            } else {
+                cb(null,null);
+            }
+        }]
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            var customer = results.getCustomer;
+            if(results.getCardBalance){
+                customer.cardBalance = results.getCardBalance.balance;
+            }
+            fn(null,customer);
+        }
     });
 };
 
