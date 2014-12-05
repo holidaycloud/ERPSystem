@@ -65,7 +65,7 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
             } else if(customer){
                 cb(null,null);
             }else {
-                CustomerCtrl.getCustomerByMobileOrRegister(results.getMember.ent,contactPhone,'',null,null,null,liveName,null,function(err,res){
+                CustomerCtrl.getCustomerByMobileOrRegister(results.getMember.ent,contactPhone,liveName,function(err,res){
                     cb(err,res);
                 })
             }
