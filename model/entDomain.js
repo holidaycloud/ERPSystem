@@ -4,7 +4,7 @@
 var Schema = require('mongoose').Schema;
 
 var entDomainSchema = new Schema({
-    'ent':{type:Schema.Types.ObjectId,ref:'Ent'},
+    'ent':{type:Schema.Types.ObjectId,ref:'Ent','unique': true},
     'domain':String,
     'address':String,
     'gps':{'lat':Number,'lon':Number},
@@ -16,7 +16,6 @@ var entDomainSchema = new Schema({
     'isEnable':Boolean,
     'longToken':String
 });
-entDomainSchema.index({'ent':1});
 entDomainSchema.index({'domain':1});
 var EntDomain = db.model('EntDomain',entDomainSchema);
 module.exports = EntDomain;

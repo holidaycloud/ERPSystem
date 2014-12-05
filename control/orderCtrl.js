@@ -262,6 +262,11 @@ OrderCtrl.cusCancel = function(id,customer,fn){
                 cb(err, res);
             });
         },
+        'returnInventory':['updateOrder',function(cb,results){
+            PriceCtrl.returnInventory(results.updateOrder.price._id,results.updateOrder.quantity,function(err,res){
+               cb(err,res);
+            });
+        }],
         'weixinNotify':['updateOrder',function(cb,results){
             OrderCtrl.sendWeixinNotify(results.updateOrder._id,function(err,res){
                 cb(null,null);

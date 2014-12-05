@@ -3,43 +3,101 @@
  */
 var EntDomain = require('./../model/entDomain');
 var EntAlipay = require('./../model/entAlipay');
+var Member = require('./../model/member');
+var WebCode = require('./../model/webCode');
+var TokenCtrl = require('./tokenCtrl')
 var async = require('async');
 var DomainCtrl = function(){};
 DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,isEnable,fn){
-    var obj = {
-        'ent':ent,
-        'isEnable': isEnable
-    };
-    if(domain){
-        obj.domain=domain;
-    }
-    if(address){
-        obj.address=address;
-    }
-    if(lat){
-        obj.gps={
-            'lat':lat,
-            'lon':lon
-        };
-    }
-    if(email){
-        obj.email=email;
-    }
-    if(logo){
-        obj.logo=logo;
-    }
-    if(qrCode){
-        obj.qrCode=qrCode;
-    }
-    if(title){
-        obj.title=title;
-    }
-    if(tel){
-        obj.tel=tel;
-    }
-    EntDomain.update({'ent':ent},{'$set':obj},{'upsert':true},function(err,res){
-        fn(err,res);
-    })
+    async.auto({
+        'findEntDomain':function(cb){
+            EntDomain.findOne({'ent':ent})
+                .lean()
+                .exec(function(err,res){
+                    cb(err,res);
+                });
+        },
+        'checkLongToken':['findEntDomain',function(cb,results){
+            var entDomain = results.findEntDomain;
+            if(entDomain.longToken){
+                cb(null,null);
+            } else {
+                WebCode.findOneAndUpdate({},{'$inc':{'code':1}},function(err,res){
+                    if(err){
+                        cb(err,null);
+                    } else {
+                        cb(null,res.code);
+                    }
+                });
+            }
+        }],
+        'saveWebMember':['checkLongToken',function(cb,results){
+            if(results.checkLongToken){
+                var member = new Member({
+                    'ent':ent,
+                    'loginName': '网站专用',
+                    'mobile': results.checkLongToken,
+                    'email':'',
+                    'passwd':''
+                });
+                member.save(function(err,res){
+                    cb(err,res);
+                });
+            } else {
+                cb(null,null);
+            }
+        }],
+        'generateToken':['saveWebMember',function(cb,results){
+            if(results.saveWebMember){
+                TokenCtrl.generateNoExpire(results.saveWebMember._id,function(err,res){
+                   cb(err,res);
+                });
+            } else {
+                cb(null,null);
+            }
+        }],
+        'saveDomain':['generateToken',function(cb,results){
+            var obj = {
+                'ent':ent,
+                'isEnable': isEnable
+            };
+            if(results.generateToken){
+                obj.longToken = results.generateToken.token;
+            }
+            if(domain){
+                obj.domain=domain;
+            }
+            if(address){
+                obj.address=address;
+            }
+            if(lat){
+                obj.gps={
+                    'lat':lat,
+                    'lon':lon
+                };
+            }
+            if(email){
+                obj.email=email;
+            }
+            if(logo){
+                obj.logo=logo;
+            }
+            if(qrCode){
+                obj.qrCode=qrCode;
+            }
+            if(title){
+                obj.title=title;
+            }
+            if(tel){
+                obj.tel=tel;
+            }
+            EntDomain.update({'ent':ent},{'$set':obj},{'upsert':true},function(err,res){
+                cb(err,res);
+            })
+        }]
+    },function(err,results){
+        fn(err,results.saveDomain);
+    });
 };
 
 DomainCtrl.saveAlipay = function(ent,pid,key,fn){

@@ -122,4 +122,10 @@ PriceCtrl.deductInventory = function(id,quantity,fn){
     })
 };
 
+PriceCtrl.returnInventory = function(id,quantity,fn){
+    Price.findByIdAndUpdate(id,{'$inc':{'inventory':quantity}},function(err,res){
+        fn(err,res);
+    })
+};
+
 module.exports = PriceCtrl;
