@@ -262,6 +262,11 @@ OrderCtrl.cusCancel = function(id,customer,fn){
                 cb(err, res);
             });
         },
+        'returnInventory':['updateOrder',function(cb,results){
+            PriceCtrl.returnInventory(results.updateOrder.price._id,results.updateOrder.quantity,function(err,res){
+               cb(err,res);
+            });
+        }],
         'weixinNotify':['updateOrder',function(cb,results){
             OrderCtrl.sendWeixinNotify(results.updateOrder._id,function(err,res){
                 cb(null,null);
@@ -286,9 +291,13 @@ OrderCtrl.pay = function(id,fn){
             }
         },
         'weixinNotify':['updateOrder',function(cb,results){
-            OrderCtrl.sendWeixinNotify(results.updateOrder._id,function(err,res){
-               cb(null,null);
-            });
+            if(results.updateOrder){
+                OrderCtrl.sendWeixinNotify(results.updateOrder._id,function(err,res){
+                    cb(null,null);
+                });
+            } else {
+                cb(null,null);
+            }
         }]
     },function(err,results){
         fn(err,results.updateOrder);
