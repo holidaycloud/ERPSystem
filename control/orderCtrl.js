@@ -291,9 +291,13 @@ OrderCtrl.pay = function(id,fn){
             }
         },
         'weixinNotify':['updateOrder',function(cb,results){
-            OrderCtrl.sendWeixinNotify(results.updateOrder._id,function(err,res){
-               cb(null,null);
-            });
+            if(results.updateOrder){
+                OrderCtrl.sendWeixinNotify(results.updateOrder._id,function(err,res){
+                    cb(null,null);
+                });
+            } else {
+                cb(null,null);
+            }
         }]
     },function(err,results){
         fn(err,results.updateOrder);
