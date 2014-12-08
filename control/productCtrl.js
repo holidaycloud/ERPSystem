@@ -58,11 +58,11 @@ ProductCtrl.list = function(ent,isRes,page,pageSize,fn){
             if(!results.getEnt.isAdmin){
                 query.where({'ent':ent});
             }
-            if(isRes){
-                query.where({'productType':2});
-            } else {
-                query.where({'productType':{'$ne':2}});
-            }
+            //if(isRes){
+            //    query.where({'productType':2});
+            //} else {
+            //    query.where({'productType':{'$ne':2}});
+            //}
             query.skip(page*pageSize).limit(pageSize).exec(function(err,products){
                 cb(err,products);
             });
@@ -72,11 +72,11 @@ ProductCtrl.list = function(ent,isRes,page,pageSize,fn){
             if(!results.getEnt.isAdmin){
                 query.where({'ent':ent});
             }
-            if(isRes){
-                query.where({'productType':2});
-            } else {
-                query.where({'productType':{'$ne':2}});
-            }
+            //if(isRes){
+            //    query.where({'productType':2});
+            //} else {
+            //    query.where({'productType':{'$ne':2}});
+            //}
             query.exec(function(err,totalSize){
                 cb(err,totalSize);
             });
