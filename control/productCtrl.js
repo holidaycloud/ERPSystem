@@ -63,7 +63,11 @@ ProductCtrl.list = function(ent,isRes,page,pageSize,fn){
             //} else {
             //    query.where({'productType':{'$ne':2}});
             //}
-            query.skip(page*pageSize).limit(pageSize).exec(function(err,products){
+            query
+                .select('name introduction startDate endDate weekend isEnable createTime')
+                .skip(page*pageSize)
+                .limit(pageSize)
+                .exec(function(err,products){
                 cb(err,products);
             });
         }],
