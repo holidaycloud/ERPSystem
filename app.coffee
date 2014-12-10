@@ -13,6 +13,8 @@ log4js = require "log4js"
 log4js.configure appenders:[type:"console"],replaceConsole:true
 logger = log4js.getLogger "normal"
 
+#verfiyRequest = require './tools/verfiyRequest'
+
 member = require "./routes/member"
 ent = require "./routes/ent"
 product = require "./routes/product"
@@ -48,6 +50,7 @@ app.use (req,res,next) ->
   res.set "X-Powered-By","Server"
   next()
 
+#app.use verfiyRequest.verfiy
 app.use "/",index
 app.use "/api/member",member
 app.use "/api/ent", ent
@@ -70,18 +73,16 @@ app.use "/api/coupon", coupon
 app.use "/api/marketing", marketing
 
 app.use (req,res,next) ->
-  err = new Error "not Found"
-  err.status = 404
-  next err
+  res.status(404).end()
 
 if (app.get "env") is "development"
   app.use (err,req,res,next) ->
     console.log err
-    res.status err.status or 500
+    res.status(err.status or 500).end()
 
 app.use (err,req,res,next) ->
   console.log err
-  res.status err.status or 500
+  res.status(err.status or 500).end()
 
 app.set "port",process.env.PORT or 3000
 

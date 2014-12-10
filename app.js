@@ -139,22 +139,19 @@
   app.use("/api/marketing", marketing);
 
   app.use(function(req, res, next) {
-    var err;
-    err = new Error("not Found");
-    err.status = 404;
-    return next(err);
+    return res.status(404).end();
   });
 
   if ((app.get("env")) === "development") {
     app.use(function(err, req, res, next) {
       console.log(err);
-      return res.status(err.status || 500);
+      return res.status(err.status || 500).end();
     });
   }
 
   app.use(function(err, req, res, next) {
     console.log(err);
-    return res.status(err.status || 500);
+    return res.status(err.status || 500).end();
   });
 
   app.set("port", process.env.PORT || 3000);
