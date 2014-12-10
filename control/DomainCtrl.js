@@ -5,7 +5,7 @@ var EntDomain = require('./../model/entDomain');
 var EntAlipay = require('./../model/entAlipay');
 var Member = require('./../model/member');
 var WebCode = require('./../model/webCode');
-var TokenCtrl = require('./tokenCtrl')
+var TokenCtrl = require('./tokenCtrl');
 var async = require('async');
 var DomainCtrl = function(){};
 DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,isEnable,fn){
@@ -96,7 +96,6 @@ DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,te
             })
         }]
     },function(err,results){
-        console.log(err,results);
         fn(err,results.saveDomain);
     });
 };

@@ -141,6 +141,20 @@ MemberCtrl.weixinMemberList = function(ent,fn){
     });
 };
 
+MemberCtrl.weixinBind = function(mobile,passwd,openID,fn){
+    Member.findOneAndUpdate({'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openID}},function(err,res){
+        if(err){
+            fn(err,null);
+        } else {
+            if(res){
+                fn(null,res);
+            } else {
+                fn(new Error('用户名或密码错误'),null);
+            }
+        }
+    });
+};
+
 MemberCtrl.changePasswd = function(token,oldPasswd,newPasswd,fn){
     async.waterfall([
         function(cb){
