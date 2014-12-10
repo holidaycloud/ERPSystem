@@ -19,7 +19,7 @@ DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,te
         },
         'checkLongToken':['findEntDomain',function(cb,results){
             var entDomain = results.findEntDomain;
-            if(entDomain.longToken){
+            if(entDomain&&entDomain.longToken){
                 cb(null,null);
             } else {
                 WebCode.findOneAndUpdate({},{'$inc':{'code':1}},function(err,res){
@@ -62,7 +62,7 @@ DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,te
                 'isEnable': isEnable
             };
             if(results.generateToken){
-                obj.longToken = results.generateToken.token;
+                obj.longToken = results.generateToken;
             }
             if(domain){
                 obj.domain=domain;
@@ -96,6 +96,7 @@ DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,te
             })
         }]
     },function(err,results){
+        console.log(err,results);
         fn(err,results.saveDomain);
     });
 };

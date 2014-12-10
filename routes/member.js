@@ -81,6 +81,17 @@ router.get('/noExpireToken', function(request, response) {
     });
 });
 
+router.post('/createWeixinToken', function(request, response) {
+    var ent = request.body.ent;
+    TokenCtrl.createWeixinToken(ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post('/changePasswd', function(request, response) {
     var token = request.body.token;
     var oldPasswd = request.body.oldPasswd;
