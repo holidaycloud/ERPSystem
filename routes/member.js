@@ -129,4 +129,17 @@ router.get('/detail', function(request, response) {
         }
     });
 });
+
+router.post('/weixinBind', function(request, response) {
+    var mobile = request.body.loginName;
+    var passwd = request.body.pwd;
+    var openID = request.body.openid;
+    MemberCtrl.weixinBind(mobile,passwd,openID,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
 module.exports = router;
