@@ -13,8 +13,9 @@ router.post('/save',function(request,response){
     var address = request.body.address;
     var customer = request.body.customer;
     var name = request.body.name;
+    var phone = request.body.phone;
     var isDefault = request.body.isDefault;
-    AddressCtrl.save(province,city,district,address,name,customer,isDefault,function(err,res){
+    AddressCtrl.save(province,city,district,address,name,phone,customer,isDefault,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {

@@ -5,7 +5,7 @@ var async = require('async');
 var DeliveryAddress = require('./../model/deliveryAddress');
 var AreaCtrl = require('./areaCtrl');
 var AddressCtrl = function(){};
-AddressCtrl.save = function(province,city,district,address,name,customer,isDefault,fn){
+AddressCtrl.save = function(province,city,district,address,name,phone,customer,isDefault,fn){
     async.auto({
         'getProvince':function(cb){
             AreaCtrl.getProvince(province,function(err,res){
@@ -41,6 +41,7 @@ AddressCtrl.save = function(province,city,district,address,name,customer,isDefau
                 'customer':customer,
                 'showtext':showtext,
                 'name':name,
+                'phone':phone,
                 'isDefault':isDefault
             });
             deliveryAddress.save(function(err,res){
