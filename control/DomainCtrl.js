@@ -6,6 +6,8 @@ var EntAlipay = require('./../model/entAlipay');
 var Member = require('./../model/member');
 var WebCode = require('./../model/webCode');
 var TokenCtrl = require('./tokenCtrl');
+var config = require('./../config/config.json')
+var request = require('request');
 var async = require('async');
 var DomainCtrl = function(){};
 DomainCtrl.save = function(ent,domain,address,lat,lon,email,logo,qrCode,title,tel,isEnable,fn){
@@ -144,7 +146,33 @@ DomainCtrl.getEnt = function(domain,fn){
                 DomainCtrl.alipayDetail(ent,function(err,res){
                    cb(err,res);
                 });
+            } else {
+                cb(null,null);
             }
+        }]
+        ,'getWeixin':['getDomain',function(cb,results){
+            var ent = results.getDomain?results.getDomain.ent:null;
+            if(ent){
+                var url = config.weixin.host+":"+config.weixin.port+"/weixin/configDetail/"+ent;
+                request({
+                    url:url,
+                    timeout:3000
+                },function(err,response,body){
+                    var obj = body!=""?JSON.parse(body):null;
+                    if(err){
+                        cb(err,null);
+                    } else {
+                        if(obj&&obj.error==0){
+                            cb(null,obj.data);
+                        } else {
+                            cb(new Error(obj.errMsg),null);
+                        }
+                    }
+                });
+            }else {
+                cb(null,null);
+            }
+
         }]
     },function(err,results){
         if(err){
@@ -153,6 +181,7 @@ DomainCtrl.getEnt = function(domain,fn){
             var domain = results.getDomain;
             if(domain){
                 domain.alipay = results.getAlipay;
+                domain.weixin = results.getWeixin;
                 fn(null,domain);
             } else {
                 fn(null,null);
