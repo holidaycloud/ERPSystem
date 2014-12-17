@@ -7,6 +7,47 @@ var async = require('async');
 var CardCtrl = require('./cardCtrl');
 var CustomerCtrl = function(){};
 
+CustomerCtrl.loginOrRegister = function(ent,mobile,passwd,fn){
+  async.auto({
+      'login':function(cb){
+          Customer.findOne({'ent':ent,'mobile':mobile},function(err,customer){
+              if(err){
+                  cb(err,null);
+              } else {
+                  if(customer){
+                      if(customer.passwd == passwd){
+                          cb(null,customer);
+                      } else {
+                          cb(new Error('用户名或密码错误'),null);
+                      }
+                  } else {
+                      cb(null,true);
+                  }
+              }
+          });
+      },
+      'register':['login',function(cb,results){
+          var r = results.login;
+          if(r===true){
+              var customer = new Customer({
+                  'ent':ent,
+                  'mobile':mobile,
+                  'passwd':passwd
+              });
+              customer.save(function(err,res){
+                  cb(err,res);
+              })
+          } else if(r!=null){
+              cb(null,r);
+          } else {
+              cb(null,null);
+          }
+      }]
+  },function(err,results){
+      fn(err,results.register);
+  });
+};
+
 CustomerCtrl.getCustomerByMobileOrRegister = function(ent,mobile,name,fn){
     async.waterfall([
         function(cb){

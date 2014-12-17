@@ -3,7 +3,7 @@
  */
 var Schema = require('mongoose').Schema;
 var payLogSchema = new Schema({
-    'type': Number,                                                           //0 支付宝
+    'type': Number,                                                           //0 支付宝 1 微信
     createDate:{'type':Number,'default':Date.now},                      //创建日期
     'data':{}
 });
