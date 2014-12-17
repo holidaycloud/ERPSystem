@@ -34,6 +34,7 @@ invoice = require "./routes/invoice"
 payLog = require "./routes/payLog"
 coupon = require "./routes/coupon"
 marketing = require "./routes/marketing"
+news = require "./routes/news"
 index = require "./routes/index"
 app = express()
 
@@ -71,6 +72,7 @@ app.use "/api/invoice", invoice
 app.use "/api/payLog", payLog
 app.use "/api/coupon", coupon
 app.use "/api/marketing", marketing
+app.use "/api/news", news
 
 app.use (req,res,next) ->
   res.status(404).end()
