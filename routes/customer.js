@@ -156,7 +156,7 @@ router.get('/getOrRegister', function(request, response) {
 router.post('/loginOrRegister', function(request, response) {
     var ent = request.body.ent;
     var mobile = request.body.mobile;
-    var passwd = request.body.name;
+    var passwd = request.body.passwd;
     CustomerCtrl.loginOrRegister(ent,mobile,passwd,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
