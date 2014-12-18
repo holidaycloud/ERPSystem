@@ -86,6 +86,8 @@
     });
   });
 
+  module.exports = router;
+
 }).call(this);
 
 //# sourceMappingURL=news.js.map

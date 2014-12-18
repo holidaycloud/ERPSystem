@@ -40,3 +40,5 @@ router.get "/detail",(request,response) ->
     else
       response.json {error:0,data:res}
   )
+
+module.exports = router
