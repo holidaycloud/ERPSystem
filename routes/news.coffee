@@ -31,3 +31,12 @@ router.get "/list",(request,response) ->
       response.json {error:1,errMsg:err.message}
     else
       response.json {error:0,data:res}
+
+router.get "/detail",(request,response) ->
+  id = request.query.id
+  NewsCtrl.detail(id,(err,res) ->
+    if err
+      response.json {error:1,errMsg:err.message}
+    else
+      response.json {error:0,data:res}
+  )

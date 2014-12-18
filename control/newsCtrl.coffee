@@ -31,4 +31,9 @@ class NewsCtrl
         else
           fn null,{totalSize:results.totalSize,news:results.getNews}
     )
+
+  @detail = (id,fn) ->
+    News.findById(id,(err,news) ->
+      fn err,news
+    )
 module.exports = NewsCtrl

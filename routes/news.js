@@ -68,6 +68,24 @@
     });
   });
 
+  router.get("/detail", function(request, response) {
+    var id;
+    id = request.query.id;
+    return NewsCtrl.detail(id, function(err, res) {
+      if (err) {
+        return response.json({
+          error: 1,
+          errMsg: err.message
+        });
+      } else {
+        return response.json({
+          error: 0,
+          data: res
+        });
+      }
+    });
+  });
+
 }).call(this);
 
 //# sourceMappingURL=news.js.map

@@ -62,6 +62,12 @@
       });
     };
 
+    NewsCtrl.detail = function(id, fn) {
+      return News.findById(id, function(err, news) {
+        return fn(err, news);
+      });
+    };
+
     return NewsCtrl;
 
   })();
