@@ -73,8 +73,8 @@ PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,basePri
     });
 };
 
-PriceCtrl.type3save = function(productId,specId,price,basePrice,tradePrice,inventory,fn){
-    Price.update({'product':productId,'spec':specId},{'$set':{'price':price,'basePrice':basePrice,'tradePrice':tradePrice,'inventory':inventory}},{'upsert':true},function(err,res){
+PriceCtrl.type3save = function(product,spec,price,basePrice,tradePrice,inventory,fn){
+    Price.update({'product':product,'spec':spec},{'$set':{'price':price,'basePrice':basePrice,'tradePrice':tradePrice,'inventory':inventory}},{'upsert':true},function(err,res){
         fn(err,res);
     });
 };
@@ -85,6 +85,7 @@ PriceCtrl.list = function(product,startDate,endDate,fn){
     if(startDate){
         query .where({'date':{'$gte':startDate,'$lte':endDate}});
     }
+    query.populate('spec')
     query.exec(function(err,res){
         fn(err,res);
     });

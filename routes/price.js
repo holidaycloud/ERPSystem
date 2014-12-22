@@ -28,6 +28,22 @@ router.post('/save', function(request, response) {
     });
 });
 
+router.post('/type3save', function(request, response) {
+    var product = request.body.product;
+    var spec = parseInt(request.body.spec);
+    var price = request.body.price;
+    var basePrice = request.body.basePrice;
+    var tradePrice = request.body.tradePrice;
+    var inventory = request.body.inventory;
+    PriceCtrl.type3save(product,spec,price,basePrice,tradePrice,inventory,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/list', function(request, response) {
     var product = request.query.product;
     var startDate = parseInt(request.query.startDate);
