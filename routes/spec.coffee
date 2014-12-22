@@ -3,9 +3,9 @@ router = express.Router()
 SpecCtrl = require "./../control/specCtrl"
 
 router.post "/save",(request,response) ->
+  console.log request.body.id,request.body.spec
   productId = request.body.id
   specs = if request.body.spec? then JSON.parse(request.body.spec) else []
-  console.log specs
   SpecCtrl.save productId,specs,(err,res) ->
     if err
       response.json {error:1,errMsg:err.message}
