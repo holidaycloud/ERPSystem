@@ -5,6 +5,7 @@ var Schema = require('mongoose').Schema;
 
 var priceSchema = new Schema({
     'product':{type:Schema.Types.ObjectId,ref:'Product'},
+    'spec':{type:Schema.Types.ObjectId,ref:'Spec'},
     'date': Number,
     'price':Number,
     'basePrice':Number,
@@ -13,6 +14,7 @@ var priceSchema = new Schema({
     'inventory':Number
 });
 priceSchema.index({'product':1});
+priceSchema.index({'product':1,'spec':1});
 priceSchema.index({'product':1,'date':1});
 priceSchema.index({'product':1,'date':1,'inventory':1});
 var Price = db.model('Price',priceSchema);

@@ -10,7 +10,6 @@
 
   router.post("/save", function(request, response) {
     var productId, specs;
-    console.log(request.body.id, request.body.spec);
     productId = request.body.id;
     specs = request.body.spec != null ? JSON.parse(request.body.spec) : [];
     return SpecCtrl.save(productId, specs, function(err, res) {

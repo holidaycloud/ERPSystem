@@ -73,6 +73,12 @@ PriceCtrl.save = function(productId,startDate,endDate,price,weekendPrice,basePri
     });
 };
 
+PriceCtrl.type3save = function(productId,specId,price,basePrice,tradePrice,inventory,fn){
+    Price.update({'product':productId,'spec':specId},{'$set':{'price':price,'basePrice':basePrice,'tradePrice':tradePrice,'inventory':inventory}},{'upsert':true},function(err,res){
+        fn(err,res);
+    });
+};
+
 PriceCtrl.list = function(product,startDate,endDate,fn){
     var query = Price.find();
     query.where({'product':product});

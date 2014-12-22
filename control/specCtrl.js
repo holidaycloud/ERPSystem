@@ -3,11 +3,15 @@
   var SpecCtrl;
 
   SpecCtrl = (function() {
-    var Spec, async, saveSpec;
+    var Price, Spec, async, saveSpec, _;
 
     function SpecCtrl() {}
 
     Spec = require("./../model/spec");
+
+    Price = require("./../model/price");
+
+    _ = require("underscore");
 
     async = require("async");
 
@@ -33,19 +37,52 @@
     };
 
     SpecCtrl.save = function(productId, specs, fn) {
-      var funcArr, spec;
-      funcArr = (function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = specs.length; _i < _len; _i++) {
-          spec = specs[_i];
-          spec.product = productId;
-          _results.push(saveSpec(spec));
-        }
-        return _results;
-      })();
-      return async.parallel(funcArr, function(err, results) {
-        return fn(err, results);
+      var idList, ids;
+      idList = _.filter(specs, function(spec) {
+        return spec._id != null;
+      });
+      ids = _.pluck(idList, "_id");
+      return async.auto({
+        deleteSpecs: function(cb) {
+          return Spec.remove({
+            product: productId,
+            _id: {
+              $nin: ids
+            }
+          }, function(err, res) {
+            return cb(err, res);
+          });
+        },
+        deletePrice: function(cb) {
+          return Price.remove({
+            product: productId,
+            _id: {
+              $nin: ids
+            }
+          }, function(err, res) {
+            return cb(err, res);
+          });
+        },
+        saveSpecs: [
+          "deleteSpecs", "deletePrice", function(cb) {
+            var funcArr, spec;
+            funcArr = (function() {
+              var _i, _len, _results;
+              _results = [];
+              for (_i = 0, _len = specs.length; _i < _len; _i++) {
+                spec = specs[_i];
+                spec.product = productId;
+                _results.push(saveSpec(spec));
+              }
+              return _results;
+            })();
+            return async.parallel(funcArr, function(err, results) {
+              return cb(err, results);
+            });
+          }
+        ]
+      }, function(err, results) {
+        return fn(err, results.saveSpecs);
       });
     };
 
