@@ -86,14 +86,18 @@ class PriceCtrl
     async.auto {
       getProduct:(cb) ->
         Product.findById product,(err,res) ->
-          cb err,res
+          if err
+            cb err
+          else
+            if res? then cb null,res else cb new Error("产品未找到"),null
       getPrice:["getProduct",(cb,results) ->
-        if results.getProduct.productType is 0
+        if results.getProduct?.productType is 0
           type0PriceList product,startDate,endDate,cb
         else
           type3PriceList product,cb
       ]
     },(err,results) ->
+      console.log err,results
       fn err,results.getPrice
 
   @update:(id,price,basePrice,tradePrice,inventory,fn) ->

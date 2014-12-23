@@ -163,12 +163,21 @@
       return async.auto({
         getProduct: function(cb) {
           return Product.findById(product, function(err, res) {
-            return cb(err, res);
+            if (err) {
+              return cb(err);
+            } else {
+              if (res != null) {
+                return cb(null, res);
+              } else {
+                return cb(new Error("产品未找到"), null);
+              }
+            }
           });
         },
         getPrice: [
           "getProduct", function(cb, results) {
-            if (results.getProduct.productType === 0) {
+            var _ref;
+            if (((_ref = results.getProduct) != null ? _ref.productType : void 0) === 0) {
               return type0PriceList(product, startDate, endDate, cb);
             } else {
               return type3PriceList(product, cb);
@@ -176,6 +185,7 @@
           }
         ]
       }, function(err, results) {
+        console.log(err, results);
         return fn(err, results.getPrice);
       });
     };
