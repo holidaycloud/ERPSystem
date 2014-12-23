@@ -19,7 +19,7 @@ router.post('/save', function(request, response) {
     var weekendTradePrice = request.body.weekendTradePrice;
     var inventory = request.body.inventory;
     var weekendinventory = request.body.weekendinventory;
-    PriceCtrl.save(product,startDate,endDate,price,weekendPrice,basePrice,weekendBasePrice,tradePrice,weekendTradePrice,inventory,weekendinventory,function(err,res){
+    PriceCtrl.type0save(product,startDate,endDate,price,weekendPrice,basePrice,weekendBasePrice,tradePrice,weekendTradePrice,inventory,weekendinventory,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
