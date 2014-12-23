@@ -80,6 +80,7 @@ class PriceCtrl
           cb null,result
       ]
     },(err,results) ->
+      console.log err,results
       fn err,results.mergeSpecPrice
 
 

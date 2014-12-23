@@ -156,6 +156,7 @@
           }
         ]
       }, function(err, results) {
+        console.log(err, results);
         return fn(err, results.mergeSpecPrice);
       });
     };
