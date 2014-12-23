@@ -137,13 +137,12 @@
                 _results = [];
                 for (_i = 0, _len = specs.length; _i < _len; _i++) {
                   spec = specs[_i];
-                  price = _.findWhere(prices, {
-                    spec: spec._id
+                  price = _.filter(prices, function(p) {
+                    return p.spec.toString() === spec._id.toString();
                   });
-                  console.log(price, spec._id);
-                  if (price != null) {
-                    price.spec = spec;
-                    _results.push(price);
+                  if (price[0] != null) {
+                    price[0].spec = spec;
+                    _results.push(price[0]);
                   } else {
                     _results.push({
                       spec: spec
@@ -187,7 +186,6 @@
           }
         ]
       }, function(err, results) {
-        console.log(err, results);
         return fn(err, results.getPrice);
       });
     };

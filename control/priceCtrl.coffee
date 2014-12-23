@@ -71,11 +71,12 @@ class PriceCtrl
           cb null,prices
         else
           result = for spec in specs
-            price = _.findWhere prices,{spec:spec._id}
-            console.log price,spec._id
-            if price?
-              price.spec = spec
-              price
+            price = _.filter prices,(p) ->
+              p.spec.toString() is spec._id.toString()
+
+            if price[0]?
+              price[0].spec = spec
+              price[0]
             else
               {spec}
           cb null,result
@@ -99,7 +100,6 @@ class PriceCtrl
           type3PriceList product,cb
       ]
     },(err,results) ->
-      console.log err,results
       fn err,results.getPrice
 
   @update:(id,price,basePrice,tradePrice,inventory,fn) ->
