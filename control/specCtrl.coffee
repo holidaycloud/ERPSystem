@@ -27,7 +27,7 @@ class SpecCtrl
           cb err,res
       #删除_id不在specs里的Price
       deletePrice:(cb) ->
-        Price.remove {product:productId,_id:{$nin:ids}},(err,res) ->
+        Price.remove {product:productId,spec:{$nin:ids}},(err,res) ->
           cb err,res
       saveSpecs:["deleteSpecs","deletePrice",(cb) ->
         #这个是最终要修改或者保存的东东

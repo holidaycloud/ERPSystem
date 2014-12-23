@@ -56,7 +56,7 @@
         deletePrice: function(cb) {
           return Price.remove({
             product: productId,
-            _id: {
+            spec: {
               $nin: ids
             }
           }, function(err, res) {
@@ -101,5 +101,3 @@
   module.exports = SpecCtrl;
 
 }).call(this);
-
-//# sourceMappingURL=specCtrl.js.map
