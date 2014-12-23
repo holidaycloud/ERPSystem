@@ -75,6 +75,7 @@
 
     PriceCtrl.type3save = function(product, spec, price, basePrice, tradePrice, inventory, fn) {
       var query;
+      console.log(product, spec, price, basePrice, tradePrice, inventory);
       query = {
         product: product
       };

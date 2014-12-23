@@ -42,6 +42,7 @@ class PriceCtrl
       fn err,results.saveProductPrice
 
   @type3save: (product,spec,price,basePrice,tradePrice,inventory,fn) ->
+    console.log product,spec,price,basePrice,tradePrice,inventory
     query = {product}
     query.spec = spec if spec?
     Price.update query,{$set:{price:price,basePrice:basePrice,tradePrice:tradePrice,inventory:inventory}},{upsert:true},(err,res) ->

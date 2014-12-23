@@ -30,7 +30,7 @@ router.post('/save', function(request, response) {
 
 router.post('/type3save', function(request, response) {
     var product = request.body.product;
-    var spec = parseInt(request.body.spec);
+    var spec = request.body.spec;
     var price = request.body.price;
     var basePrice = request.body.basePrice;
     var tradePrice = request.body.tradePrice;
