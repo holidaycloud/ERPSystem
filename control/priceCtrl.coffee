@@ -72,6 +72,7 @@ class PriceCtrl
         else
           result = for spec in specs
             price = _.findWhere prices,{spec:spec._id}
+            console.log price,spec._id
             if price?
               price.spec = spec
               price
@@ -80,7 +81,6 @@ class PriceCtrl
           cb null,result
       ]
     },(err,results) ->
-      console.log err,results
       fn err,results.mergeSpecPrice
 
 

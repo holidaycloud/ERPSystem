@@ -140,6 +140,7 @@
                   price = _.findWhere(prices, {
                     spec: spec._id
                   });
+                  console.log(price, spec._id);
                   if (price != null) {
                     price.spec = spec;
                     _results.push(price);
@@ -156,7 +157,6 @@
           }
         ]
       }, function(err, results) {
-        console.log(err, results);
         return fn(err, results.mergeSpecPrice);
       });
     };
