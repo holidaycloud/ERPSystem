@@ -35,6 +35,7 @@ payLog = require "./routes/payLog"
 coupon = require "./routes/coupon"
 marketing = require "./routes/marketing"
 news = require "./routes/news"
+spec = require "./routes/spec"
 index = require "./routes/index"
 app = express()
 
@@ -73,6 +74,7 @@ app.use "/api/payLog", payLog
 app.use "/api/coupon", coupon
 app.use "/api/marketing", marketing
 app.use "/api/news", news
+app.use "/api/product/spec", spec
 
 app.use (req,res,next) ->
   res.status(404).end()
@@ -119,3 +121,4 @@ Date::Format = (fmt) ->
     if new RegExp("(#{key})").test fmt
       fmt = fmt.replace RegExp.$1,(if RegExp.$1.length is 1 then value else "00#{value}".substr "#{value}".length)
   fmt
+

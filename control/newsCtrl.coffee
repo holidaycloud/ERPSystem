@@ -1,7 +1,7 @@
 class NewsCtrl
   async = require "async"
   News = require "./../model/news"
-  @save = (ent,title,content,fn) ->
+  @save:(ent,title,content,fn) ->
     news = new News({
       ent
       title
@@ -11,12 +11,12 @@ class NewsCtrl
       fn err,res
     )
 
-  @update = (id,title,content,fn) ->
+  @update: (id,title,content,fn) ->
     News.findByIdAndUpdate(id,{$set:{title,content}},(err,res) ->
       fn err,res
     )
 
-  @list = (page,pageSize,ent,fn) ->
+  @list:(page,pageSize,ent,fn) ->
     async.auto({
       totalSize:(cb) ->
         News.count {ent},(err,count) ->
@@ -32,7 +32,7 @@ class NewsCtrl
           fn null,{totalSize:results.totalSize,news:results.getNews}
     )
 
-  @detail = (id,fn) ->
+  @detail:(id,fn) ->
     News.findById(id,(err,news) ->
       fn err,news
     )

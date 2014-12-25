@@ -130,7 +130,7 @@ OrderCtrl.save = function (token, startDate, quantity, remark, product, liveName
                 'quantity': quantity,
                 'remark': remark,
                 'product': product,
-                'status': 0,
+                'status': payway==1?1:0,
                 'ent': results.getProduct.ent,
                 'liveName': liveName,
                 'contactPhone': contactPhone,

@@ -19,7 +19,23 @@ router.post('/save', function(request, response) {
     var weekendTradePrice = request.body.weekendTradePrice;
     var inventory = request.body.inventory;
     var weekendinventory = request.body.weekendinventory;
-    PriceCtrl.save(product,startDate,endDate,price,weekendPrice,basePrice,weekendBasePrice,tradePrice,weekendTradePrice,inventory,weekendinventory,function(err,res){
+    PriceCtrl.type0save(product,startDate,endDate,price,weekendPrice,basePrice,weekendBasePrice,tradePrice,weekendTradePrice,inventory,weekendinventory,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.post('/type3save', function(request, response) {
+    var product = request.body.product;
+    var spec = request.body.spec;
+    var price = request.body.price;
+    var basePrice = request.body.basePrice;
+    var tradePrice = request.body.tradePrice;
+    var inventory = request.body.inventory;
+    PriceCtrl.type3save(product,spec,price,basePrice,tradePrice,inventory,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
