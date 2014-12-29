@@ -14,23 +14,55 @@
     async = require("async");
 
     WeixinCustomerCtrl.save = function(ent, subscribe, openid, nickname, sex, city, country, province, language, headimgurl, subscribe_time, unionid, fn) {
-      var customer;
-      customer = new WeixinCustomer({
-        ent: ent,
-        subscribe: subscribe,
-        openid: openid,
-        nickname: nickname,
-        sex: sex,
-        city: city,
-        country: country,
-        province: province,
-        language: language,
-        headimgurl: headimgurl,
-        subscribe_time: subscribe_time,
-        unionid: unionid
-      });
-      return customer.save(function(err, res) {
-        return fn(err, res);
+      return async.auto({
+        findCustomer: function(cb) {
+          return WeixinCustomer.findOneAndUpdate({
+            ent: ent,
+            openid: openid
+          }, {
+            $set: {
+              subscribe: subscribe,
+              nickname: nickname,
+              sex: sex,
+              city: city,
+              country: country,
+              province: province,
+              language: language,
+              headimgurl: headimgurl,
+              subscribe_time: subscribe_time
+            }
+          }, function(err, res) {
+            return cb(err, res);
+          });
+        },
+        saveCustomer: [
+          "findCustomer", function(cb, results) {
+            var customer;
+            customer = results.findCustomer;
+            if (customer != null) {
+              return cb(null, customer);
+            } else {
+              customer = new WeixinCustomer({
+                ent: ent,
+                subscribe: subscribe,
+                openid: openid,
+                nickname: nickname,
+                sex: sex,
+                city: city,
+                country: country,
+                province: province,
+                language: language,
+                headimgurl: headimgurl,
+                subscribe_time: subscribe_time
+              });
+              return customer.save(function(err, res) {
+                return cb(err, res);
+              });
+            }
+          }
+        ]
+      }, function(err, results) {
+        return fn(err, results.saveCustomer);
       });
     };
 
