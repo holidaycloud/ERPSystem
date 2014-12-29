@@ -229,6 +229,25 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName
                     }
                 });
         }
+        //TODO 获取微信用户信息
+        //,'getUserInfo':function(cb){
+        //    var url = config.weixin.host+':'+config.weixin.port+'/weixin/userInfo/'+ent+'?openid='+openID;
+        //    request({
+        //        url:url,
+        //        timeout:3000
+        //    },function(err,response,body){
+        //        if(err){
+        //            cb(err,null);
+        //        } else {
+        //            var res = body?JSON.parse(body):{};
+        //            if(res.error==0&&res.data){
+        //                cb(null,res.data);
+        //            } else {
+        //                cb(new Error(res.errMsg),null);
+        //            }
+        //        }
+        //    });
+        //}
         ,'registerCustomer':['getCustomer',function(cb,results){
             if(results.getCustomer){
                 Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId,'headimgurl':headimgurl,'loginName':loginName,'sex':parseInt(sex)}})

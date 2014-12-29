@@ -1,7 +1,0 @@
-{
-    "db":{
-        "host":"172.16.0.15",
-        "port":27017,
-        "database":"holidaycloud"
-    }
-}
