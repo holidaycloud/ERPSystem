@@ -26,4 +26,6 @@
 
   WeixinCustomer = db.model('WeixinCustomer', customerSchema);
 
+  module.exports = WeixinCustomer;
+
 }).call(this);

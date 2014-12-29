@@ -17,3 +17,5 @@ customerSchema = new Schema(
 )
 customerSchema.index
 WeixinCustomer = db.model('WeixinCustomer',customerSchema);
+
+module.exports = WeixinCustomer
