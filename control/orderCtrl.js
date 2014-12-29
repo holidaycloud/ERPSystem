@@ -415,14 +415,25 @@ OrderCtrl.list = function (page, pageSize, ent, product, startDate, endDate, fn)
 };
 
 OrderCtrl.detail = function (id, fn) {
-    Order.findById(id)
-        .populate({'path': 'product', 'select': 'name'})
-        .populate({'path': 'member', 'select': 'loginName'})
-        .populate({'path': 'customer','select':'name mobile'})
-        .populate({'path': 'address','select':'name phone showtext'})
-        .exec(function (err, order) {
-            fn(err, order);
-        });
+    if(id.length!=24){
+        Order.findOne({'orderID': id})
+            .populate({'path': 'product', 'select': 'name'})
+            .populate({'path': 'member', 'select': 'loginName'})
+            .populate({'path': 'customer','select':'name mobile'})
+            .populate({'path': 'address','select':'name phone showtext'})
+            .exec(function (err, order) {
+                fn(err, order);
+            });
+    } else {
+        Order.findById(id)
+            .populate({'path': 'product', 'select': 'name'})
+            .populate({'path': 'member', 'select': 'loginName'})
+            .populate({'path': 'customer','select':'name mobile'})
+            .populate({'path': 'address','select':'name phone showtext'})
+            .exec(function (err, order) {
+                fn(err, order);
+            });
+    }
 };
 
 OrderCtrl.cusDetail = function (id,customer,fn) {

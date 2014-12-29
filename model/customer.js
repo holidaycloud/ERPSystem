@@ -22,7 +22,6 @@ var customerSchema = new Schema({
 customerSchema.index({'ent':1});
 customerSchema.index({'ent':1,'mobile':1});
 customerSchema.index({'ent':1,'mobile':1,'passwd':1});
-customerSchema.index({'weixinOpenId':1});
 customerSchema.index({'ent':1,'weixinOpenId':1});
 
 var Customer = db.model('Customer',customerSchema);

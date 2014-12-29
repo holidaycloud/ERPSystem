@@ -1,7 +1,11 @@
 {
-    "db":{
-        "host":"172.16.0.15",
+   "db":{
+        "host":"192.168.22.2",
         "port":27017,
         "database":"holidaycloud"
+    },
+    "weixin":{
+        "host":"http://192.168.22.5",
+        "port":3333
     }
 }

@@ -4,8 +4,32 @@
 var express = require('express');
 var router = express.Router();
 var CustomerCtrl = require('./../control/customerCtrl');
+var WeixinCustomerCtrl = require("./../control/weixinCustomerCtrl")
 
 //会员接口
+router.post("/saveWeixinCustomer",function(request,response){
+    var ent = request.body.ent;
+    var subscribe = request.body.subscribe;
+    var openid = request.body.openid;
+    var nickname = request.body.nickname;
+    var sex = request.body.sex;
+    var city = request.body.city;
+    var country = request.body.country;
+    var province = request.body.province;
+    var language = request.body.language;
+    var headimgurl = request.body.headimgurl;
+    var subscribe_time = request.body.subscribe_time;
+    var unionid = request.body.unionid;
+
+    WeixinCustomerCtrl.save(ent,subscribe,openid,nickname,sex,city,country,province,language,headimgurl,subscribe_time,unionid,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post('/register', function(request, response) {
     var ent = request.body.ent;
     var mobile = request.body.mobile;
@@ -178,4 +202,5 @@ router.get('/login', function(request, response) {
         }
     });
 });
+
 module.exports = router;
