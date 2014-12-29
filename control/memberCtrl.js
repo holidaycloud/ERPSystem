@@ -32,6 +32,32 @@ MemberCtrl.login = function(name,passwd,fn){
         fn(err,res);
     });
 };
+MemberCtrl.weixinLogin = function(openid,fn){
+    async.waterfall([
+        function(cb){
+            Member.findOne({'weixinOpenId':openid})
+                .exec(function(err,res){
+                    cb(err,res);
+                });
+        },
+        function(member,cb){
+            if(member){
+                TokenCtrl.generate(member._id,function(e,r){
+                    if(e){
+                        fn(e,null);
+                    } else {
+                        fn(null,r);
+                    }
+                });
+            } else {
+                cb(new Error('未找到用户'),null);
+
+            }
+        }
+    ],function(err,res){
+        fn(err,res);
+    });
+};
 
 MemberCtrl.detail = function(id,fn){
     Member.findById(id)

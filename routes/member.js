@@ -47,6 +47,18 @@ router.post('/update', function(request, response) {
     });
 });
 
+router.get('/weixinLogin', function(request, response) {
+    var openid = request.query.openid;
+
+    MemberCtrl.weixinLogin(openid,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/login', function(request, response) {
     var loginName = request.query.mobile||request.query.email||request.query.username;
     var passwd = request.query.passwd;
