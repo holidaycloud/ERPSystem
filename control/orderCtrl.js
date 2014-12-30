@@ -416,7 +416,7 @@ OrderCtrl.list = function (page, pageSize, ent, product, startDate, endDate, fn)
 
 OrderCtrl.detail = function (id, fn) {
     console.log(id);
-    if(id.length!=24){
+    if(id.toString().length!=24){
         Order.findOne({'orderID': id})
             .populate({'path': 'product', 'select': 'name'})
             .populate({'path': 'member', 'select': 'loginName'})
