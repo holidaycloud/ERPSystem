@@ -415,6 +415,7 @@ OrderCtrl.list = function (page, pageSize, ent, product, startDate, endDate, fn)
 };
 
 OrderCtrl.detail = function (id, fn) {
+    console.log(id);
     if(id.length!=24){
         Order.findOne({'orderID': id})
             .populate({'path': 'product', 'select': 'name'})
@@ -422,6 +423,7 @@ OrderCtrl.detail = function (id, fn) {
             .populate({'path': 'customer','select':'name mobile'})
             .populate({'path': 'address','select':'name phone showtext'})
             .exec(function (err, order) {
+                console.log('orderID',err,order);
                 fn(err, order);
             });
     } else {
@@ -431,6 +433,7 @@ OrderCtrl.detail = function (id, fn) {
             .populate({'path': 'customer','select':'name mobile'})
             .populate({'path': 'address','select':'name phone showtext'})
             .exec(function (err, order) {
+                console.log('_id',err,order);
                 fn(err, order);
             });
     }
