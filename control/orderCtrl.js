@@ -486,6 +486,7 @@ OrderCtrl.sendWeixinNotify = function(oid,fn){
             });
         },
         'getMembers':['getOrderDetail',function(cb,results){
+            console.log(results);
             MemberCtrl.weixinMemberList(results.getOrderDetail.ent,function(err,res){
                cb(err,res);
             });
