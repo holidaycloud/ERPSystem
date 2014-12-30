@@ -121,7 +121,6 @@ DomainCtrl.alipayDetail = function(ent,fn){
     EntAlipay.findOne({'ent':ent})
         .lean()
         .exec(function(err,res){
-            fn(err,res);
             if(err){
                 fn(err,null)
             } else {
