@@ -121,7 +121,15 @@ DomainCtrl.alipayDetail = function(ent,fn){
     EntAlipay.findOne({'ent':ent})
         .lean()
         .exec(function(err,res){
-            fn(err,res);
+            if(err){
+                fn(err,null)
+            } else {
+                if(res){
+                    fn(null,res);
+                } else {
+                    fn(null,{"pid":config.alipay.pid,"key":config.alipay.key})
+                }
+            }
         });
 };
 
