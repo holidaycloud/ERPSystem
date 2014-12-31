@@ -127,7 +127,7 @@ DomainCtrl.alipayDetail = function(ent,fn){
                 if(res){
                     fn(null,res);
                 } else {
-                    fn(null,{"ent":ent,"pid":config.alipay.pid,"key":config.alipay.key})
+                    fn(null,{"ent":ent,"pid":config.alipay.pid,"key":config.alipay.key,'account':config.alipay.account})
                 }
             }
         });
