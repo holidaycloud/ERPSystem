@@ -6,6 +6,7 @@ var Schema = require('mongoose').Schema;
 var entAlipaySchema = new Schema({
     'ent':{type:Schema.Types.ObjectId,ref:'Ent'},
     'pid':String,
+    'account':String,
     'key':String
 });
 entAlipaySchema.index({'ent':1},{'unique': true});
