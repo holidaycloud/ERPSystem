@@ -57,6 +57,41 @@ router.get('/detail', function(request, response) {
     });
 });
 
+router.get('/agent/list', function(request, response) {
+    var ent = request.query.ent;
+    EntCtrl.agentList(ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.post('/agent/bind', function(request, response) {
+    var ent = request.body.ent;
+    var agent = request.body.agent;
+    EntCtrl.agentBind(ent,agent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.post('/agent/unbind', function(request, response) {
+    var ent = request.body.ent;
+    var agent = request.body.agent;
+    EntCtrl.agentUnbind(ent,agent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post('/update', function(request, response) {
     var id = request.body.id;
     var name = request.body.name;

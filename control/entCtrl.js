@@ -59,4 +59,27 @@ EntCtrl.detail = function(id,fn){
         fn(err,res);
     });
 };
+
+EntCtrl.agentList = function(ent,fn){
+    Ent.findById(ent)
+        .lean()
+        .select("bind")
+        .populate({"path":"bind.sell.ent","select":"name contactName contactPhone"})
+        .exec(function(err,res){
+           fn(err,res.bind?res.bind.sell:[]);
+        });
+};
+
+EntCtrl.agentBind = function(ent,agent,fn){
+    Ent.findByIdAndUpdate(ent,{"$push":{"bind.sell":{"ent":agent,"settle":0}}},function(err,res){
+        fn(err,res);
+    });
+};
+
+EntCtrl.agentUnbind = function(ent,agent,fn){
+    Ent.findByIdAndUpdate(ent,{"$pull":{"bind.sell":{"ent":agent}}},function(err,res){
+        fn(err,res);
+    });
+};
+
 module.exports = EntCtrl;
