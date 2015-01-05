@@ -71,13 +71,29 @@
         ent: ent,
         openid: openid
       }).lean().exec(function(err, res) {
+        var obj;
         if (err != null) {
           return fn(err);
         } else {
           if (res != null) {
-            res.isWeixin = true;
+            obj = {
+              _id: res._id,
+              ent: res.ent,
+              mobile: "",
+              isEnable: true,
+              createDate: res.subscribe_time * 1000,
+              loginName: res.nickname,
+              email: "",
+              name: "",
+              address: "",
+              birthday: 0,
+              weixinOpenId: res.openid,
+              headimgurl: res.headimgurl,
+              sex: res.sex,
+              isWeixin: true
+            };
           }
-          return fn(null, res);
+          return fn(null, obj);
         }
       });
     };
