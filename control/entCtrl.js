@@ -71,15 +71,38 @@ EntCtrl.agentList = function(ent,fn){
 };
 
 EntCtrl.agentBind = function(ent,agent,fn){
-    Ent.findByIdAndUpdate(ent,{"$addToSet":{"sell":agent}},function(err,res){
-        fn(err,res);
+    async.auto({
+        bindSell:function(cb){
+            Ent.findByIdAndUpdate(ent,{"$addToSet":{"sell":agent}},function(err,res){
+                cb(err,res);
+            });
+        },
+        bindProvider:function(cb){
+            Ent.findByIdAndUpdate(agent,{"$addToSet":{"provider":ent}},function(err,res){
+                cb(err,res);
+            });
+        }
+    },function(err,results){
+        fn(err,results);
     });
 };
 
 EntCtrl.agentUnbind = function(ent,agent,fn){
-    Ent.findByIdAndUpdate(ent,{"$pull":{"sell":agent}},function(err,res){
-        fn(err,res);
+    async.auto({
+        unBindSell:function(cb){
+            Ent.findByIdAndUpdate(ent,{"$pull":{"sell":agent}},function(err,res){
+                cb(err,res);
+            });
+        },
+        unBindProvider:function(cb){
+            Ent.findByIdAndUpdate(agent,{"$pull":{"provider":ent}},function(err,res){
+                cb(err,res);
+            });
+        }
+    },function(err,results){
+        fn(err,results);
     });
+
 };
 
 module.exports = EntCtrl;
