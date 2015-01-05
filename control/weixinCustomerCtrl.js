@@ -70,8 +70,15 @@
       return WeixinCustomer.findOne({
         ent: ent,
         openid: openid
-      }, function(err, res) {
-        return fn(err, res);
+      }).lean().exec(function(err, res) {
+        if (err != null) {
+          return fn(err);
+        } else {
+          if (res != null) {
+            res.isWeixin = true;
+          }
+          return fn(null, res);
+        }
       });
     };
 
