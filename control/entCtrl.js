@@ -63,21 +63,21 @@ EntCtrl.detail = function(id,fn){
 EntCtrl.agentList = function(ent,fn){
     Ent.findById(ent)
         .lean()
-        .select("bind")
-        .populate({"path":"bind.sell.ent","select":"name contactName contactPhone"})
+        .select("sell")
+        .populate({"path":"sell","select":"name contactName contactPhone"})
         .exec(function(err,res){
-           fn(err,res.bind?res.bind.sell:[]);
+           fn(err,res.sell?res.sell:[]);
         });
 };
 
 EntCtrl.agentBind = function(ent,agent,fn){
-    Ent.findByIdAndUpdate(ent,{"$push":{"bind.sell":{"ent":agent,"settle":0}}},function(err,res){
+    Ent.findByIdAndUpdate(ent,{"$addToSet":{"sell":agent}},function(err,res){
         fn(err,res);
     });
 };
 
 EntCtrl.agentUnbind = function(ent,agent,fn){
-    Ent.findByIdAndUpdate(ent,{"$pull":{"bind.sell":{"ent":agent}}},function(err,res){
+    Ent.findByIdAndUpdate(ent,{"$pull":{"sell":agent}},function(err,res){
         fn(err,res);
     });
 };
