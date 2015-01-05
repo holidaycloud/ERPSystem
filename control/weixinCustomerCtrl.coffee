@@ -40,7 +40,23 @@ class WeixinCustomerCtrl
         if err?
           fn err
         else
-          res.isWeixin = true if res?
-          fn null,res
+          if res?
+            obj = {
+              _id:res._id
+              ent:res.ent
+              mobile:""
+              isEnable:true
+              createDate:res.subscribe_time*1000
+              loginName:res.nickname
+              email:""
+              name:""
+              address:""
+              birthday:0
+              weixinOpenId:res.openid
+              headimgurl:res.headimgurl
+              sex:res.sex
+              isWeixin:true
+            }
+          fn null,obj
 
 module.exports = WeixinCustomerCtrl
