@@ -34,7 +34,13 @@ class WeixinCustomerCtrl
 
 
   @detail:(ent,openid,fn) ->
-    WeixinCustomer.findOne {ent,openid},(err,res) ->
-      fn err,res
+    WeixinCustomer.findOne {ent,openid}
+      .lean()
+      .exec (err,res) ->
+        if err?
+          fn err
+        else
+          res.isWeixin = true if res?
+          fn null,res
 
 module.exports = WeixinCustomerCtrl

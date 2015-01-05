@@ -5,6 +5,7 @@ var Customer = require('./../model/customer');
 var CustomerCard = require('./../model/customerCard');
 var async = require('async');
 var CardCtrl = require('./cardCtrl');
+var WeixinCustomerCtrl = require("./weixinCustomerCtrl")
 var CustomerCtrl = function(){};
 
 CustomerCtrl.loginOrRegister = function(ent,mobile,passwd,fn){
@@ -207,9 +208,37 @@ CustomerCtrl.login = function(ent,mobile,passwd,fn){
 };
 
 CustomerCtrl.weixinLogin = function(ent,openId,fn){
-    Customer.findOne({'ent':ent,'weixinOpenId':openId},function(err,customer){
-        fn(err,customer);
+    async.auto({
+        customerLogin:function(cb){
+            Customer.findOne({'ent':ent,'weixinOpenId':openId})
+                .lean()
+                .exec(function(err,customer){
+                    if(err){
+                        cb(err,null);
+                    } else {
+                        if(customer){
+                            customer.isWeixin = false;
+                            cb(null,customer);
+                        } else {
+                            cb(null,null);
+                        }
+                    }
+                });
+        },
+        weixinCustomerLogin:["customerLogin",function(cb,results){
+            var customer = results.customerLogin;
+            if(customer){
+                cb(null,customer);
+            } else {
+                WeixinCustomerCtrl.detail(ent,openId,function(err,res){
+                    cb(err,res);
+                });
+            }
+        }]
+    },function(err,results){
+        fn(err,results.weixinCustomerLogin);
     });
+
 };
 
 CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName,sex,fn){

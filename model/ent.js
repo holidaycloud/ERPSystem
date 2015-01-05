@@ -14,10 +14,8 @@ var entSchema = new Schema({
     'type': Number,                                               //企业类型 1 分销商 2 供应商 0皆是
     'createTime': {type: Number, default: Date.now},              //创建时间
     'isAdmin':{type: Boolean, default: false},
-    'bind':{
-        'provider':[{'ent':{'type': Schema.Types.ObjectId, 'ref': 'Ent'},'settle':Number}],
-        'sell':[{'ent':{'type': Schema.Types.ObjectId, 'ref': 'Ent'},'settle':Number}]
-    }
+    'provider':[{'type': Schema.Types.ObjectId, 'ref': 'Ent'}],
+    'sell':[{'type': Schema.Types.ObjectId, 'ref': 'Ent'}]
 });
 var Ent = db.model('Ent',entSchema);
 module.exports = Ent;
