@@ -50,7 +50,7 @@ StaticProductCtrl.classifyList = function(page,pageSize,ent,classify,fn){
             fn(err,null);
         } else {
             fn(null,{
-                'totalSize':results.getTotal,
+                'totalSize':results.getTotal||0,
                 'products':results.getProduct
             });
         }
