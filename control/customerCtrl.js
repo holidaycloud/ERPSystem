@@ -3,6 +3,7 @@
  */
 var Customer = require('./../model/customer');
 var CustomerCard = require('./../model/customerCard');
+var config = require("./../config/config.json")
 var async = require('async');
 var CardCtrl = require('./cardCtrl');
 var CustomerCtrl = function(){};
