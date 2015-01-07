@@ -260,9 +260,21 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,fn){
             });
         }
         ,'registerCustomer':['getCustomer','getUserInfo',function(cb,results){
+            var userinfo = results.getUserInfo;
             if(results.getCustomer){
-                var userinfo = results.getUserInfo;
-                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId,'headimgurl':userinfo.headimgurl,'loginName':userinfo.nickname,'sex':parseInt(userinfo.sex)}})
+                var setObj = {
+                    'weixinOpenId':openId
+                };
+                if(userinfo.headimgurl){
+                    setObj.headimgurl = userinfo.headimgurl;
+                }
+                if(userinfo.nickname){
+                    setObj.loginName = userinfo.nickname;
+                }
+                if(userinfo.sex){
+                    setObj.sex = parseInt(userinfo.sex);
+                }
+                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':setObj})
                     .lean()
                     .exec(function(err,customer){
                         cb(err,customer);
@@ -273,9 +285,9 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,fn){
                     'mobile':mobile,
                     'passwd':passwd,
                     'weixinOpenId':openId,
-                    'headimgurl':userinfo.headimgurl,
-                    'loginName':userinfo.nickname,
-                    'sex':parseInt(userinfo.sex)
+                    'headimgurl':userinfo.headimgurl?userinfo.headimgurl:"",
+                    'loginName':userinfo.nickname?userinfo.nickname:"",
+                    'sex':userinfo.sex?parseInt(userinfo.sex):2
                 });
                 customer.save(function(err,res){
                     cb(err,res);
@@ -310,7 +322,6 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,fn){
             }
         }]
     },function(err,results){
-        console.log(err,results);
         if(err){
             fn(err,null);
         } else {
