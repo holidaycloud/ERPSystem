@@ -114,11 +114,8 @@ router.post('/weixinBind', function(request, response) {
     var mobile = request.body.mobile;
     var passwd = request.body.passwd;
     var openId = request.body.openId;
-    var headimgurl = request.body.headimgurl;
-    var loginName = request.body.loginName;
-    var sex = request.body.sex;
 
-    CustomerCtrl.weixinBind(ent,mobile,passwd,openId,headimgurl,loginName,sex,function(err,res){
+    CustomerCtrl.weixinBind(ent,mobile,passwd,openId,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
