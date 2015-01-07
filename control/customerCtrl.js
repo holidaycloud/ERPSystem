@@ -310,7 +310,6 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,fn){
             }
         }]
     },function(err,results){
-        console.log(err,results);
         if(err){
             fn(err,null);
         } else {
