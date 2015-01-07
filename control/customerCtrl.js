@@ -5,7 +5,6 @@ var Customer = require('./../model/customer');
 var CustomerCard = require('./../model/customerCard');
 var async = require('async');
 var CardCtrl = require('./cardCtrl');
-var WeixinCustomerCtrl = require("./weixinCustomerCtrl")
 var CustomerCtrl = function(){};
 
 CustomerCtrl.loginOrRegister = function(ent,mobile,passwd,fn){
@@ -208,40 +207,22 @@ CustomerCtrl.login = function(ent,mobile,passwd,fn){
 };
 
 CustomerCtrl.weixinLogin = function(ent,openId,fn){
-    async.auto({
-        customerLogin:function(cb){
-            Customer.findOne({'ent':ent,'weixinOpenId':openId})
-                .lean()
-                .exec(function(err,customer){
-                    if(err){
-                        cb(err,null);
-                    } else {
-                        if(customer){
-                            customer.isWeixin = false;
-                            cb(null,customer);
-                        } else {
-                            cb(null,null);
-                        }
-                    }
-                });
-        },
-        weixinCustomerLogin:["customerLogin",function(cb,results){
-            var customer = results.customerLogin;
-            if(customer){
-                cb(null,customer);
+    Customer.findOne({'ent':ent,'weixinOpenId':openId})
+        .lean()
+        .exec(function(err,customer){
+            if(err){
+                fn(err,null);
             } else {
-                WeixinCustomerCtrl.detail(ent,openId,function(err,res){
-                    cb(err,res);
-                });
+                if(customer){
+                    fn(null,customer);
+                } else {
+                    fn(null,null);
+                }
             }
-        }]
-    },function(err,results){
-        fn(err,results.weixinCustomerLogin);
-    });
-
+        });
 };
 
-CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName,sex,fn){
+CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,fn){
     async.auto({
         'getCustomer':function(cb){
             Customer.findOne({'ent':ent,'mobile':mobile})
@@ -258,28 +239,28 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName
                     }
                 });
         }
-        //TODO 获取微信用户信息
-        //,'getUserInfo':function(cb){
-        //    var url = config.weixin.host+':'+config.weixin.port+'/weixin/userInfo/'+ent+'?openid='+openID;
-        //    request({
-        //        url:url,
-        //        timeout:3000
-        //    },function(err,response,body){
-        //        if(err){
-        //            cb(err,null);
-        //        } else {
-        //            var res = body?JSON.parse(body):{};
-        //            if(res.error==0&&res.data){
-        //                cb(null,res.data);
-        //            } else {
-        //                cb(new Error(res.errMsg),null);
-        //            }
-        //        }
-        //    });
-        //}
-        ,'registerCustomer':['getCustomer',function(cb,results){
+        ,'getUserInfo':function(cb){
+            var url = config.weixin.host+':'+config.weixin.port+'/weixin/userInfo/'+ent+'?openid='+openID;
+            request({
+                url:url,
+                timeout:3000
+            },function(err,response,body){
+                if(err){
+                    cb(err,null);
+                } else {
+                    var res = body?JSON.parse(body):{};
+                    if(res.error==0&&res.data){
+                        cb(null,res.data);
+                    } else {
+                        cb(new Error(res.errMsg),null);
+                    }
+                }
+            });
+        }
+        ,'registerCustomer':['getCustomer','getUserInfo',function(cb,results){
             if(results.getCustomer){
-                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId,'headimgurl':headimgurl,'loginName':loginName,'sex':parseInt(sex)}})
+                var userinfo = results.getUserInfo;
+                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':{'weixinOpenId':openId,'headimgurl':userinfo.headimgurl,'loginName':userinfo.nickname,'sex':parseInt(userinfo.sex)}})
                     .lean()
                     .exec(function(err,customer){
                         cb(err,customer);
@@ -290,9 +271,9 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName
                     'mobile':mobile,
                     'passwd':passwd,
                     'weixinOpenId':openId,
-                    'headimgurl':headimgurl,
-                    'loginName':loginName,
-                    'sex':parseInt(sex)
+                    'headimgurl':userinfo.headimgurl,
+                    'loginName':userinfo.nickname,
+                    'sex':parseInt(userinfo.sex)
                 });
                 customer.save(function(err,res){
                     cb(err,res);
@@ -300,33 +281,32 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,headimgurl,loginName
             }
         }]
         ,'getCustomerCard':['registerCustomer',function(cb,results){
-        CustomerCtrl.getCustomerCard(results.registerCustomer._id,function(err,res){
-            if(err){
-                cb(err,null);
-            } else {
-                cb(null,res);
-            }
-        });
-    }]
-        ,'getCard':['getCustomerCard',function(cb,results){
-        if(results.getCustomerCard){
-            CardCtrl.getCard(results.getCustomerCard.card,function(err,res){
-                cb(err,res);
+            CustomerCtrl.getCustomerCard(results.registerCustomer._id,function(err,res){
+                if(err){
+                    cb(err,null);
+                } else {
+                    cb(null,res);
+                }
             });
-        } else {
-            cb(null,null);
-        }
-
-    }]
+        }]
+        ,'getCard':['getCustomerCard',function(cb,results){
+            if(results.getCustomerCard){
+                CardCtrl.getCard(results.getCustomerCard.card,function(err,res){
+                    cb(err,res);
+                });
+            } else {
+                cb(null,null);
+            }
+        }]
         ,'getCardBalance':['getCard',function(cb,results){
-        if(results.getCard){
-            CardCtrl.balance(results.getCard.cardNum,ent,function(err,res){
-                cb(err,res);
-            })
-        } else {
-            cb(null,null);
-        }
-    }]
+            if(results.getCard){
+                CardCtrl.balance(results.getCard.cardNum,ent,function(err,res){
+                    cb(err,res);
+                })
+            } else {
+                cb(null,null);
+            }
+        }]
     },function(err,results){
         if(err){
             fn(err,null);
