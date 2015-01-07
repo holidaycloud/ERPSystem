@@ -241,7 +241,7 @@ CustomerCtrl.weixinBind = function(ent,mobile,passwd,openId,fn){
                 });
         }
         ,'getUserInfo':function(cb){
-            var url = config.weixin.host+':'+config.weixin.port+'/weixin/userInfo/'+ent+'?openid='+openID;
+            var url = config.weixin.host+':'+config.weixin.port+'/weixin/userInfo/'+ent+'?openid='+openId;
             request({
                 url:url,
                 timeout:3000
