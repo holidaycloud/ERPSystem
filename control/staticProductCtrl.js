@@ -24,6 +24,7 @@ StaticProductCtrl.recommendList = function(ent,fn){
 };
 
 StaticProductCtrl.classifyList = function(page,pageSize,ent,classify,fn){
+    console.log(page,pageSize,ent,classify);
     async.auto({
         'getTotal':function(cb){
             var query = StaticProduct.count({'ent':ent});
@@ -46,6 +47,7 @@ StaticProductCtrl.classifyList = function(page,pageSize,ent,classify,fn){
             });
         }
     },function(err,results){
+        console.log(err,results);
         if(err){
             fn(err,null);
         } else {
