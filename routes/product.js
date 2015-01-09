@@ -101,13 +101,14 @@ router.get('/list', function(request, response) {
     var isRes = request.query.isRes=='true'?true:false;
     var page = request.query.page||0;
     var pageSize = request.query.pageSize||25;
+    var isAll = request.query.isAll=='true'?true:false;
     ProductCtrl.list(ent,isRes,page,pageSize,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});
         } else {
             response.json({'error':0, 'data':res});
         }
-    });
+    },isAll);
 });
 
 router.get('/detail', function(request, response) {
