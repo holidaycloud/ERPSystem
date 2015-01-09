@@ -1,6 +1,7 @@
 var Product = require('./../model/product');
 var async = require('async');
 var EntCtrl = require('./../control/entCtrl');
+var timeZone = ' 00:00:00 +08:00';
 var ProductCtrl = function(){};
 
 ProductCtrl.save = function(name,introduction,gps,content,startDate,endDate,ent,weekend,imageUrl,imagesMediaId,imagesTitle,productType,subProduct,isHot,isRecommend,lable,classify,fn){
@@ -46,7 +47,10 @@ ProductCtrl.update = function(id,obj,fn){
   });
 };
 
-ProductCtrl.list = function(ent,isRes,page,pageSize,fn){
+ProductCtrl.list = function(ent,isRes,page,pageSize,fn,isAll){
+    var now = new Date();
+    var today = new Date(now.Format("yyyy-MM-dd")+timeZone);
+    today.setDate(today.getDate()+1);
     async.auto({
         'getEnt':function(cb){
             EntCtrl.detail(ent,function(err,res){
@@ -55,6 +59,9 @@ ProductCtrl.list = function(ent,isRes,page,pageSize,fn){
         },
         'getList':['getEnt',function(cb,results){
             var query = Product.find();
+            if(!isAll){
+                query.where({"endDate":{"$gte":today.getTime()}});
+            }
             if(!results.getEnt.isAdmin){
                 query.where({'ent':ent});
             }
@@ -63,8 +70,7 @@ ProductCtrl.list = function(ent,isRes,page,pageSize,fn){
             //} else {
             //    query.where({'productType':{'$ne':2}});
             //}
-            query
-                .select('name introduction startDate endDate weekend isEnable createTime')
+            query.select('name introduction startDate endDate weekend isEnable createTime')
                 .skip(page*pageSize)
                 .limit(pageSize)
                 .exec(function(err,products){
@@ -73,6 +79,9 @@ ProductCtrl.list = function(ent,isRes,page,pageSize,fn){
         }],
         'getTotalSize':['getEnt',function(cb,results){
             var query = Product.count();
+            if(!isAll){
+                query.where({"endDate":{"$gte":today.getTime()}});
+            }
             if(!results.getEnt.isAdmin){
                 query.where({'ent':ent});
             }
