@@ -59,17 +59,18 @@ ProductCtrl.list = function(ent,isRes,page,pageSize,fn,isAll){
         },
         'getList':['getEnt',function(cb,results){
             var query = Product.find();
-            if(!isAll){
-                query.where({"endDate":{"$gte":today.getTime()}});
-            }
+            var obj = [];
+            var type0query = {productType:0};
+            var type3query = {productType:3};
             if(!results.getEnt.isAdmin){
-                query.where({'ent':ent});
+                type0query.ent = ent;
+                type3query.ent = ent;
             }
-            //if(isRes){
-            //    query.where({'productType':2});
-            //} else {
-            //    query.where({'productType':{'$ne':2}});
-            //}
+            if(!isAll){
+                type0query.endDate = {"$gte":today.getTime()};
+            }
+            obj.push(type0query,type3query);
+            query.or(obj);
             query.select('name introduction startDate endDate weekend isEnable createTime')
                 .skip(page*pageSize)
                 .limit(pageSize)
@@ -79,17 +80,18 @@ ProductCtrl.list = function(ent,isRes,page,pageSize,fn,isAll){
         }],
         'getTotalSize':['getEnt',function(cb,results){
             var query = Product.count();
-            if(!isAll){
-                query.where({"endDate":{"$gte":today.getTime()}});
-            }
+            var obj = [];
+            var type0query = {productType:0};
+            var type3query = {productType:3};
             if(!results.getEnt.isAdmin){
-                query.where({'ent':ent});
+                type0query.ent = ent;
+                type3query.ent = ent;
             }
-            //if(isRes){
-            //    query.where({'productType':2});
-            //} else {
-            //    query.where({'productType':{'$ne':2}});
-            //}
+            if(!isAll){
+                type0query.endDate = {"$gte":today.getTime()};
+            }
+            obj.push(type0query,type3query);
+            query.or(obj);
             query.exec(function(err,totalSize){
                 cb(err,totalSize);
             });
