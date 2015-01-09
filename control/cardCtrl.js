@@ -23,17 +23,17 @@ CardCtrl.initCard = function(token,cardNum,ent,fn){
                 }
             });
         },
-        'getQrCode':function(cb){
-          CardCtrl.getQRCode(cardNum,null,null,function(err,res){
-              cb(err,res);
-          });
-        },
+        //'getQrCode':function(cb){
+        //  CardCtrl.getQRCode(cardNum,null,null,function(err,res){
+        //      cb(err,res);
+        //  });
+        //},
         'initCard':['getMember','getQrCode',function(cb,results){
             var card = new Card({
                 'cardNum':cardNum,
                 'member':results.getMember._id,
-                'ent':ent,
-                'qrCode':results.getQrCode
+                'ent':ent
+                //'qrCode':results.getQrCode
             });
             card.save(function(err,res){
                 if(err){

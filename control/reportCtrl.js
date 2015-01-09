@@ -4,9 +4,73 @@
 
 var Order = require('./../model/order');
 var ProductCtrl = require('./productCtrl');
+var EntCtrl = require('./entCtrl');
 var OrderCtrl = require('./orderCtrl');
 var async = require('async');
 var ReportCtrl = function(){};
+
+ReportCtrl.entSalesSummary = function(startDate,endDate,fn){
+    var o = {};
+    o.map = function(){
+        emit(this.ent,{
+            totalPrice:this.totalPrice,
+            quantity:this.quantity,
+            price:this.price.price,
+            cost:this.price.basePrice*this.quantity,
+            profit:this.totalPrice-this.price.basePrice*this.quantity,
+            profitRate:(this.totalPrice-this.price.basePrice*this.quantity)/this.totalPrice
+        });
+    };
+    o.reduce = function(product,values){
+        var totalPrice = 0;
+        var cost = 0;
+        var quantity = 0;
+        var price = 0;
+        for(var i in values){
+            totalPrice+=values[i].totalPrice;
+            quantity+=values[i].quantity;
+            cost+=values[i].cost;
+            price += values[i].price*values[i].quantity;
+        }
+        var profit=totalPrice-cost;
+        var profitRate = profit/totalPrice;
+        price = price/quantity;
+        return {
+            'totalPrice':totalPrice,
+            'quantity':quantity,
+            'price':price,
+            'cost':cost,
+            'profit':profit,
+            'profitRate':profitRate
+        };
+    };
+    o.query={'ent':ent,'orderDate':{'$gte':startDate,"$lt":endDate}};
+    Order.mapReduce(o,function(err, res){
+        cb(err,res);
+    });
+    //async.auto({
+    //    'getEnts':function(cb){
+    //        EntCtrl.nameList(function(err,res){
+    //           cb(err,res);
+    //        });
+    //    },
+    //    'getOrders':function(cb){
+    //        Order.find({orderDate:{"$gte":startDate,"$lt":endDate}},function(err,res){
+    //            cb(err,res);
+    //        });
+    //    }
+    //},function(err,results){
+    //    var ents = results.getEnts;
+    //    var orders = results.getOrders;
+    //    var categories=[],series=[];
+    //    for(var i in ents){
+    //        categories.push(ents[i].name);
+    //    }
+    //
+    //    //fn(err,results.createReport);
+    //});
+};
+
 ReportCtrl.saleReport = function(ent,startDate,endDate,fn){
     async.auto({
         'getProducts':function(cb){
