@@ -28,7 +28,7 @@ CardCtrl.initCard = function(token,cardNum,ent,fn){
         //      cb(err,res);
         //  });
         //},
-        'initCard':['getMember','getQrCode',function(cb,results){
+        'initCard':['getMember',,function(cb,results){
             var card = new Card({
                 'cardNum':cardNum,
                 'member':results.getMember._id,
