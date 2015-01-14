@@ -2,13 +2,13 @@
 #fn=(err,res) ->
 #  console.log err,res
 #QRcodeCtrl.generateCode fn,123123
-_ = require 'underscore'
+mongoose = require "mongoose"
+config = require "./../config/config.json"
+uri = "mongodb://#{config.db.host}:#{config.db.port}/#{config.db.database}"
+global.db = mongoose.createConnection uri
 
-specs = [{name:123123},{_id:1,name:123123123},{_id:2,name:346456}]
-
-a = _.filter specs,(spec) ->
-  spec._id?
-
-b = _.pluck a,"_id"
-
-console.log b
+PriceCtrl = require "./../control/priceCtrl"
+id = "54a36e74d62713a35a8e728c"
+PriceCtrl.deductInventory(id,1,(err,res) ->
+  console.log err,res
+)

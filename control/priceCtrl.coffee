@@ -122,13 +122,13 @@ class PriceCtrl
     )
 
   @deductInventory:(id,quantity,fn) ->
-    console.log id,quantity
-    Price.findByIdAndUpdate id,{$inc:{inventroy:-(quantity)}},(err,res) ->
-      console.log err,res
+    Price.findByIdAndUpdate(id,{$inc:{inventory:-quantity}},(err,res) ->
       fn err,res
+    )
 
   @returnInventory:(id,quantity,fn) ->
-    Price.findByIdAndUpdate id,{$inc:{inventroy:quantity}},(err,res) ->
+    Price.findByIdAndUpdate(id,{$inc:{inventory:quantity}},(err,res) ->
       fn err,res
+    )
 
 module.exports = PriceCtrl
