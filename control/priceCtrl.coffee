@@ -122,7 +122,9 @@ class PriceCtrl
     )
 
   @deductInventory:(id,quantity,fn) ->
-    Price.findByIdAndUpdate id,{$inc:{inventroy:-quantity}},(err,res) ->
+    console.log id,quantity
+    Price.findByIdAndUpdate id,{$inc:{inventroy:-(quantity)}},(err,res) ->
+      console.log err,res
       fn err,res
 
   @returnInventory:(id,quantity,fn) ->

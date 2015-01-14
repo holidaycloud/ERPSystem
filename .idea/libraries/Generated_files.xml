@@ -3,10 +3,12 @@
     <properties>
       <sourceFilesUrls>
         <item url="file://$PROJECT_DIR$/control/weixinCustomerCtrl.js" />
+        <item url="file://$PROJECT_DIR$/control/priceCtrl.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
       <root url="file://$PROJECT_DIR$/control/weixinCustomerCtrl.js" />
+      <root url="file://$PROJECT_DIR$/control/priceCtrl.js" />
     </CLASSES>
     <SOURCES />
   </library>
