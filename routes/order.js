@@ -10,7 +10,7 @@ var OrderCtrl = require('./../control/orderCtrl');
 router.post('/save', function(request, response) {
     var token = request.body.token;
     var startDate = request.body.startDate;
-    var quantity = request.body.quantity;
+    var quantity = parseInt(request.body.quantity);
     var remark = request.body.remark;
     var product = request.body.product;
     var liveName = request.body.liveName;

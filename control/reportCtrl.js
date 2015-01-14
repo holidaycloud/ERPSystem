@@ -139,7 +139,6 @@ ReportCtrl.saleReport = function(ent,startDate,endDate,fn){
                 }
                 res.push(obj);
             });
-            console.log(res);
             cb(null,res);
         }]
     },function(err,results){
