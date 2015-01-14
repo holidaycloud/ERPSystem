@@ -113,7 +113,7 @@ ReportCtrl.saleReport = function(ent,startDate,endDate,fn){
                     'profitRate':profitRate
                 };
             };
-            o.query={'ent':ent,'orderDate':{'$gte':startDate,"$lt":endDate}};
+            o.query={'ent':ent,'orderDate':{'$gte':startDate,"$lt":endDate},'status':{'$nin':[0,3]}};
             Order.mapReduce(o,function(err, res){
                 cb(err,res);
             });
