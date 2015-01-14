@@ -237,11 +237,13 @@
     };
 
     PriceCtrl.deductInventory = function(id, quantity, fn) {
+      console.log(id, quantity);
       return Price.findByIdAndUpdate(id, {
         $inc: {
           inventroy: -quantity
         }
       }, function(err, res) {
+        console.log(err, res);
         return fn(err, res);
       });
     };
