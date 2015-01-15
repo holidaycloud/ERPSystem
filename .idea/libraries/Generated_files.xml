@@ -3,14 +3,20 @@
     <properties>
       <sourceFilesUrls>
         <item url="file://$PROJECT_DIR$/test/test.js" />
+        <item url="file://$PROJECT_DIR$/control/verifyCodeCtrl.js" />
+        <item url="file://$PROJECT_DIR$/tools/sms.js" />
         <item url="file://$PROJECT_DIR$/control/weixinCustomerCtrl.js" />
         <item url="file://$PROJECT_DIR$/control/priceCtrl.js" />
+        <item url="file://$PROJECT_DIR$/model/verificationCode.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
       <root url="file://$PROJECT_DIR$/test/test.js" />
+      <root url="file://$PROJECT_DIR$/tools/sms.js" />
+      <root url="file://$PROJECT_DIR$/control/verifyCodeCtrl.js" />
       <root url="file://$PROJECT_DIR$/control/weixinCustomerCtrl.js" />
       <root url="file://$PROJECT_DIR$/control/priceCtrl.js" />
+      <root url="file://$PROJECT_DIR$/model/verificationCode.js" />
     </CLASSES>
     <SOURCES />
   </library>

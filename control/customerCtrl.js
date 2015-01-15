@@ -7,6 +7,7 @@ var config = require("./../config/config.json")
 var async = require('async');
 var request = require("request");
 var CardCtrl = require('./cardCtrl');
+var VerifyCodeCtrl = require("./../control/verifyCodeCtrl")
 var CustomerCtrl = function(){};
 
 CustomerCtrl.loginOrRegister = function(ent,mobile,passwd,fn){
@@ -78,6 +79,51 @@ CustomerCtrl.getCustomerByMobileOrRegister = function(ent,mobile,name,fn){
         }
     ],function(err,res){
         fn(err,res);
+    });
+};
+
+CustomerCtrl.verifyCode = function(mobile,fn){
+    VerifyCodeCtrl.create(mobile,function(err,res){
+        fn(err,res);
+    })
+};
+
+CustomerCtrl.webRegister = function(ent,mobile,password,code,fn){
+    async.auto({
+        checkCode:function(cb){
+            VerifyCodeCtrl.checkCode(mobile,code,function(err,res){
+               if(err){
+                   cb(err);
+               } else {
+                   if(res){
+                       cb(null,res);
+                   } else {
+                       cb(new Error('验证码错误'))
+                   }
+               }
+            });
+        },
+        checkMobile:["checkCode",function(cb,results){
+            Customer.findOne({'ent':ent,'mobile':mobile},function(err,res){
+                cb(err,res);
+            });
+        }],
+        saveCustomer:["checkMobile",function(cb,results){
+            if(results.checkMobile){
+                cb(new Error('用户已存在'),null);
+            } else {
+                var customer = new Customer( {
+                    'ent':ent,
+                    'mobile':mobile,
+                    'passwd':password
+                });
+                customer.save(function(err,res){
+                    cb(err,res);
+                });
+            }
+        }]
+    },function(err,results){
+        fn(err,results.saveCustomer);
     });
 };
 
