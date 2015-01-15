@@ -32,6 +32,20 @@ router.post('/save', function(request, response) {
     },invoiceTitle,coupon,deliveryAddress);
 });
 
+router.post('/update', function(request,response){
+    var token = request.body.token;
+    var remark = request.body.remark;
+    var orderID = request.body.orderID;
+
+    OrderCtrl.update(token,remark,orderID,function(err,res){
+        if(err){
+            response.json({'error':1,'errMsg':err.message});
+        }else{
+            response.json({'error':0,'data':res});
+        }
+    });
+});
+
 router.post('/cardPay', function(request, response) {
     var id = request.body.id;
     var token = request.body.token;
