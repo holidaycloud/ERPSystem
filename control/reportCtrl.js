@@ -178,4 +178,40 @@ ReportCtrl.saleDetail = function(page,pageSize,start,end,ent,fn){
         fn(err,results.createReport);
     });
 };
+
+ReportCtrl.entOrders = function(startDate,endDate,fn){
+    var returnValue = {};
+    returnValue.all = [];
+    returnValue.pay = [];
+    async.auto({
+        'getAllEnts': function(cb){
+            EntCtrl.nameList(function(err,res){
+                returnValue.ents = res;
+                cb(err,res);
+            });
+        }
+        ,'getOrdersNum': ['getAllEnts',function(cb,result){
+            returnValue.ents.forEach(function(e){
+                async.auto({
+                    'getOrdersNum': function(cb){
+                    }
+                    ,'getPayOrdersNum': function(cb,result){
+                        returnValue.ents.forEach(function(e){
+                            //pay orders count
+                            var query = Order.count({ent: e._id,status:1});
+                            query.exec(function(err,count){
+                                cb(err,count);
+                            });
+                        });
+                    }
+                },function(err,res){
+                    cb(err,res);
+                });
+            });
+        }]
+    },function(err,results){
+        console.log('fin:',results);
+        fn(err,"");
+    });
+};
 module.exports = ReportCtrl;
