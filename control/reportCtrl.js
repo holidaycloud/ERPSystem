@@ -181,8 +181,7 @@ ReportCtrl.saleDetail = function(page,pageSize,start,end,ent,fn){
 
 ReportCtrl.entOrders = function(startDate,endDate,fn){
     var returnValue = {};
-    returnValue.all = [];
-    returnValue.pay = [];
+    returnValue.funcQueue = [];
     async.auto({
         'getAllEnts': function(cb){
             EntCtrl.nameList(function(err,res){
@@ -192,26 +191,43 @@ ReportCtrl.entOrders = function(startDate,endDate,fn){
         }
         ,'getOrdersNum': ['getAllEnts',function(cb,result){
             returnValue.ents.forEach(function(e){
-                async.auto({
-                    'getOrdersNum': function(cb){
-                    }
-                    ,'getPayOrdersNum': function(cb,result){
-                        returnValue.ents.forEach(function(e){
-                            //pay orders count
-                            var query = Order.count({ent: e._id,status:1});
-                            query.exec(function(err,count){
-                                cb(err,count);
-                            });
-                        });
-                    }
-                },function(err,res){
-                    cb(err,res);
-                });
+                returnValue[e._id] = {};
+                //all orders count
+                returnValue.funcQueue.push(getEntOrdersNumber(startDate,endDate,e._id,returnValue[e._id]));
+                //pay orders count
+                returnValue.funcQueue.push(getEntOrdersNumber(startDate,endDate,e._id,returnValue[e._id],1));
+                //fin orders count
+                returnValue.funcQueue.push(getEntOrdersNumber(startDate,endDate,e._id,returnValue[e._id],2));
+            });
+            //run all
+            async.series(returnValue.funcQueue,function(err,res){
+                delete returnValue.funcQueue;
+                cb(err,res);
             });
         }]
     },function(err,results){
-        console.log('fin:',results);
-        fn(err,"");
+        fn(err,returnValue);
     });
+};
+
+var getEntOrdersNumber = function(sd,ed,entId,object,status){
+  return function(cb){
+      var cond = {};
+      cond.ent = entId;
+      cond.orderDate = {'$gte':sd,"$lt":ed};
+      if(status){
+          cond.status = status;
+      }
+      Order.count(cond,function(err,res){
+          if(cond.status&&cond.status == 1){
+              object.pay = res;
+          }else if(cond.status&&cond.status == 2){
+              object.fin = res;
+          }else{
+              object.all = res;
+          }
+          cb(err,object);
+      });
+  }
 };
 module.exports = ReportCtrl;

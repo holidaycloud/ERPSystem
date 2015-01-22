@@ -114,6 +114,14 @@ MemberCtrl.list = function(page,pageSize,mobile,ent,fn){
     });
 }
 
+MemberCtrl.nameList = function(fn){
+    var query = Member.find({'isEnable':true});
+    query.select('_id loginName mobile email');
+    query.exec(function(err,members){
+        fn(err,members);
+    });
+}
+
 MemberCtrl.token = function(token,fn){
     TokenCtrl.findToken(token,fn);
 };

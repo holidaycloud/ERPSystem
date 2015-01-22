@@ -36,6 +36,7 @@ coupon = require "./routes/coupon"
 marketing = require "./routes/marketing"
 news = require "./routes/news"
 spec = require "./routes/spec"
+notice = require "./routes/notice"
 index = require "./routes/index"
 app = express()
 
@@ -75,7 +76,7 @@ app.use "/api/coupon", coupon
 app.use "/api/marketing", marketing
 app.use "/api/news", news
 app.use "/api/product/spec", spec
-
+app.use "/api/notice", notice
 app.use (req,res,next) ->
   res.status(404).end()
 
@@ -88,7 +89,7 @@ app.use (err,req,res,next) ->
   console.log err
   res.status(err.status or 500).end()
 
-app.set "port",process.env.PORT or 3000
+app.set "port",process.env.PORT or 3456
 
 server = app.listen (app.get "port"),() ->
   console.log "Express server listening on port #{server.address().port}"
