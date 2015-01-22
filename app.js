@@ -166,7 +166,7 @@
     return res.status(err.status || 500).end();
   });
 
-  app.set("port", process.env.PORT || 3456);
+  app.set("port", process.env.PORT || 3000);
 
   server = app.listen(app.get("port"), function() {
     return console.log("Express server listening on port " + (server.address().port));

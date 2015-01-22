@@ -89,7 +89,8 @@ app.use (err,req,res,next) ->
   console.log err
   res.status(err.status or 500).end()
 
-app.set "port",process.env.PORT or 3456
+#app.set "port",process.env.PORT or 3456
+app.set "port",process.env.PORT or 3000
 
 server = app.listen (app.get "port"),() ->
   console.log "Express server listening on port #{server.address().port}"
