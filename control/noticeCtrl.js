@@ -3,7 +3,7 @@
  */
 var Notice = require('./../model/notice');
 var TokenCtrl = require('./tokenCtrl');
-var MemberCtrl = require('./MemberCtrl');
+var MemberCtrl = require('./memberCtrl');
 var async = require('async');
 var NoticeCtrl = function () {
 };
