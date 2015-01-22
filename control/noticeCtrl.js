@@ -1,7 +1,7 @@
 /**
  * Created by cloudbian on 2015/1/19.
  */
-var Notice = require('./../model/Notice');
+var Notice = require('./../model/notice');
 var TokenCtrl = require('./tokenCtrl');
 var MemberCtrl = require('./MemberCtrl');
 var async = require('async');
