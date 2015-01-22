@@ -5,7 +5,7 @@ var express = require('express');
 var httpReq = require('request');
 var config = require('./../config/config.json');
 var router = express.Router();
-var NoticeCtrl = require('./../control/NoticeCtrl');
+var NoticeCtrl = require('./../control/noticeCtrl');
 router.get('/list',function(request,response){
     var token = request.query.token;
     var page = request.query.page?request.query.page:0;
