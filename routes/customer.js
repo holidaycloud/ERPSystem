@@ -30,6 +30,31 @@ router.post("/saveWeixinCustomer",function(request,response){
     });
 });
 
+router.get('/verifyCode', function(request, response) {
+    var mobile = request.query.mobile;
+    CustomerCtrl.verifyCode(mobile,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.post('/webRegister', function(request, response) {
+    var ent = request.body.ent;
+    var mobile = request.body.mobile;
+    var passwd = request.body.passwd;
+    var code = request.body.code;
+    CustomerCtrl.webRegister(ent,mobile,passwd,code,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post('/register', function(request, response) {
     var ent = request.body.ent;
     var mobile = request.body.mobile;
