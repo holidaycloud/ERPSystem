@@ -131,6 +131,17 @@ router.get('/list', function(request, response) {
     });
 });
 
+router.get('/nameList', function(request, response) {
+    var token = request.query.token;
+    MemberCtrl.nameList(function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/detail', function(request, response) {
     var id = request.query.id;
     MemberCtrl.detail(id,function(err,res){

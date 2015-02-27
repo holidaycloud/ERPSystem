@@ -105,4 +105,11 @@ TokenCtrl.findToken = function(token,fn){
         });
 };
 
+TokenCtrl.findTokenByMemberId = function(memberID,fn){
+    Token.findOne({'member':memberID})
+        .select('token')
+        .exec(function(err,res){
+            fn(err,res);
+        });
+};
 module.exports = TokenCtrl;
