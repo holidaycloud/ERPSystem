@@ -60,8 +60,7 @@ ProductCtrl.fulllist = function(ent,fn){
     type0query.endDate = {"$gte":today.getTime()};
     obj.push(type0query,type3query);
     query.or(obj);
-    query.select('name introduction startDate endDate weekend isEnable createTime')
-        .exec(function(err,products){
+    query.exec(function(err,products){
             fn(err,products);
         });
 };
