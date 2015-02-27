@@ -47,6 +47,25 @@ ProductCtrl.update = function(id,obj,fn){
   });
 };
 
+ProductCtrl.fulllist = function(ent,fn){
+    var now = new Date();
+    var today = new Date(now.Format("yyyy-MM-dd")+timeZone);
+    today.setDate(today.getDate()+1);
+    var query = Product.find();
+    var obj = [];
+    var type0query = {productType:0};
+    var type3query = {productType:3};
+    type0query.ent = ent;
+    type3query.ent = ent;
+    type0query.endDate = {"$gte":today.getTime()};
+    obj.push(type0query,type3query);
+    query.or(obj);
+    query.select('name introduction startDate endDate weekend isEnable createTime')
+        .exec(function(err,products){
+            cb(err,products);
+        });
+};
+
 ProductCtrl.list = function(ent,isRes,page,pageSize,fn,isAll){
     var now = new Date();
     var today = new Date(now.Format("yyyy-MM-dd")+timeZone);

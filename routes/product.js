@@ -96,6 +96,16 @@ router.post('/update', function(request, response) {
     });
 });
 
+router.get('/fulllist',function(request,response){
+    var ent = request.query.ent;
+    ProductCtrl.fulllist(ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
 router.get('/list', function(request, response) {
     var ent = request.query.ent;
     var isRes = request.query.isRes=='true'?true:false;
