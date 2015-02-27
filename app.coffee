@@ -124,3 +124,4 @@ Date::Format = (fmt) ->
       fmt = fmt.replace RegExp.$1,(if RegExp.$1.length is 1 then value else "00#{value}".substr "#{value}".length)
   fmt
 
+
