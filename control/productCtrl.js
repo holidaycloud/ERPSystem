@@ -62,7 +62,7 @@ ProductCtrl.fulllist = function(ent,fn){
     query.or(obj);
     query.select('name introduction startDate endDate weekend isEnable createTime')
         .exec(function(err,products){
-            cb(err,products);
+            fn(err,products);
         });
 };
 
