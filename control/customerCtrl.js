@@ -454,6 +454,13 @@ CustomerCtrl.update = function(id,obj,fn){
     });
 };
 
+CustomerCtrl.fulllist = function(ent,fn){
+    var query = Customer.find({'ent': ent});
+    query.exec(function (err, customers) {
+        fn(err, customers);
+    });
+};
+
 CustomerCtrl.list = function(page,pageSize,ent,mobile,fn){
     async.parallel([
         function (cb) {
