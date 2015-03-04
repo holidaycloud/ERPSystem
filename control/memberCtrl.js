@@ -74,6 +74,20 @@ MemberCtrl.update = function(id,obj,fn){
         });
 };
 
+MemberCtrl.fulllist = function(mobile,ent,fn){
+    var query = Member.find();
+    if(mobile){
+        query.where({'mobile':mobile});
+    }
+    if(ent){
+        query.where({'ent':ent});
+    }
+    query.populate({'path':'ent','select':'name'});
+    query.exec(function(err,members){
+        fn(err,members);
+    });
+}
+
 MemberCtrl.list = function(page,pageSize,mobile,ent,fn){
     async.parallel([
         function(cb){
