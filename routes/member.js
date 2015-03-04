@@ -117,6 +117,18 @@ router.post('/changePasswd', function(request, response) {
     });
 });
 
+router.get('/fulllist', function(request, response) {
+    var mobile = request.query.mobile;
+    var ent = request.query.ent;
+    MemberCtrl.fulllist(mobile,ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/list', function(request, response) {
     var page = request.query.page||0;
     var pageSize = request.query.pageSize||25;
