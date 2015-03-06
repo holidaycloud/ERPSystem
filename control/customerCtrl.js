@@ -159,6 +159,105 @@ CustomerCtrl.register=function(ent,mobile,passwd,loginName,email,birthday,name,a
     });
 };
 
+CustomerCtrl.weixinSubscribe = function(ent,openid,fn){
+    async.auto({
+        'getCustomer':function(cb){
+            Customer.findOne({'ent':ent,'weixinOpenId':openid})
+                .lean()
+                .exec(function(err,customer){
+                    cb(err,customer);
+                });
+        },
+        'getUserInfo':function(cb){
+            var url = config.weixin.host+':'+config.weixin.port+'/weixin/userInfo/'+ent+'?openid='+openId;
+            request({
+                url:url,
+                timeout:3000
+            },function(err,response,body){
+                if(err){
+                    cb(err,null);
+                } else {
+                    var res = body?JSON.parse(body):{};
+                    if(res.error==0&&res.data){
+                        cb(null,res.data);
+                    } else {
+                        cb(new Error(res.errMsg),null);
+                    }
+                }
+            });
+        },
+        'registerCustomer':['getCustomer','getUserInfo',function(cb,results){
+            var userinfo = results.getUserInfo;
+            var customer = results.getCustomer;
+            if(customer){
+                var setObj = {};
+                if(userinfo.headimgurl){
+                    setObj.headimgurl = userinfo.headimgurl;
+                }
+                if(userinfo.nickname){
+                    setObj.loginName = userinfo.nickname;
+                }
+                if(userinfo.sex){
+                    setObj.sex = parseInt(userinfo.sex);
+                }
+                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':setObj})
+                    .lean()
+                    .exec(function(err,customer){
+                        cb(err,customer);
+                    });
+            } else {
+                var customer = new Customer({
+                    'ent':ent,
+                    'weixinOpenId':openId,
+                    'headimgurl':userinfo.headimgurl?userinfo.headimgurl:"",
+                    'loginName':userinfo.nickname?userinfo.nickname:"",
+                    'sex':userinfo.sex?parseInt(userinfo.sex):2
+                });
+                customer.save(function(err,res){
+                    cb(err,res);
+                });
+            }
+        }]
+        ,'getCustomerCard':['registerCustomer',function(cb,results){
+            CustomerCtrl.getCustomerCard(results.registerCustomer._id,function(err,res){
+                if(err){
+                    cb(err,null);
+                } else {
+                    cb(null,res);
+                }
+            });
+        }]
+        ,'getCard':['getCustomerCard',function(cb,results){
+            if(results.getCustomerCard){
+                CardCtrl.getCard(results.getCustomerCard.card,function(err,res){
+                    cb(err,res);
+                });
+            } else {
+                cb(null,null);
+            }
+        }]
+        ,'getCardBalance':['getCard',function(cb,results){
+            if(results.getCard){
+                CardCtrl.balance(results.getCard.cardNum,ent,function(err,res){
+                    cb(err,res);
+                })
+            } else {
+                cb(null,null);
+            }
+        }]
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            var customer = results.registerCustomer;
+            if(results.getCardBalance){
+                customer.cardBalance = results.getCardBalance.balance;
+            }
+            fn(null,customer);
+        }
+    });
+};
+
 CustomerCtrl.detailByWeixin = function(openId,fn){
     Customer.findOne({'weixinOpenId':openId},function(err,customer){
         fn(err,customer);
