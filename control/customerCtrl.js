@@ -208,7 +208,7 @@ CustomerCtrl.weixinSubscribe = function(ent,openid,fn){
             } else {
                 var customer = new Customer({
                     'ent':ent,
-                    'weixinOpenId':openId,
+                    'weixinOpenId':openid,
                     'headimgurl':userinfo.headimgurl?userinfo.headimgurl:"",
                     'loginName':userinfo.nickname?userinfo.nickname:"",
                     'sex':userinfo.sex?parseInt(userinfo.sex):2
