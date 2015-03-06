@@ -169,7 +169,7 @@ CustomerCtrl.weixinSubscribe = function(ent,openid,fn){
                 });
         },
         'getUserInfo':function(cb){
-            var url = config.weixin.host+':'+config.weixin.port+'/weixin/userInfo/'+ent+'?openid='+openId;
+            var url = config.weixin.host+':'+config.weixin.port+'/weixin/userInfo/'+ent+'?openid='+openid;
             request({
                 url:url,
                 timeout:3000
