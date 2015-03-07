@@ -49,16 +49,37 @@ CouponCtrl.generate = function(ent,marketing,qty,minValue,type,value,name,produc
 };
 
 CouponCtrl.give = function(ent,marketing,customer,fn){
-    Coupon.findOneAndUpdate({'ent':ent,'marketing':marketing,'customer':{'$exists':false}},{'$set':{'customer':customer}},function(err,res){
-        if(err){
-            fn(err,null);
-        } else {
-            if(res){
-                fn(null,res);
-            } else {
-                fn(new Error('优惠券已发完'),null);
-            }
-        }
+    async.auto({
+        //查找是否已领过此次活动的优惠券
+        couponIsGet:function(cb){
+            Coupon.count({'ent':ent,'marketing':marketing,'customer':customer},function(err,res){
+               if(err){
+                   cb(err);
+               } else {
+                   if(res>0){
+                       cb(new Error("优惠券已领用"));
+                   } else {
+                       cb(null,res);
+                   }
+               }
+            });
+        },
+        //领取优惠券
+        getCoupon:["couponIsGet",function(cb,results){
+            Coupon.findOneAndUpdate({'ent':ent,'marketing':marketing,'customer':{'$exists':false}},{'$set':{'customer':customer}},function(err,res){
+                if(err){
+                    cb(err,null);
+                } else {
+                    if(res){
+                        cb(null,res);
+                    } else {
+                        cb(new Error('优惠券已发完'),null);
+                    }
+                }
+            });
+        }]
+    },function(err,results){
+        fn(err,results.getCoupon);
     });
 };
 
