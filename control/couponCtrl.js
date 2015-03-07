@@ -49,6 +49,7 @@ CouponCtrl.generate = function(ent,marketing,qty,minValue,type,value,name,produc
 };
 
 CouponCtrl.give = function(ent,marketing,customer,fn){
+    console.log(ent,marketing,customer);
     async.auto({
         //查找是否已领过此次活动的优惠券
         couponIsGet:function(cb){
