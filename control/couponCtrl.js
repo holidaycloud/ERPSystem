@@ -57,7 +57,7 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
                if(err){
                    cb(err);
                } else {
-                   console.log(err,res);
+
                    if(res>0){
                        cb(new Error("优惠券已领用"));
                    } else {
@@ -81,6 +81,7 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
             });
         }]
     },function(err,results){
+        console.log(err,results);
         fn(err,results.getCoupon);
     });
 };
