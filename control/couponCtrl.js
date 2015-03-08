@@ -49,7 +49,6 @@ CouponCtrl.generate = function(ent,marketing,qty,minValue,type,value,name,produc
 };
 
 CouponCtrl.give = function(ent,marketing,customer,fn){
-    console.log(ent,marketing,customer);
     async.auto({
         //查找是否已领过此次活动的优惠券
         couponIsGet:function(cb){
@@ -81,6 +80,20 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
         }]
     },function(err,results){
         fn(err,results.getCoupon);
+    });
+};
+
+CouponCtrl.scanUse = function(id,fn){
+    Coupon.findByIdAndUpdate(id,{'$set':{'status':1,'useTime':Date.now()}},function(err,res){
+        if(err){
+            fn(err,null);
+        } else {
+            if(res){
+                fn(null,res);
+            } else {
+                fn(new Error('优惠券已使用过'),null);
+            }
+        }
     });
 };
 

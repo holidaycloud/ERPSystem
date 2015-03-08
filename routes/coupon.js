@@ -37,6 +37,17 @@ router.post('/give',function(request,response){
     });
 });
 
+router.post('/scanUse',function(request,response){
+    var id = request.body.id;
+    CouponCtrl.scanUse(id,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post('/use',function(request,response){
     var code = request.body.code;
     var customer = request.body.customer;
