@@ -84,7 +84,7 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
 };
 
 CouponCtrl.scanUse = function(id,fn){
-    Coupon.findByIdAndUpdate(id,{'$set':{'status':1,'useTime':Date.now()}},function(err,res){
+    Coupon.findOneAndUpdate({'_id':id,'status':0},{'$set':{'status':1,'useTime':Date.now()}},function(err,res){
         if(err){
             fn(err,null);
         } else {
@@ -96,7 +96,7 @@ CouponCtrl.scanUse = function(id,fn){
         }
     });
 };
-
+s
 CouponCtrl.useCoupon = function(code,customer,order,fn){
     Coupon.findOneAndUpdate({'code':code,'customer':customer,'status':0},{'$set':{'status':1,'order':order,'useTime':Date.now()}},function(err,res){
        if(err){
