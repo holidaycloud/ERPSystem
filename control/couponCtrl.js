@@ -96,7 +96,7 @@ CouponCtrl.scanUse = function(id,fn){
         }
     });
 };
-s
+
 CouponCtrl.useCoupon = function(code,customer,order,fn){
     Coupon.findOneAndUpdate({'code':code,'customer':customer,'status':0},{'$set':{'status':1,'order':order,'useTime':Date.now()}},function(err,res){
        if(err){
