@@ -129,6 +129,13 @@ CouponCtrl.detail = function(id,fn){
     });
 };
 
+CouponCtrl.fullList = function(ent,fn){
+    Coupon.find({'ent':ent})
+        .exec(function(err,coupons){
+            fn(err,coupons);
+        });
+};
+
 CouponCtrl.list = function(page,pageSize,ent,fn){
     async.auto({
         'getList':function(cb){
