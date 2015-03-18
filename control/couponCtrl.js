@@ -131,6 +131,7 @@ CouponCtrl.detail = function(id,fn){
 
 CouponCtrl.fullList = function(ent,fn){
     Coupon.find({'ent':ent})
+        .populate("marketing")
         .exec(function(err,coupons){
             fn(err,coupons);
         });
