@@ -200,7 +200,7 @@ CustomerCtrl.weixinSubscribe = function(ent,openid,fn){
                 if(userinfo.sex){
                     setObj.sex = parseInt(userinfo.sex);
                 }
-                Customer.findOneAndUpdate({'ent':ent,'mobile':mobile,'passwd':passwd},{'$set':setObj})
+                Customer.findByIdUpdate(customer._id,{'$set':setObj})
                     .lean()
                     .exec(function(err,customer){
                         cb(err,customer);
