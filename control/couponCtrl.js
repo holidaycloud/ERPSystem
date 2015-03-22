@@ -129,6 +129,51 @@ CouponCtrl.detail = function(id,fn){
     });
 };
 
+CouponCtrl.customList = function(ent,start,length,order,dir,search,fn){
+    async.auto({
+        'getList':function(cb){
+            var query = Coupon.find();
+            if(ent!="548123e82321630e394590e5"){
+                query.where({"ent":ent});
+            }
+            query.populate({"path":"marketing","select":"name"});
+            query.populate({"path":"ent","select":"name"});
+            if(dir == "asc"){
+                query.sort(order);
+            } else {
+                query.sort("-"+order);
+            }
+
+            query.skip(start);
+            query.limit(length);
+            query.lean();
+            query.exec(function(err,marketings){
+                    cb(err,marketings);
+            });
+        },
+        'getTotalSize':function(cb){
+            if(ent!="548123e82321630e394590e5"){
+                Coupon.count({'ent':ent},function(err,size){
+                    cb(err,size);
+                });
+            }else {
+                Coupon.count(function(err,size){
+                    cb(err,size);
+                });
+            }
+        }
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            fn(null,{
+                'totalSize':results.getTotalSize,
+                'coupons':results.getList
+            });
+        }
+    });
+};
+
 CouponCtrl.fullList = function(ent,fn){
     if(ent == "548123e82321630e394590e5"){
         Coupon.find()
