@@ -133,12 +133,15 @@ CouponCtrl.fullList = function(ent,fn){
     if(ent == "548123e82321630e394590e5"){
         Coupon.find()
             .populate("marketing")
+            .populate("ent")
             .exec(function(err,coupons){
                 fn(err,coupons);
             });
     } else {
         Coupon.find({'ent':ent})
-            .populate("marketing")
+            .populate({"path":"marketing","select":"name"})
+            .populate({"path":"ent","select":"name"})
+            .lean()
             .exec(function(err,coupons){
                 fn(err,coupons);
             });
@@ -149,13 +152,16 @@ CouponCtrl.list = function(page,pageSize,ent,fn){
     async.auto({
         'getList':function(cb){
             Coupon.find({'ent':ent})
+                .populate({"path":"marketing","select":"name"})
+                .populate({"path":"ent","select":"name"})
                 .skip(page*pageSize)
                 .limit(pageSize)
+                .lean()
                 .exec(function(err,marketings){
                     cb(err,marketings);
                 });
         },
-        'getTotalSize':function(cb,results){
+        'getTotalSize':function(cb){
             Coupon.count({'ent':ent},function(err,size){
                 cb(err,size);
             });
