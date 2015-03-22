@@ -130,11 +130,19 @@ CouponCtrl.detail = function(id,fn){
 };
 
 CouponCtrl.fullList = function(ent,fn){
-    Coupon.find({'ent':ent})
-        .populate("marketing")
-        .exec(function(err,coupons){
-            fn(err,coupons);
-        });
+    if(ent == "548123e82321630e394590e5"){
+        Coupon.find()
+            .populate("marketing")
+            .exec(function(err,coupons){
+                fn(err,coupons);
+            });
+    } else {
+        Coupon.find({'ent':ent})
+            .populate("marketing")
+            .exec(function(err,coupons){
+                fn(err,coupons);
+            });
+    }
 };
 
 CouponCtrl.list = function(page,pageSize,ent,fn){
