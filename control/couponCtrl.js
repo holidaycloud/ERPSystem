@@ -67,7 +67,7 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
         },
         //领取优惠券
         getCoupon:["couponIsGet",function(cb,results){
-            Coupon.findOneAndUpdate({'ent':ent,'marketing':marketing,'customer':{'$exists':false}},{'$set':{'customer':customer}},function(err,res){
+            Coupon.findOneAndUpdate({'marketing':marketing,'customer':{'$exists':false}},{'$set':{'customer':customer}},function(err,res){
                 if(err){
                     cb(err,null);
                 } else {
