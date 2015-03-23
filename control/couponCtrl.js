@@ -114,7 +114,7 @@ CouponCtrl.useCoupon = function(code,customer,order,fn){
 };
 
 CouponCtrl.customerCoupons = function(ent,customer,status,fn){
-    var query = Coupon.find({'ent':ent,'customer':customer});
+    var query = Coupon.find({'customer':customer});
     if(status){
         query.where({'status':status});
     }
