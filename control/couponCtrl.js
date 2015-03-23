@@ -124,9 +124,11 @@ CouponCtrl.customerCoupons = function(ent,customer,status,fn){
 };
 
 CouponCtrl.detail = function(id,fn){
-    Coupon.findById(id,function(err,res){
-       fn(err,res);
-    });
+    Coupon.findById(id)
+        .populate({"path":"ent","select":"name"})
+        .exec(function(err,res){
+            fn(err,res);
+        });
 };
 
 CouponCtrl.customList = function(ent,start,length,order,dir,search,fn){
