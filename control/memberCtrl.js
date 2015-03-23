@@ -33,10 +33,12 @@ MemberCtrl.login = function(name,passwd,fn){
     });
 };
 MemberCtrl.weixinLogin = function(openid,fn){
+    console.log("openid:",openid)
     async.waterfall([
         function(cb){
             Member.findOne({'weixinOpenId':openid})
                 .exec(function(err,res){
+                    console.log("member",member);
                     cb(err,res);
                 });
         },
