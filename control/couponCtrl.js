@@ -232,4 +232,24 @@ CouponCtrl.canUseList = function(ent,customer,product,totalPrice,fn){
         fn(err,res);
     });
 };
+
+CouponCtrl.count = function(ent,type,fn){
+    var query = Coupon.count();
+    if(ent != "548123e82321630e394590e5"){
+        query.where({"ent":ent});
+    }
+    if(type == "used") {
+        query.where({"status":1});
+    }
+    else if(type == "received"){
+        query.where({"customer":{"$exists":true}});
+    }
+    else if(type == "noreceived"){
+        query.where({"customer":{"$exists":false}});
+    }
+    query.exec(function(err,res){
+        fn(err,res);
+    });
+};
+
 module.exports = CouponCtrl;
