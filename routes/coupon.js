@@ -125,6 +125,18 @@ router.get('/detail',function(request,response){
     });
 });
 
+router.get('/count',function(request,response){
+    var ent = request.query.ent;
+    var type = request.query.type;
+    CouponCtrl.count(ent,type,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/canUseList',function(request,response){
     var customer = request.query.customer;
     var ent = request.query.ent;
