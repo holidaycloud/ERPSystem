@@ -52,7 +52,7 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
     async.auto({
         //查找是否已领过此次活动的优惠券
         couponIsGet:function(cb){
-            Coupon.count({'ent':ent,'marketing':marketing,'customer':customer},function(err,res){
+            Coupon.count({'marketing':marketing,'customer':customer},function(err,res){
                if(err){
                    cb(err);
                } else {
