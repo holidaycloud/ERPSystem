@@ -118,6 +118,7 @@ CouponCtrl.customerCoupons = function(ent,customer,status,fn){
     if(status){
         query.where({'status':status});
     }
+    query.populate({"path":"marketing","select":"name content"});
     query.exec(function(err,res){
         fn(err,res);
     });
@@ -125,6 +126,7 @@ CouponCtrl.customerCoupons = function(ent,customer,status,fn){
 
 CouponCtrl.detail = function(id,fn){
     Coupon.findById(id)
+        .populate({"path":"marketing","select":"name content"})
         .populate({"path":"ent","select":"name"})
         .exec(function(err,res){
             fn(err,res);
