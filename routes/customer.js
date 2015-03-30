@@ -86,6 +86,30 @@ router.post('/initCard', function(request, response) {
     });
 });
 
+router.post('/updateLocation', function(request, response) {
+    var id = request.body.id;
+    var lat = request.body.lat;
+    var lon = request.body.lon;
+    CustomerCtrl.updateLocation(id,lat,lon,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
+router.get('/customerLocations', function(request, response) {
+    var ent = request.query.ent;
+    CustomerCtrl.getLocations(ent,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post('/update', function(request, response) {
     var id = request.body.id;
     var loginName = request.body.loginName;

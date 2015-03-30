@@ -10,6 +10,20 @@ var CardCtrl = require('./cardCtrl');
 var VerifyCodeCtrl = require("./../control/verifyCodeCtrl")
 var CustomerCtrl = function(){};
 
+CustomerCtrl.updateLocation = function(id,lat,lon,fn){
+    Customer.findByIdAndUpdate(id,{"$set":{'location':{'lat':lat,'lon':lon}}},function(err,res){
+        fn(err,res);
+    });
+};
+
+CustomerCtrl.getLocations = function(ent,fn){
+    CustomerCtrl.find({'ent':ent,'location':{'$exists':true}})
+        .select("loginName location")
+        .exec(function(err,res){
+           fn(err,res);
+        });
+}
+
 CustomerCtrl.loginOrRegister = function(ent,mobile,passwd,fn){
   async.auto({
       'login':function(cb){

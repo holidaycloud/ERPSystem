@@ -17,7 +17,11 @@ var customerSchema = new Schema({
     'isEnable': {'type': 'Boolean', 'default': true},
     'headimgurl':String,
     'weixinOpenId':String,
-    'origin':{type:Schema.Types.ObjectId}
+    'origin':{type:Schema.Types.ObjectId},
+    'location':{
+        'lat':Number,
+        'lon':Number
+    }
 });
 customerSchema.index({'ent':1});
 customerSchema.index({'ent':1,'mobile':1});
