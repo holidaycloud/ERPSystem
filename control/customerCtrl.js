@@ -17,7 +17,7 @@ CustomerCtrl.updateLocation = function(id,lat,lon,fn){
 };
 
 CustomerCtrl.getLocations = function(ent,fn){
-    CustomerCtrl.find({'ent':ent,'location':{'$exists':true}})
+    Customer.find({'ent':ent,'location':{'$exists':true}})
         .select("loginName location")
         .exec(function(err,res){
            fn(err,res);
