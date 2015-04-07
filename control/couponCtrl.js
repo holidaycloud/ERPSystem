@@ -143,6 +143,7 @@ CouponCtrl.customList = function(ent,start,length,order,dir,search,fn){
             }
             query.populate({"path":"marketing","select":"name"});
             query.populate({"path":"ent","select":"name"});
+            query.populate({"path":"customer","select":"loginName"})
             if(dir == "asc"){
                 query.sort(order);
             } else {
