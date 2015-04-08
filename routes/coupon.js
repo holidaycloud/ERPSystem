@@ -74,6 +74,17 @@ router.get('/customerCoupons',function(request,response){
     });
 });
 
+router.get("/marketList",function(request,response){
+    var marketing = request.query.marketing;
+    CouponCtrl.marketList(marketing,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.get('/fulllist',function(request,response){
     var ent = request.query.ent;
     CouponCtrl.fullList(ent,function(err,res){
