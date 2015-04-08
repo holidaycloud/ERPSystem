@@ -138,9 +138,10 @@ CouponCtrl.customList = function(ent,start,length,order,dir,search,fn){
     async.auto({
         'getList':function(cb){
             var query = Coupon.find();
-            query.where({"ent":{"$nin":["54742dffc96fa033763d3145"]}});
             if(ent!="548123e82321630e394590e5"){
                 query.where({"ent":ent});
+            } else {
+                query.where({"ent":{"$nin":["54742dffc96fa033763d3145"]}});
             }
             query.populate({"path":"marketing","select":"name"});
             query.populate({"path":"ent","select":"name"});
@@ -164,7 +165,7 @@ CouponCtrl.customList = function(ent,start,length,order,dir,search,fn){
                     cb(err,size);
                 });
             }else {
-                Coupon.count(function(err,size){
+                Coupon.count({"ent":{"$nin":["54742dffc96fa033763d3145"]}},function(err,size){
                     cb(err,size);
                 });
             }
