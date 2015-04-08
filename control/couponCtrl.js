@@ -138,6 +138,7 @@ CouponCtrl.customList = function(ent,start,length,order,dir,search,fn){
     async.auto({
         'getList':function(cb){
             var query = Coupon.find();
+            query.where({"ent":{"$nin":["54742dffc96fa033763d3145"]}});
             if(ent!="548123e82321630e394590e5"){
                 query.where({"ent":ent});
             }
