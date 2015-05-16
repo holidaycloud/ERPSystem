@@ -126,6 +126,7 @@ CouponCtrl.customerCoupons = function(ent,customer,status,fn){
     }
     query.sort("status");
     query.populate({"path":"marketing","select":"name content"});
+    query.populate({"path":"ent","select":"name"});
     query.exec(function(err,res){
         fn(err,res);
     });
