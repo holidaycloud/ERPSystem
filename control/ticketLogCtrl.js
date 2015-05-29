@@ -12,4 +12,12 @@ TicketLogCtrl.save = function(ticket,openid,fn){
     ticketLog.save(fn);
 };
 
+TicketLogCtrl.dayCount = function(openid,day,fn){
+    var now = new Date();
+    var today = new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    TicketLog.count({openid:openid,createDate:{"$gte":today.getTime()-(86400000*day)}},function(err,res){
+       fn(err,res);
+    });
+};
+
 module.exports = TicketLogCtrl;

@@ -8,6 +8,7 @@ var ticketLogSchema = new Schema({
     createDate: {'type':Number, 'default':Date.now},
     openid: String
 });
-
+ticketLogSchema.index({'ticket':1});
+ticketLogSchema.index({'openid':1});
 var TicketLogo = db.model('TicketLog', ticketLogSchema);
 module.exports = TicketLogo;
