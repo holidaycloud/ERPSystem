@@ -37,6 +37,7 @@ marketing = require "./routes/marketing"
 news = require "./routes/news"
 spec = require "./routes/spec"
 notice = require "./routes/notice"
+ticketLog = require "./routes/ticketLog"
 index = require "./routes/index"
 app = express()
 
@@ -77,6 +78,7 @@ app.use "/api/marketing", marketing
 app.use "/api/news", news
 app.use "/api/product/spec", spec
 app.use "/api/notice", notice
+app.use "/api/ticketLog", ticketLog
 app.use (req,res,next) ->
   res.status(404).end()
 
