@@ -265,6 +265,7 @@ CouponCtrl.count = function(ent,type,fn){
             if(ent.marketings){
                 query.where({"marketing":{"$in":ent.marketing}});
             }
+            query.where({"marketing":{"$in":aaa}});
             if(type == "used") {
                 query.where({"status":1});
             }
@@ -279,7 +280,6 @@ CouponCtrl.count = function(ent,type,fn){
             });
         }]
     },function(err,results){
-        console.log(err,results);
         fn(err,results.calCount);
     });
 };
