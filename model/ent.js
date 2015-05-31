@@ -16,7 +16,7 @@ var entSchema = new Schema({
     'isAdmin':{type: Boolean, default: false},
     'provider':[{'type': Schema.Types.ObjectId, 'ref': 'Ent'}],
     'sell':[{'type': Schema.Types.ObjectId, 'ref': 'Ent'}],
-    'marketings':[{'type': Schema.Types.ObjectId, 'ref': 'Marketing'}]
+    'marketings':[String]
 });
 var Ent = db.model('Ent',entSchema);
 module.exports = Ent;
