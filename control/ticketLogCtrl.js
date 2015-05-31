@@ -20,4 +20,21 @@ TicketLogCtrl.dayCount = function(openid,day,fn){
     });
 };
 
+TicketLogCtrl.ticketCount = function(fn){
+    var o = {};
+    o.map = function(){
+        emit(this.ticket,1);
+    };
+    o.reduce = function(key,values){
+        totalCount =0;
+        for(var i in values){
+            totalCount++;
+        }
+        return totalCount
+    };
+    TicketLog.mapReduce(o,function(err, res){
+        fn(err,res);
+    });
+};
+
 module.exports = TicketLogCtrl;
