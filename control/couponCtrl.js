@@ -263,9 +263,8 @@ CouponCtrl.count = function(ent,type,fn){
             var query = Coupon.count();
             var ent = results.getEnt;
             if(ent.marketings){
-                query.where({"marketing":{"$in":ent.marketing}});
+                query.where({"marketing":{"$in":ent.marketings}});
             }
-            query.where({"marketing":{"$in":aaa}});
             if(type == "used") {
                 query.where({"status":1});
             }
