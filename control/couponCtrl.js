@@ -84,16 +84,21 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
     });
 };
 
-CouponCtrl.scanUse = function(id,fn){
-    Coupon.findOneAndUpdate({'_id':id,'status':0},{'$set':{'status':1,'useTime':Date.now()}},function(err,res){
-        console.log(err,res);
-        if(err){
-            fn(err,null);
+CouponCtrl.scanUse = function(id,ent,fn) {
+    Coupon.findById(id, function (err, res) {
+        if (err) {
+            fn(err)
         } else {
-            if(res){
-                fn(null,res);
+            if (res.ent.toString() != ent.toString()) {
+                fn(new Error('无权使用该优惠券'));
+            } else if (res.status != 0) {
+                fn(new Error('优惠券已使用过'));
             } else {
-                fn(new Error('优惠券已使用过'),null);
+                res.status = 1;
+                res.useTime = Date.now();
+                res.save(function (e, r) {
+                    fn(e, r);
+                });
             }
         }
     });
