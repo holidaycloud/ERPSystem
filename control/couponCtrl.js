@@ -279,7 +279,6 @@ CouponCtrl.count = function(ent,type,fn){
             });
         }]
     },function(err,results){
-        console.log(err,results);
         fn(err,results.calCount);
     });
 };
