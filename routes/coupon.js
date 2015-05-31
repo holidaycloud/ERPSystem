@@ -39,7 +39,7 @@ router.post('/give',function(request,response){
 
 router.post('/scanUse',function(request,response){
     var id = request.body.id;
-    var ent = request.body.ent
+    var ent = request.body.ent;
     CouponCtrl.scanUse(id,ent,function(err,res){
         if(err){
             response.json({'error':1, 'errMsg':err.message});

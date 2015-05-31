@@ -15,7 +15,8 @@ var entSchema = new Schema({
     'createTime': {type: Number, default: Date.now},              //创建时间
     'isAdmin':{type: Boolean, default: false},
     'provider':[{'type': Schema.Types.ObjectId, 'ref': 'Ent'}],
-    'sell':[{'type': Schema.Types.ObjectId, 'ref': 'Ent'}]
+    'sell':[{'type': Schema.Types.ObjectId, 'ref': 'Ent'}],
+    'marketings':[{'type': Schema.Types.ObjectId, 'ref': 'Marketing'}]
 });
 var Ent = db.model('Ent',entSchema);
 module.exports = Ent;

@@ -4,6 +4,7 @@
 var async = require('async');
 var CouponCode = require('./../model/couponCode');
 var Coupon = require('./../model/coupon');
+var EntCtrl = require("./entCtrl");
 var CouponCtrl = function(){};
 CouponCtrl.generate = function(ent,marketing,qty,minValue,type,value,name,product,startDate,endDate,fn){
     var createFunc = function(){
@@ -85,7 +86,7 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
 };
 
 CouponCtrl.scanUse = function(id,ent,fn) {
-    Coupon.findById(id, function (err, res) {
+    Coupon.findById(id,function (err, res) {
         if (err) {
             fn(err)
         } else {
@@ -252,21 +253,33 @@ CouponCtrl.canUseList = function(ent,customer,product,totalPrice,fn){
 };
 
 CouponCtrl.count = function(ent,type,fn){
-    var query = Coupon.count();
-    if(ent != "548123e82321630e394590e5"){
-        query.where({"ent":ent});
-    }
-    if(type == "used") {
-        query.where({"status":1});
-    }
-    else if(type == "received"){
-        query.where({"customer":{"$exists":true}});
-    }
-    else if(type == "noreceived"){
-        query.where({"customer":{"$exists":false}});
-    }
-    query.exec(function(err,res){
-        fn(err,res);
+    async.auto({
+        "getEnt":function(cb){
+            EntCtrl.detail(ent,function(err,res){
+               cb(err,res);
+            });
+        },
+        "calCount":["getEnt",function(cb,results){
+            var query = Coupon.count();
+            var ent = results.getEnt;
+            if(ent.marketings){
+                query.where({"marketing":{"$in":ent.marketing}});
+            }
+            if(type == "used") {
+                query.where({"status":1});
+            }
+            else if(type == "received"){
+                query.where({"customer":{"$exists":true}});
+            }
+            else if(type == "noreceived"){
+                query.where({"customer":{"$exists":false}});
+            }
+            query.exec(function(err,res){
+                cb(err,res);
+            });
+        }]
+    },function(err,results){
+        fn(err,results.calCount);
     });
 };
 
