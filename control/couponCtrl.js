@@ -84,8 +84,8 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
     });
 };
 
-CouponCtrl.scanUse = function(id,fn){
-    Coupon.findOneAndUpdate({'_id':id,'status':0},{'$set':{'status':1,'useTime':Date.now()}},function(err,res){
+CouponCtrl.scanUse = function(id,ent,fn){
+    Coupon.findOneAndUpdate({'_id':id,'ent':ent,'status':0},{'$set':{'status':1,'useTime':Date.now()}},function(err,res){
         console.log(err,res);
         if(err){
             fn(err,null);
