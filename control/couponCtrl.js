@@ -149,12 +149,18 @@ CouponCtrl.detail = function(id,fn){
 
 CouponCtrl.customList = function(ent,start,length,order,dir,search,fn){
     async.auto({
-        'getList':function(cb){
+        "getEnt":function(cb){
+            EntCtrl.detail(ent,function(err,res){
+                cb(err,res);
+            });
+        },
+        'getList':["getEnt",function(cb,results){
+            ent = results.getEnt;
             var query = Coupon.find();
-            if(ent!="548123e82321630e394590e5"){
-                query.where({"ent":ent});
+            if(ent.marketings){
+                query.where({"marketing":{"$in":ent.marketings}});
             } else {
-                query.where({"ent":{"$nin":["54742dffc96fa033763d3145"]}});
+                query.where({"ent":ent});
             }
             query.populate({"path":"marketing","select":"name"});
             query.populate({"path":"ent","select":"name"});
@@ -171,14 +177,15 @@ CouponCtrl.customList = function(ent,start,length,order,dir,search,fn){
             query.exec(function(err,marketings){
                     cb(err,marketings);
             });
-        },
+        }],
         'getTotalSize':function(cb){
-            if(ent!="548123e82321630e394590e5"){
-                Coupon.count({'ent':ent},function(err,size){
+            ent = results.getEnt;
+            if(ent.marketings){
+                Coupon.count({"marketing":{"$in":ent.marketings}},function(err,size){
                     cb(err,size);
                 });
             }else {
-                Coupon.count({"ent":{"$nin":["54742dffc96fa033763d3145"]}},function(err,size){
+                Coupon.count({"ent":ent},function(err,size){
                     cb(err,size);
                 });
             }
@@ -264,6 +271,8 @@ CouponCtrl.count = function(ent,type,fn){
             var ent = results.getEnt;
             if(ent.marketings){
                 query.where({"marketing":{"$in":ent.marketings}});
+            } else {
+                query.where({"ent":ent});
             }
             if(type == "used") {
                 query.where({"status":1});
