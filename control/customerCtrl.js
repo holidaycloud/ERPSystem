@@ -173,6 +173,69 @@ CustomerCtrl.register=function(ent,mobile,passwd,loginName,email,birthday,name,a
     });
 };
 
+CustomerCtrl.shakeLogin = function(ent,openid,fn){
+    async.auto({
+        'getCustomer':function(cb){
+            Customer.findOne({'ent':ent,'weixinOpenId':openid})
+                .lean()
+                .exec(function(err,customer){
+                    cb(err,customer);
+                });
+        },
+        'registerCustomer':['getCustomer',,function(cb,results){
+            var customer = results.getCustomer;
+            if(customer){
+                cb(null,customer);
+            } else {
+                var customer = new Customer({
+                    'ent':ent,
+                    'weixinOpenId':openid
+                });
+                customer.save(function(err,res){
+                    cb(err,res);
+                });
+            }
+        }]
+        ,'getCustomerCard':['registerCustomer',function(cb,results){
+            CustomerCtrl.getCustomerCard(results.registerCustomer._id,function(err,res){
+                if(err){
+                    cb(err,null);
+                } else {
+                    cb(null,res);
+                }
+            });
+        }]
+        ,'getCard':['getCustomerCard',function(cb,results){
+            if(results.getCustomerCard){
+                CardCtrl.getCard(results.getCustomerCard.card,function(err,res){
+                    cb(err,res);
+                });
+            } else {
+                cb(null,null);
+            }
+        }]
+        ,'getCardBalance':['getCard',function(cb,results){
+            if(results.getCard){
+                CardCtrl.balance(results.getCard.cardNum,ent,function(err,res){
+                    cb(err,res);
+                })
+            } else {
+                cb(null,null);
+            }
+        }]
+    },function(err,results){
+        if(err){
+            fn(err,null);
+        } else {
+            var customer = results.registerCustomer;
+            if(results.getCardBalance){
+                customer.cardBalance = results.getCardBalance.balance;
+            }
+            fn(null,customer);
+        }
+    });
+};
+
 CustomerCtrl.weixinSubscribe = function(ent,openid,fn){
     async.auto({
         'getCustomer':function(cb){

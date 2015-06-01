@@ -158,6 +158,19 @@ router.post('/changePasswd', function(request, response) {
     });
 });
 
+router.post("/shakeLogin",function(request,response){
+    var ent = request.body.ent;
+    var openid = request.body.openid;
+
+    CustomerCtrl.shakeLogin(ent,openid,function(err,res){
+        if(err){
+            response.json({'error':1, 'errMsg':err.message});
+        } else {
+            response.json({'error':0, 'data':res});
+        }
+    });
+});
+
 router.post("/weixinSubscribe",function(request,response){
     var ent = request.body.ent;
     var openid = request.body.openid;
