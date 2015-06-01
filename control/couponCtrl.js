@@ -178,7 +178,7 @@ CouponCtrl.customList = function(ent,start,length,order,dir,search,fn){
                     cb(err,marketings);
             });
         }],
-        'getTotalSize':function(cb){
+        'getTotalSize':["getEnt",function(cb,results){
             ent = results.getEnt;
             if(ent.marketings){
                 Coupon.count({"marketing":{"$in":ent.marketings}},function(err,size){
@@ -189,7 +189,7 @@ CouponCtrl.customList = function(ent,start,length,order,dir,search,fn){
                     cb(err,size);
                 });
             }
-        }
+        }]
     },function(err,results){
         if(err){
             fn(err,null);
