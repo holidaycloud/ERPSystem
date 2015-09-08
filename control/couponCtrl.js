@@ -53,17 +53,17 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
     async.auto({
         //查找是否已领过此次活动的优惠券
         couponIsGet:function(cb){
-            //Coupon.count({'marketing':marketing,'customer':customer},function(err,res){
-            //   if(err){
-            //       cb(err);
-            //   } else {
-            //       if(res>0){
-            //           cb(new Error("优惠券已领过"));
-            //       } else {
-            //           cb(null,res);
-            //       }
-            //   }
-            //});
+            Coupon.count({'marketing':marketing,'customer':customer,'status':0},function(err,res){
+               if(err){
+                   cb(err);
+               } else {
+                   if(res>0){
+                       cb(new Error("优惠券已领过"));
+                   } else {
+                       cb(null,res);
+                   }
+               }
+            });
             cb(null,null);
         },
         //领取优惠券
