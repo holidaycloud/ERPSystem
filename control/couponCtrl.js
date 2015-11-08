@@ -130,6 +130,7 @@ CouponCtrl.customerCoupons = function(ent,customer,status,fn){
     if(status){
         query.where({'status':status});
     }
+    query.where({'status':{'$ne':2}});
     query.sort("status");
     query.populate({"path":"marketing","select":"name content"});
     query.populate({"path":"ent","select":"name"});
