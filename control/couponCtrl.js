@@ -49,6 +49,39 @@ CouponCtrl.generate = function(ent,marketing,qty,minValue,type,value,name,produc
     });
 };
 
+CouponCtrl.createCoupon = function(ent,marketing,qty,minValue,type,value,name,product,customer,fn){
+  var today = new Date();
+  async.auto({
+      'getCode':function(cb){
+          CouponCode.findOneAndUpdate({'isUsed':false},{'$set':{'isUsed':true}})
+              .lean()
+              .exec(function(err,res){
+                  cb(err,res);
+              });
+      },
+      'saveCoupon':['getCode',function(cb,results){
+          var code = results.getCode.code;
+          var coupon = new Coupon({
+              'code':code,
+              'ent':ent,
+              'marketing':marketing,
+              'minValue':minValue,
+              'type':type,
+              'value':value,
+              'name':name,
+              'startDate':today.getTime(),
+              'endDate':today.getTime()+180*24*60*60*1000,
+              'customer':customer
+          });
+          coupon.save(function(err,res){
+              cb(err,res);
+          });
+      }]
+  },function(err,results){
+      fn(err,results.saveCoupon);
+  })
+};
+
 CouponCtrl.give = function(ent,marketing,customer,fn){
     async.auto({
         //查找是否已领过此次活动的优惠券
@@ -68,7 +101,7 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
         },
         //领取优惠券
         getCoupon:["couponIsGet",function(cb,results){
-            Coupon.findOneAndUpdate({'marketing':marketing,'customer':{'$exists':false}},{'$set':{'customer':customer}},function(err,res){
+            CouponCtrl.createCoupon(ent,marketing,1,1,1,1,"太仓假日工厂店优惠",customer,function(err,res){
                 if(err){
                     cb(err,null);
                 } else {
@@ -78,7 +111,18 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
                         cb(new Error('优惠券已发完'),null);
                     }
                 }
-            });
+          });
+            // Coupon.findOneAndUpdate({'marketing':marketing,'customer':{'$exists':false}},{'$set':{'customer':customer}},function(err,res){
+            //     if(err){
+            //         cb(err,null);
+            //     } else {
+            //         if(res){
+            //             cb(null,res);
+            //         } else {
+            //             cb(new Error('优惠券已发完'),null);
+            //         }
+            //     }
+            // });
         }]
     },function(err,results){
         fn(err,results.getCoupon);
