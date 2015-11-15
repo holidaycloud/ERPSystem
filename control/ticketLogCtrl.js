@@ -26,11 +26,9 @@ TicketLogCtrl.ticketCount = function(fn){
         emit(this.ticket,1);
     };
     o.reduce = function(key,values){
-        totalCount =0;
-        for(var i in values){
-            totalCount++;
-        }
-        return totalCount
+        var x = 0;
+        values.forEach(function(v){x+=v});
+        return x;
     };
     TicketLog.mapReduce(o,function(err, res){
         fn(err,res);
