@@ -49,7 +49,7 @@ CouponCtrl.generate = function(ent,marketing,qty,minValue,type,value,name,produc
     });
 };
 
-CouponCtrl.createCoupon = function(ent,marketing,qty,minValue,type,value,name,product,customer,fn){
+CouponCtrl.createCoupon = function(ent,marketing,qty,minValue,type,value,name,customer,fn){
   var today = new Date();
   async.auto({
       'getCode':function(cb){
