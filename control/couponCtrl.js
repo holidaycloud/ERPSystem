@@ -101,17 +101,18 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
         },
         //领取优惠券
         getCoupon:["couponIsGet",function(cb,results){
-            CouponCtrl.createCoupon(ent,marketing,1,1,1,1,"太仓假日工厂店优惠",customer,function(err,res){
-                if(err){
-                    cb(err,null);
-                } else {
-                    if(res){
-                        cb(null,res);
-                    } else {
-                        cb(new Error('优惠券已发完'),null);
-                    }
-                }
-          });
+            cb(new Error('优惠券已发完'),null);
+            // CouponCtrl.createCoupon(ent,marketing,1,1,1,1,"太仓假日工厂店优惠",customer,function(err,res){
+            //     if(err){
+            //         cb(err,null);
+            //     } else {
+            //         if(res){
+            //             cb(null,res);
+            //         } else {
+            //             cb(new Error('优惠券已发完'),null);
+            //         }
+            //     }
+            // });
             // Coupon.findOneAndUpdate({'marketing':marketing,'customer':{'$exists':false}},{'$set':{'customer':customer}},function(err,res){
             //     if(err){
             //         cb(err,null);
