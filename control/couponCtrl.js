@@ -5,6 +5,7 @@ var async = require('async');
 var CouponCode = require('./../model/couponCode');
 var Coupon = require('./../model/coupon');
 var EntCtrl = require("./entCtrl");
+var MarketingCtrl = require("./marketingCtrl");
 var CouponCtrl = function(){};
 CouponCtrl.generate = function(ent,marketing,qty,minValue,type,value,name,product,startDate,endDate,fn){
     var createFunc = function(){
@@ -99,20 +100,26 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
             });
             cb(null,null);
         },
+        getMarketing:function(cb){
+            MarketingCtrl.detail(marketing,function(err,res){
+                cb(err,res);
+            });
+        },
         //领取优惠券
-        getCoupon:["couponIsGet",function(cb,results){
+        getCoupon:["couponIsGet","getMarketing",function(cb,results){
+            var marketing = results.getMarketing;
             cb(new Error('优惠券已发完'),null);
-            // CouponCtrl.createCoupon(ent,marketing,1,1,1,1,"太仓假日工厂店优惠",customer,function(err,res){
-            //     if(err){
-            //         cb(err,null);
-            //     } else {
-            //         if(res){
-            //             cb(null,res);
-            //         } else {
-            //             cb(new Error('优惠券已发完'),null);
-            //         }
-            //     }
-            // });
+            CouponCtrl.createCoupon(marketing.endt,marketing,1,1,1,1,marketing.name,customer,function(err,res){
+                if(err){
+                    cb(err,null);
+                } else {
+                    if(res){
+                        cb(null,res);
+                    } else {
+                        cb(new Error('优惠券已发完'),null);
+                    }
+                }
+            });
             // Coupon.findOneAndUpdate({'marketing':marketing,'customer':{'$exists':false}},{'$set':{'customer':customer}},function(err,res){
             //     if(err){
             //         cb(err,null);
