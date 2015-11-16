@@ -108,7 +108,7 @@ CouponCtrl.give = function(ent,marketing,customer,fn){
         //领取优惠券
         getCoupon:["couponIsGet","getMarketing",function(cb,results){
             var marketing = results.getMarketing;
-            CouponCtrl.createCoupon(marketing.endt,marketing,1,1,1,1,marketing.name,customer,function(err,res){
+            CouponCtrl.createCoupon(marketing.ent,marketing,1,1,1,1,marketing.name,customer,function(err,res){
                 if(err){
                     cb(err,null);
                 } else {
